@@ -41,7 +41,7 @@ class Recipe implements IRecipe {
     }
 
 
-    public Edit(): void {
+    Edit(): void {
         throw new Error("Method not implemented.") // TODO: implement this function
     }    
 }
