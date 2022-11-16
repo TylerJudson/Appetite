@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Recipes from '../screens/Recipes';
-import Settings from '../screens/Settings';
-import TabOneScreen from '../screens/TabOneScreen';
+import Recipes from '../Views/Recipes';
+import Settings from '../Views/Settings';
+import TabOneScreen from '../Views/TabOneScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 
 
