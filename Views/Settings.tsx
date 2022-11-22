@@ -1,6 +1,9 @@
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 
 export default function Settings() {
+    const theme = useTheme();
+    const colors = theme.colors;
+    
     return (
         <Text variant="headlineLarge" >Settings</Text>
     );

@@ -2,13 +2,12 @@ import React from "react";
 import { Text, useTheme } from "react-native-paper";
 
 
-export default function Recipes() {
+export default function Social() {
     const theme = useTheme();
     const colors = theme.colors;
 
 
-
     return (
-        <Text variant="headlineLarge" >Recpies</Text>
+        <Text variant="headlineLarge" >Social</Text>
     );
 }

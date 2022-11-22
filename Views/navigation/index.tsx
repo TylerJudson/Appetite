@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { BottomNavigation } from 'react-native-paper';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { BottomNavigation, useTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import FeaturedRecipe from '../FeaturedRecipe';
 import Recipes from '../Recipes';
 import Settings from '../Settings';
-import TabOneScreen from '../TabOneScreen';
-import LinkingConfiguration from './LinkingConfiguration';
+import Social from '../Social';
 
 
 export default function Navigation() {
@@ -14,7 +14,7 @@ export default function Navigation() {
 	const Stack = createNativeStackNavigator();
 
  	return (
-		<NavigationContainer linking={LinkingConfiguration} >
+		<NavigationContainer>
 			<Stack.Navigator>
 			<Stack.Screen
 				name="Appetite"
@@ -33,28 +33,29 @@ export default function Navigation() {
 // TODO: Documentation
 function BottomTabs() {
 	const [index, setIndex] = React.useState(0);
+	const { colors } = useTheme();
+
 	const [routes] = React.useState([
-		{ key: 'recipes', title: 'Recipes', focusedIcon: 'silverware-fork' },
-		{ key: 'something', title: 'Something', focusedIcon: 'cloud' },
-		{ key: 'something1', title: 'Something1', focusedIcon: 'cloud' },
-		{ key: 'something2', title: 'Something2', focusedIcon: 'cloud' },
+		{ key: 'recipes', title: 'Recipes', focusedIcon: 'book', unfocusedIcon: "book-outline" },
+		{ key: 'featuredRecipe', title: 'Featured', focusedIcon: 'silverware-fork' },
+		{ key: 'social', title: 'Social', focusedIcon: 'message', unfocusedIcon: "message-outline" },
 		{ key: 'settings', title: 'Settings', focusedIcon: 'dots-horizontal' },
 	]);
 
 	const renderScene = BottomNavigation.SceneMap({
 		recipes: Recipes,
-		something: TabOneScreen,
-		something1: TabOneScreen,
-		something2: TabOneScreen,
+		featuredRecipe: FeaturedRecipe,
+		social: Social,
 		settings: Settings,
 	});
 	return (
-		<SafeAreaView style={{ flex: 1 }} edges={['top', 'right', 'left']}>
+		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top', 'right', 'left']}>
 			<BottomNavigation
 				navigationState={{ index, routes }}
 				onIndexChange={setIndex}
 				renderScene={renderScene}
 				shifting={true}
+				sceneAnimationType="opacity"
 			/>
 		</SafeAreaView>
 	)
