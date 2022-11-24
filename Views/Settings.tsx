@@ -5,7 +5,7 @@ export default function Settings() {
     const colors = theme.colors;
     
     return (
-        <Text variant="headlineLarge" >Settings -- this is a test.</Text>
+        <Text variant="headlineLarge" >Settings -- this is a </Text>
     );
 }
 
