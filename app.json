@@ -4,6 +4,7 @@
     "slug": "Appetite",
     "version": "1.0.0",
     "orientation": "portrait",
+    "owner": "tsasoftware",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -13,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/f5948e0c-6eea-477c-a8c4-b880a1c0a873"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -29,6 +31,14 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f5948e0c-6eea-477c-a8c4-b880a1c0a873"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
