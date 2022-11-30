@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { BottomNavigation, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,22 +7,36 @@ import FeaturedRecipe from '../FeaturedRecipe';
 import Recipes from '../Recipes';
 import Settings from '../Settings';
 import Social from '../Social';
+import ViewRecipe from '../ViewRecipe';
+
+
+
+type RootStackParamList = {
+	Appetite: undefined, // undefined because we aren't passing any params.
+	Recipe: { name: string };
+};
+
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
 export default function Navigation() {
 
-	const Stack = createNativeStackNavigator();
 
  	return (
 		<NavigationContainer>
 			<Stack.Navigator>
-			<Stack.Screen
-				name="Appetite"
-				component={BottomTabs}
-				options={{
-					headerShown: false
-				}}
-			/>
+				<Stack.Screen
+					name="Appetite"
+					component={BottomTabs}
+					options={{
+						headerShown: false
+					}}
+				/>
+				<Stack.Screen 
+					name="Recipe"
+					component={ViewRecipe}
+				/>
 			</Stack.Navigator>
       </NavigationContainer>
       
@@ -30,11 +44,13 @@ export default function Navigation() {
 }
 
 
+
 // TODO: Documentation
-function BottomTabs() {
+type Props = NativeStackScreenProps<RootStackParamList, 'Appetite'>;
+function BottomTabs({navigation}: Props) {
 	const [index, setIndex] = React.useState(0);
 	const { colors } = useTheme();
-
+	
 	const [routes] = React.useState([
 		{ key: 'recipes', title: 'Recipes', focusedIcon: 'book', unfocusedIcon: "book-outline" },
 		{ key: 'featuredRecipe', title: 'Featured', focusedIcon: 'silverware-fork' },
