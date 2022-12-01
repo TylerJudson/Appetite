@@ -1,21 +1,21 @@
 
 interface IRecipe {
     /** The name of the recipe. */
-    name: string
+    name: string;
     /** The image of the recipe. */
-    image: string
+    image: string;
     /** The ingredients required for the recipe. */
-    ingredients: string[]
+    ingredients: string[];
     /** The istructions to make the recipe */
-    instructions: string[]
+    instructions: string[];
     /** The time it takes to prepare the recipe (in minutes) */
-    prepTime?: number
+    prepTime?: number;
     /** The time it takes to cook the recipe (in minutes) */
-    cookTime?: number
+    cookTime?: number;
     /** Tags the user can add to organize recipes better. i.e. healthy, breakfast, lunch, cookies, etc. */
-    tags: string[]
+    tags: string[];
     /** If the recipe is readonly or not. Set this property to true to prevent people from editing it. */
-    readonly: boolean
+    readonly: boolean;
 }
 
 
@@ -36,7 +36,7 @@ export class Recipe implements IRecipe {
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.tags = tags;
-        this.readonly = readonly
+        this.readonly = readonly;
 
         this.image = ""; // TODO: find a default image for this
     }
