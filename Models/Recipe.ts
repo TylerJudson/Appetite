@@ -14,13 +14,12 @@ interface IRecipe {
     cookTime?: number
     /** Tags the user can add to organize recipes better. i.e. healthy, breakfast, lunch, cookies, etc. */
     tags: string[]
-
-    /** Edits the recipe, allowing the user to change specific values */
-    Edit(): void; // TODO: fix the parameters for the edit function
+    /** If the recipe is readonly or not. Set this property to true to prevent people from editing it. */
+    readonly: boolean
 }
 
 
-class Recipe implements IRecipe {
+export class Recipe implements IRecipe {
     name: string;
     image: string;
     ingredients: string[];
@@ -28,21 +27,17 @@ class Recipe implements IRecipe {
     prepTime?: number;
     cookTime?: number;
     tags: string[];
+    readonly: boolean
 
-    constructor(name: string, ingredients: string[], instructions: string[], prepTime?: number, cookTime?: number, tags: string[] = []) {
+    constructor(name: string, ingredients: string[], instructions: string[], prepTime?: number, cookTime?: number, tags: string[] = [], readonly: boolean = false) {
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.tags = tags;
+        this.readonly = readonly
 
         this.image = ""; // TODO: find a default image for this
     }
-
-
-    Edit(): void {
-        throw new Error("Method not implemented.") // TODO: implement this function
-    }    
 }
-
