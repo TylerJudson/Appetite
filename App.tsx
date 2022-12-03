@@ -4,6 +4,7 @@ import { Provider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
+import { GlobalStateProvider } from './state';
 import { darkTheme, lightTheme } from './theme';
 import Navigation from './Views/navigation';
 
@@ -15,12 +16,14 @@ export default function App() {
 		return null;
 	} else {
 		return (
-			<SafeAreaProvider>
+			<GlobalStateProvider>
 				<Provider theme={colorScheme === 'dark' ? darkTheme : lightTheme}>
-					<Navigation />
-					<StatusBar />
+					<SafeAreaProvider>
+						<Navigation />
+						<StatusBar />
+					</SafeAreaProvider>
 				</Provider>
-			</SafeAreaProvider>
+			</GlobalStateProvider>
 		);
 	}
 }

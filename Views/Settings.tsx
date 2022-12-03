@@ -1,4 +1,5 @@
 import { Text, useTheme } from "react-native-paper";
+import { useFeaturedRecipeState } from "../state";
 
 
 /**
@@ -7,7 +8,8 @@ import { Text, useTheme } from "react-native-paper";
 export default function Settings() {
     const theme = useTheme();
     const colors = theme.colors;
-    
+    const { featuredRecipe, setFeaturedRecipe } = useFeaturedRecipeState();
+
     return (
         <Text variant="headlineLarge" >Settings</Text>
     );

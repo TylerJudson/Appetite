@@ -1,39 +1,22 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
-import { Recipe } from "../Models/Recipe";
-import { RootStackParamList } from "./navigation";
+import { useFeaturedRecipeState } from "../state";
+import { Route } from "./navigation";
 
-
-
-const featuredRecipe = new Recipe(
-    "Pizza",
-    [""],
-    [""],
-    10,
-    20,
-    [],
-    true
-);
-
-
-
-type navProps = NativeStackScreenProps<RootStackParamList, 'Appetite'>;
 /**
  * This shows a recipe that is chosen everyday as the "featured recipe"
  * @param param0 The navigation to let the app navigate between screens
  */
-export default function FeaturedRecipe({navigation}: navProps) {
+export default function FeaturedRecipe({ route }: Route) {
+    const { featuredRecipe, setFeaturedRecipe } = useFeaturedRecipeState();
     const theme = useTheme();
     const colors = theme.colors;
 
     return (
         <View>
             <Text variant="headlineLarge" >Featured Recipe</Text>
-            <Button onPress={() => navigation.navigate("Recipe", {recipe: featuredRecipe})}>View Recipe</Button>
+            <Button onPress={() => route.navigation.navigate("Recipe", { recipe: featuredRecipe.recipe })}>View Recipe</Button>
         </View>
     );
 }
-
-
