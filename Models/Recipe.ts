@@ -48,9 +48,17 @@ export class Recipe implements IRecipe {
         this.id = uuidv4();
     }    
 
+    /**
+     * Creates a blank recipe
+     * @returns a blank recipe
+     */
     static Initial() {
         return new Recipe("", [], []);
     }
+    /**
+     * Creates a blank recipe that is readonly
+     * @returns A blank recipe that is readonly
+     */
     static ReadonlyInital() {
         return new Recipe("", [], [], undefined, undefined, [], true)
     }
