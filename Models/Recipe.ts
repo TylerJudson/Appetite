@@ -13,6 +13,8 @@ interface IRecipe {
     ingredients: string[];
     /** The istructions to make the recipe */
     instructions: string[];
+    /** The description of the recipe. */
+    description?: string;
     /** The time it takes to prepare the recipe (in minutes) */
     prepTime?: number;
     /** The time it takes to cook the recipe (in minutes) */
@@ -30,15 +32,17 @@ export class Recipe implements IRecipe {
     image: string;
     ingredients: string[];
     instructions: string[];
+    description?: string;
     prepTime?: number;
     cookTime?: number;
     tags: string[];
     readonly: boolean
 
-    constructor(name: string, ingredients: string[], instructions: string[], prepTime?: number, cookTime?: number, tags: string[] = [], readonly: boolean = false) {
+    constructor(name: string, ingredients: string[], instructions: string[], description: string = "", prepTime?: number, cookTime?: number, tags: string[] = [], readonly: boolean = false) {
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
+        this.description = description;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.tags = tags;
@@ -60,6 +64,6 @@ export class Recipe implements IRecipe {
      * @returns A blank recipe that is readonly
      */
     static ReadonlyInital() {
-        return new Recipe("", [], [], undefined, undefined, [], true)
+        return new Recipe("", [], [], "", undefined, undefined, [], true)
     }
 }

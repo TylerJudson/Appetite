@@ -1,14 +1,13 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { Appbar, Text, Tooltip, useTheme, Button } from "react-native-paper";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 import { createGlobalStyles } from "./styles/globalStyles";
 import { ViewRecipeHeader as Header } from "./components/Headers";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./navigation";
 import { ViewRecipeTimes as Times } from "./components/ViewRecipeTimes";
-import { Recipe } from "../Models/Recipe";
-
-
+import { ViewRecipeDescription as Description } from "./components/ViewRecipeDescription";
+import { ViewRecipeTags as Tags } from "./components/ViewRecipeTags";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'Recipe'>;
 /**
@@ -24,18 +23,44 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     return (
         <View style={globalStyles.container}>
 
-            <Header navigation={navigation} recipe={route.params.recipe}/>
+                <Header navigation={navigation} recipe={route.params.recipe}/>
 
-            <Image style={styles.image} source={{ uri: route.params.recipe.image }} />
+            <ScrollView style={{paddingBottom: 100}}>
 
-            <Text variant="titleLarge" style={styles.title} >{route.params.recipe.name}</Text>
+                <Image style={styles.image} source={{ uri: route.params.recipe.image }} />
 
-            <Times prepTime={route.params.recipe.prepTime} cookTime={route.params.recipe.cookTime} />
+                <Text variant="titleLarge" style={styles.title} >{route.params.recipe.name}</Text>
 
-            <Text style={styles.title}>Description</Text>
+                <Times prepTime={route.params.recipe.prepTime} cookTime={route.params.recipe.cookTime} />
 
-            <Text variant="titleLarge" style={styles.title} >Ingredients</Text>
+                <Description description={route.params.recipe.description}/>
 
+                <Text variant="titleLarge" style={styles.title} >Ingredients</Text>
+
+                    {
+                        route.params.recipe.ingredients.map((ingredient, index) => {
+                            return (
+                                <Text key={index} style={[styles.list, { backgroundColor: index % 2 ? colors.backdrop : undefined}]}>
+                                    {ingredient}
+                                </Text>
+                            )
+                        })
+                    }
+
+                <Text variant="titleLarge" style={styles.title} >Instructions</Text>
+                    {
+                        route.params.recipe.instructions.map((instruction, index) => {
+                            return (
+                                <Text key={index} style={[styles.list, { backgroundColor: index % 2 ? colors.backdrop : undefined}]}>
+                                    {index + 1}. {instruction}
+                                </Text>
+                            )
+                        })
+                    }
+
+                <Tags tags={route.params.recipe.tags}/>
+
+            </ScrollView>
         </View>
     );
 }
@@ -49,14 +74,14 @@ export default function ViewRecipe({ navigation, route }: navProps) {
 function createStyles() {
     return StyleSheet.create({
         title: {
-            padding: 10,
-            paddingRight: 20
+            padding: 10, paddingRight: 25
         },
         image: {
-            width: "100%",
-            height: 150,
-            borderWidth: 1,
-            borderColor: "blue"
+            width: "100%", height: 150,
+            borderWidth: 1, borderColor: "blue"
+        },
+        list: {
+            padding: 10, paddingHorizontal: 15,
         }
     });
 }

@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
+import { View } from "react-native";
 import { Appbar, Divider, Menu, Tooltip } from "react-native-paper";
 import { Recipe } from "../../Models/Recipe";
 import { RootStackParamList } from "../navigation";
@@ -54,7 +55,7 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
    
 
     return (
-        <Appbar.Header elevated>
+        <Appbar.Header elevated statusBarHeight={30}>
             {/** This is the button that allows the user to go back to the previous screen */}
             <Tooltip title="Back">
                 <Appbar.BackAction onPress={navigation.goBack} />

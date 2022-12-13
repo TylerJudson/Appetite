@@ -4,12 +4,12 @@ import { Button, Text } from "react-native-paper";
 
 
 /**
- * Creates a header with a back button and controls for the recipe
- * @param param0 The navigation and recipe
+ * Displays the prep, cook, and total time for a recipe.
+ * @param prepTime The time it takes to prep the recipe.
+ * @param cookTime The time it takes to cook the recip.
  */
 export function ViewRecipeTimes({ prepTime, cookTime }: { prepTime?: number, cookTime?: number }) {
     const styles = createStyles();
-
 
     return (
         <View style={styles.container}>
