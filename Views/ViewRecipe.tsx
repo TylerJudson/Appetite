@@ -23,9 +23,9 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     return (
         <View style={globalStyles.container}>
 
-                <Header navigation={navigation} recipe={route.params.recipe}/>
+            <Header navigation={navigation} recipe={route.params.recipe}/>
 
-            <ScrollView style={{paddingBottom: 100}}>
+            <ScrollView>
 
                 <Image style={styles.image} source={{ uri: route.params.recipe.image }} />
 
