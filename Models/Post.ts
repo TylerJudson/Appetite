@@ -24,16 +24,16 @@ export class Post implements IPost {
     likes: number;
     timestamp: string;
 
-    constructor(id: string, recipe: Recipe, description: string, likes: number, timestamp) {
-        this.id = id;
+    constructor(recipe: Recipe, description: string, likes: number = 0) {
         this.recipe = recipe;
         this.description = description;
         this.likes = likes;
-        this.timestamp = timestamp
+        this.timestamp = ""
+
+        this.id = uuidv4();
     }
-    
 
-
-
-    // TODO: Initial stuff
+    static Initial() {
+        return new Post(Recipe.Initial(), "");
+    }
 }
