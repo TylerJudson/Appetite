@@ -66,4 +66,16 @@ export class Recipe implements IRecipe {
     static ReadonlyInital() {
         return new Recipe("", [], [], "", undefined, undefined, [], true)
     }
+
+    /**
+     * Creates a clone of the current state of the recipe
+     * @returns A shallow clone of the Recipe
+     */
+    clone() {
+        const clone = new Recipe(this.name, this.ingredients, this.instructions, this.description, this.prepTime, this.cookTime, this.tags, this.readonly);
+        clone.id = this.id;
+        clone.image = this.image;
+        return clone;
+    }
+
 }

@@ -1,15 +1,16 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Snackbar } from "react-native-paper";
+import { Appbar, Divider, Menu, Tooltip, SegmentedButtons } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Recipe } from "../../Models/Recipe";
-import { RecipeBook } from "../../Models/RecipeBook";
 import { useRecipeBookState } from "../../state";
 import { RootStackParamList } from "../navigation";
 
 
 // TODO: documentation and fix statusBarHeight
 export function RecipeHeader({ value, setValue }: { value: string, setValue: Dispatch<SetStateAction<string>> }) {
+    const insets = useSafeAreaInsets();
 
     /**
       Handles the action of pressing the search button
@@ -20,10 +21,10 @@ export function RecipeHeader({ value, setValue }: { value: string, setValue: Dis
 
 
     return (
-        <Appbar.Header elevated statusBarHeight={30}>
+        <Appbar.Header elevated statusBarHeight={insets.top - 15}>
             <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
                 <Tooltip title="Tags">
-                    <Appbar.Action icon={"tag-multiple"} onPress={handleSearch} />
+                    <Appbar.Action icon={"filter-variant"} onPress={handleSearch} />
                 </Tooltip>
 
                 <View style={{alignSelf: "center"}}>
@@ -66,6 +67,11 @@ interface ViewRecipeHeader {
     navigation: navProps
     /** The recipe (so the user can save or send it.) */
     recipe: Recipe
+    /** Gives the header the ability to set the state of the snackbar */
+    setSnackBar: React.Dispatch<React.SetStateAction<{
+        visible: boolean;
+        message: string;
+    }>>
 }
 
 
@@ -73,10 +79,12 @@ interface ViewRecipeHeader {
  * Creates a header with a back button and controls for the recipe
  * @param param0 The navigation and recipe
  */
-export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
+export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipeHeader ) {
     /** Whether the menu is visible or not. */
-    const [menuVisible, setMenuVisible] = React.useState(false);
+    const [menuVisible, setMenuVisible] = useState(false);
     const { recipeBook, setRecipeBook } = useRecipeBookState();
+
+    const insets = useSafeAreaInsets();
 
     /** Handles the action of pressing the heart */
     function handleHeart() {
@@ -88,10 +96,24 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
     }
     /** Handles the action of saving the recipe */
     function handleSave() {
-        // recipeBook.recipes.push(recipe);
-        const test = new RecipeBook(recipeBook.recipes);
-        test.recipes.push(recipe);
-        setRecipeBook(test);
+        // Create a clone of the recipe so we can safely change the readability
+        const clone = recipe.clone();
+        clone.readonly = false;
+
+        // Try to add the clone to the recipe book
+        const addRecipeResult = recipeBook.addRecipe(clone);
+        if (addRecipeResult.success) {
+            // Save and update the state
+            setRecipeBook(recipeBook);
+            
+            // Navigate to the new recipe
+            navigation.navigate("Recipe", { recipe: clone });
+            setSnackBar({ visible: true, message: "Recipe Saved." })
+
+        } else {
+            setSnackBar({ visible: true, message: addRecipeResult.message})
+        }
+
     }
     /** Handles the action of editting the recipe */
     function handleEdit() {
@@ -112,7 +134,7 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
    
 
     return (
-        <Appbar.Header elevated statusBarHeight={30}>
+        <Appbar.Header elevated statusBarHeight={insets.top - 10}>
             {/** This is the button that allows the user to go back to the previous screen */}
             <Tooltip title="Back">
                 <Appbar.BackAction onPress={navigation.goBack} />
@@ -157,6 +179,7 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
                     </Tooltip>
                 </>
             }
+
 
         </Appbar.Header>
     );

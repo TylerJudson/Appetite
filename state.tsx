@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useReducer } from "react";
 import { Recipe } from "./Models/Recipe";
 import { RecipeBook } from "./Models/RecipeBook";
 
@@ -11,12 +11,19 @@ export const State = {
 }
 
 
-const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: undefined as unknown as Dispatch<React.SetStateAction<RecipeBook>> });
+const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: (recipeBook: RecipeBook) => {}});
 const FeaturedRecipeStateContext = React.createContext({ featuredRecipe: State.featuredRecipe, setFeaturedRecipe: undefined as unknown as Dispatch<React.SetStateAction<Recipe>> });
 
 export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
-    const [recipeBook, setRecipeBook] = React.useState(State.recipeBook);
+    const [recipeBook, setRecipeBook] = useReducer(
+        (newValue: RecipeBook) => {
+            // newValue.saveData();
+            return newValue.clone();
+        },
+        State.recipeBook
+    );
+
     const recipeBookContextValue = { recipeBook, setRecipeBook };
 
     const [featuredRecipe, setFeaturedRecipe] = React.useState(State.featuredRecipe);

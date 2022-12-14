@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Snackbar, Text, useTheme } from "react-native-paper";
 import { createGlobalStyles } from "./styles/globalStyles";
 import { ViewRecipeHeader as Header } from "./components/Headers";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -20,10 +20,15 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
+    const [snackBar, setSnackBar] = useState( {
+        visible: false,
+        message: ""
+    });
+
     return (
         <View style={globalStyles.container}>
 
-            <Header navigation={navigation} recipe={route.params.recipe}/>
+            <Header navigation={navigation} recipe={route.params.recipe} setSnackBar={setSnackBar} />
 
             <ScrollView>
 
@@ -61,6 +66,15 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                 <Tags tags={route.params.recipe.tags}/>
 
             </ScrollView>
+
+            <Snackbar 
+                visible={snackBar.visible} 
+                onDismiss={() => { setSnackBar({...snackBar, visible: false})}}
+                duration={3000}
+            >
+                {snackBar.message}
+            </Snackbar>
+
         </View>
     );
 }

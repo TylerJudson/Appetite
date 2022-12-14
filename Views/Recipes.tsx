@@ -25,6 +25,7 @@ export default function Recipes({ route }: Route) {
         setSearch(value);
     }
 
+
     return (
         <View style={globalStyles.container}>
             <Header value={viewAllRecipes} setValue={setViewAllRecipes}/>
@@ -36,7 +37,7 @@ export default function Recipes({ route }: Route) {
 
                 <View>
                     {
-                        recipeBook.recipes.map((recipe, index) => {
+                        Object.values(recipeBook.recipes).map((recipe, index) => {
                             return (
                                 <RecipeWidget key={index} recipe={recipe} onPress={() => route.navigation.navigate("Recipe", {recipe: recipe})}/>
                             )
