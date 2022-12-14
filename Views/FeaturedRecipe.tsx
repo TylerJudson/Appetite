@@ -7,8 +7,6 @@ import { Route } from "./navigation";
 
 
 
-
-
 /**
  * This shows a recipe that is chosen everyday as the "featured recipe"
  * @param param0 The navigation to let the app navigate between screens

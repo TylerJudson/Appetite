@@ -1,3 +1,4 @@
+import { getItem, saveItem } from "../utilities/AsyncHelpers";
 import { Recipe } from "./Recipe";
 
 
@@ -19,6 +20,26 @@ export class RecipeBook implements IRecipeBook {
      */
     static Initial() {
         return new RecipeBook();
+    }
+
+    /**
+     * Gets all of the data from async storage (key: RecipeBook)
+     */
+    async getData() {
+        await getItem("RecipeBook").then(
+            (value) => {
+                if (value) {
+                    this.recipes = value.recipes;
+                }
+            },
+        )
+    }
+
+    /**
+     * Saves the current state of the object to async storage (key: RecipeBook)
+     */
+    async saveData() {
+        await saveItem("RecipeBook", this);
     }
 
 }
