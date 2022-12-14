@@ -1,9 +1,62 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { View } from "react-native";
-import { Appbar, Divider, Menu, Tooltip } from "react-native-paper";
+import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Snackbar } from "react-native-paper";
 import { Recipe } from "../../Models/Recipe";
+import { RecipeBook } from "../../Models/RecipeBook";
+import { useRecipeBookState } from "../../state";
 import { RootStackParamList } from "../navigation";
+
+
+// TODO: documentation and fix statusBarHeight
+export function RecipeHeader({ value, setValue }: { value: string, setValue: Dispatch<SetStateAction<string>> }) {
+
+    /**
+      Handles the action of pressing the search button
+     */
+    function handleSearch() {
+        console.log("Not yet implemented");
+    }
+
+
+    return (
+        <Appbar.Header elevated statusBarHeight={30}>
+            <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
+                <Tooltip title="Tags">
+                    <Appbar.Action icon={"tag-multiple"} onPress={handleSearch} />
+                </Tooltip>
+
+                <View style={{alignSelf: "center"}}>
+                    <SegmentedButtons 
+                        value={value}
+                        onValueChange={setValue}
+                        density="small"
+                        
+                        buttons={[
+                            {
+                                value: "All Recipes",
+                                label: "All Recipes",
+                                icon: "format-list-bulleted",
+                                showSelectedCheck: true
+                            },
+                            {
+                                value: "Favorites",
+                                label: "Favorites",
+                                icon: "heart",
+                                showSelectedCheck: true
+                            }
+                        ]}
+                        
+                        />
+                </View>
+
+                <Tooltip title="Search">
+                    <Appbar.Action icon={"card-search"} onPress={handleSearch} />
+                </Tooltip>
+            </View>
+        </Appbar.Header>
+    )
+}
 
 
 
@@ -23,6 +76,7 @@ interface ViewRecipeHeader {
 export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
     /** Whether the menu is visible or not. */
     const [menuVisible, setMenuVisible] = React.useState(false);
+    const { recipeBook, setRecipeBook } = useRecipeBookState();
 
     /** Handles the action of pressing the heart */
     function handleHeart() {
@@ -34,7 +88,10 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
     }
     /** Handles the action of saving the recipe */
     function handleSave() {
-        console.log("Not yet implemented");
+        // recipeBook.recipes.push(recipe);
+        const test = new RecipeBook(recipeBook.recipes);
+        test.recipes.push(recipe);
+        setRecipeBook(test);
     }
     /** Handles the action of editting the recipe */
     function handleEdit() {
@@ -82,7 +139,7 @@ export function ViewRecipeHeader({ navigation, recipe }: ViewRecipeHeader ) {
                         <Appbar.Action icon={false ? "heart" : "heart-outline"} onPress={handleHeart} />
                     </Tooltip>
 
-                    {/** The more button opens a menu with more options. */}
+                    {/** The more button opens a menu with more options. // TODO: Something is wrong with this tooltip */}
                     <Tooltip title="More">
                         <Menu
                             visible={menuVisible}

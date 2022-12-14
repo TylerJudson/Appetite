@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
-import { Recipe } from "../Models/Recipe";
 import { useFeaturedRecipeState } from "../state";
 import { Route } from "./navigation";
 

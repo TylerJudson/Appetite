@@ -17,10 +17,10 @@ const FeaturedRecipeStateContext = React.createContext({ featuredRecipe: State.f
 export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
     const [recipeBook, setRecipeBook] = React.useState(State.recipeBook);
-    const recipeBookContextValue = React.useMemo(() => ({ recipeBook, setRecipeBook }), [recipeBook]);
+    const recipeBookContextValue = { recipeBook, setRecipeBook };
 
     const [featuredRecipe, setFeaturedRecipe] = React.useState(State.featuredRecipe);
-    const featuredRecipeContextValue = React.useMemo(() => ({ featuredRecipe, setFeaturedRecipe }), [featuredRecipe]);
+    const featuredRecipeContextValue = { featuredRecipe, setFeaturedRecipe };
 
     return (
         <RecipeBookStateContext.Provider value={recipeBookContextValue}>
@@ -31,4 +31,5 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
     );
 };
 
+export const useRecipeBookState = () => React.useContext(RecipeBookStateContext);
 export const useFeaturedRecipeState = () => React.useContext(FeaturedRecipeStateContext);

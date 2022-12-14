@@ -71,7 +71,7 @@ function Appetite({navigation, route}: Props) {
 	});
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top', 'right', 'left']}>
+		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['right', 'left']}>
 			<BottomNavigation
 				navigationState={{ index, routes }}
 				onIndexChange={setIndex}

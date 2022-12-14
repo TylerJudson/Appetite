@@ -27,7 +27,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
 
             <ScrollView>
 
-                <Image style={styles.image} source={{ uri: route.params.recipe.image }} />
+                <Image style={styles.image} />
 
                 <Text variant="titleLarge" style={styles.title} >{route.params.recipe.name}</Text>
 
