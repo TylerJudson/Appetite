@@ -19,6 +19,8 @@ interface IRecipe {
     prepTime?: number;
     /** The time it takes to cook the recipe (in minutes) */
     cookTime?: number;
+    /** Whether or not the recipe has been favorited */
+    favorited: boolean
     /** Tags the user can add to organize recipes better. i.e. healthy, breakfast, lunch, cookies, etc. */
     tags: string[];
     /** If the recipe is readonly or not. Set this property to true to prevent people from editing it.Defaults to false. */
@@ -35,10 +37,11 @@ export class Recipe implements IRecipe {
     description?: string;
     prepTime?: number;
     cookTime?: number;
+    favorited: boolean;
     tags: string[];
-    readonly: boolean
+    readonly: boolean;
 
-    constructor(name: string, ingredients: string[], instructions: string[], description: string = "", prepTime?: number, cookTime?: number, tags: string[] = [], readonly: boolean = false) {
+    constructor(name: string, ingredients: string[], instructions: string[], description: string = "", prepTime?: number, cookTime?: number, favorited: boolean = false, tags: string[] = [], readonly: boolean = false) {
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
@@ -48,6 +51,7 @@ export class Recipe implements IRecipe {
         this.tags = tags;
         this.readonly = readonly;
 
+        this.favorited = favorited;
         this.image = ""; // TODO: find a default image for this
         this.id = uuidv4();
     }    
@@ -64,7 +68,7 @@ export class Recipe implements IRecipe {
      * @returns A blank recipe that is readonly
      */
     static ReadonlyInital() {
-        return new Recipe("", [], [], "", undefined, undefined, [], true)
+        return new Recipe("", [], [], "", undefined, undefined, false, [], true)
     }
 
     /**
@@ -72,7 +76,7 @@ export class Recipe implements IRecipe {
      * @returns A shallow clone of the Recipe
      */
     clone() {
-        const clone = new Recipe(this.name, this.ingredients, this.instructions, this.description, this.prepTime, this.cookTime, this.tags, this.readonly);
+        const clone = new Recipe(this.name, this.ingredients, this.instructions, this.description, this.prepTime, this.cookTime, this.favorited, this.tags, this.readonly);
         clone.id = this.id;
         clone.image = this.image;
         return clone;

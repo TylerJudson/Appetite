@@ -9,7 +9,7 @@ import { RootStackParamList } from "../navigation";
 
 
 // TODO: documentation and fix statusBarHeight
-export function RecipeHeader({ value, setValue }: { value: string, setValue: Dispatch<SetStateAction<string>> }) {
+export function RecipesHeader({ value, setValue }: { value: boolean, setValue: Dispatch<SetStateAction<boolean>> }) {
     const insets = useSafeAreaInsets();
 
     /**
@@ -29,8 +29,8 @@ export function RecipeHeader({ value, setValue }: { value: string, setValue: Dis
 
                 <View style={{alignSelf: "center"}}>
                     <SegmentedButtons 
-                        value={value}
-                        onValueChange={setValue}
+                        value={value ? "Favorites" : "All Recipes"}
+                        onValueChange={(value) => {setValue(value === "Favorites")}}
                         density="small"
                         
                         buttons={[
@@ -88,7 +88,8 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
 
     /** Handles the action of pressing the heart */
     function handleHeart() {
-        console.log("Not yet implemented");
+        recipe.favorited = !recipe.favorited;
+        setRecipeBook(recipeBook);
     }
     /** Handles the action of sharing the recipe */
     function handleShare() {
@@ -110,7 +111,8 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
             navigation.navigate("Recipe", { recipe: clone });
             setSnackBar({ visible: true, message: "Recipe Saved." })
 
-        } else {
+        } 
+        else {
             setSnackBar({ visible: true, message: addRecipeResult.message})
         }
 
@@ -158,7 +160,7 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
                 // If the header is not readonly: then show the favorites button and the more button
                 <>
                     <Tooltip title="Favorite">
-                        <Appbar.Action icon={false ? "heart" : "heart-outline"} onPress={handleHeart} />
+                        <Appbar.Action icon={recipe.favorited ? "heart" : "heart-outline"} onPress={handleHeart} />
                     </Tooltip>
 
                     {/** The more button opens a menu with more options. // TODO: Something is wrong with this tooltip */}
