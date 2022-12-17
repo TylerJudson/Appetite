@@ -30,9 +30,9 @@ export function RecipeWidget({ recipe, onPress }: { recipe: Recipe, onPress: Voi
 function createStyles() {
     return StyleSheet.create({
         container: {
-            marginTop: 15, marginHorizontal: 10,
+            marginBottom: 15, marginHorizontal: 10,
             borderRadius: 10,
-            justifyContent: "center"
+            justifyContent: "center",
         },
         image: {
             height: 100

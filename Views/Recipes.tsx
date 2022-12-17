@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import { useTheme, Searchbar, Text } from "react-native-paper";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import { View, ScrollView, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
+import { useTheme, Searchbar, Text, Button } from "react-native-paper";
 import { Route } from "./navigation";
 import { RecipesHeader as Header } from "./components/Headers";
 import { useRecipeBookState } from "../state";
@@ -23,7 +23,11 @@ export default function Recipes({ route }: Route) {
     const [viewFavorites, setViewFavorites] = useState(false); // TODO: Docume
     const [tags, setTags] = useState([]);
     const [search, setSearch] = useState("");
+    const [searching, setSearching] = useState(false);
     const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes);
+
+    const animSearchBar = useRef(new Animated.Value(0)).current;
+    const searchBar = useRef<TextInput>() as MutableRefObject<TextInput>;
 
     function filter() {
         setFilteredRecipes(filterObject(recipeBook.recipes, (recipe: Recipe) => {
@@ -43,32 +47,71 @@ export default function Recipes({ route }: Route) {
 
     useEffect(filter, [recipeBook, viewFavorites, search, tags]);
 
-
-    function handleSearchChange(value: string) {
-        setSearch(value);
+    function toggleSearch() {
+        if (searching) {
+            setSearch("");
+            searchBar.current.blur();
+            SearchAnimaionBlur.start(() => setSearching(false));
+        }
+        else {
+            setSearching(true);
+            searchBar.current.focus();
+            SearchAnimationFocus.start();
+        }
     }
+
+    // Animates the focus of the search bar
+    const SearchAnimationFocus = Animated.timing(
+        animSearchBar,
+        {
+            toValue: 1,
+            duration: 500,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true
+        }
+    );
+
+    // Animates the blur of the search bar
+    const SearchAnimaionBlur = Animated.timing(
+        animSearchBar,
+        {
+            toValue: 0,
+            duration: 500,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true
+        }
+    );
 
 
     return (
         <View style={globalStyles.container}>
-            <Header value={viewFavorites} setValue={setViewFavorites}/>
+            <Header value={viewFavorites} setValue={setViewFavorites} toggleSearch={toggleSearch} />
 
-            <ScrollView>
-                <Text style={styles.title} variant="headlineLarge" >Recipes</Text>
-
-                <Searchbar style={styles.searchBar} placeholder="Search" onChangeText={handleSearchChange} value={search} />
-
-                <View>
-                    {
-                        Object.values(filteredRecipes).sort(sortAlpha).map((recipe, index) => {
-                            return (
-                                <RecipeWidget key={index} recipe={recipe} onPress={() => route.navigation.navigate("Recipe", {recipe: recipe})}/>
-                            )
-                        })
-                    }
-                </View>
-
-            </ScrollView>
+            <FlatList 
+                data={Object.values(filteredRecipes).sort(sortAlpha)}
+                renderItem={ ({item}) => {
+                    return <RecipeWidget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
+                }}
+                numColumns={1}
+                ListHeaderComponent={
+                    <View style={{overflow: "hidden" }}>
+                        <Animated.View style={{
+                                transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [0, -50]})}], 
+                                opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [1, 0]}),
+                                position: searching ? "absolute" : 'relative'}}
+                        >
+                            <Text style={styles.title} variant="headlineLarge">Recipes</Text>
+                        </Animated.View>
+                        <Animated.View style={{
+                            transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [55, 0]})}],
+                            opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [-0.5, 1]}),
+                            position: searching ? "relative" : "absolute"}} 
+                        >
+                            <Searchbar style={styles.searchBar} placeholder="Search Recipes" onChangeText={(value) => setSearch(value)} value={search} ref={searchBar} />
+                        </Animated.View>
+                    </View>
+                }
+            />
 
         </View>
     );
@@ -86,8 +129,9 @@ function createStyles() {
             margin: 10
         },
         searchBar: {
-            marginHorizontal: 10
-        }
+            margin: 10,
+            height: 40,
+        },
     });
 }
 

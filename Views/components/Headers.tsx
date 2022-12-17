@@ -9,7 +9,7 @@ import { RootStackParamList } from "../navigation";
 
 
 // TODO: documentation and fix statusBarHeight
-export function RecipesHeader({ value, setValue }: { value: boolean, setValue: Dispatch<SetStateAction<boolean>> }) {
+export function RecipesHeader({ value, setValue, toggleSearch }: { value: boolean, setValue: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction }) {
     const insets = useSafeAreaInsets();
 
     /**
@@ -52,7 +52,7 @@ export function RecipesHeader({ value, setValue }: { value: boolean, setValue: D
                 </View>
 
                 <Tooltip title="Search">
-                    <Appbar.Action icon={"card-search"} onPress={handleSearch} />
+                    <Appbar.Action icon={"card-search"} onPress={toggleSearch} />
                 </Tooltip>
             </View>
         </Appbar.Header>
