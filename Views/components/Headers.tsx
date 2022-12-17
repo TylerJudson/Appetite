@@ -8,8 +8,13 @@ import { useRecipeBookState } from "../../state";
 import { RootStackParamList } from "../navigation";
 
 
-// TODO: documentation and fix statusBarHeight
-export function RecipesHeader({ value, setValue, toggleSearch }: { value: boolean, setValue: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction }) {
+/**
+ * Displays a header at the top of the screen that showsa filter button, view all recipes and favorites button, and a search button
+ * @param viewFavorites whether or not the favorite segment is selected
+ * @param setViewFavorites the function to change viewFavorites
+ * @param toggleSearch the function to toggle the search bar
+ */
+export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }: { viewFavorites: boolean, setViewFavorites: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction }) {
     const insets = useSafeAreaInsets();
 
     /**
@@ -22,15 +27,15 @@ export function RecipesHeader({ value, setValue, toggleSearch }: { value: boolea
 
     return (
         <Appbar.Header elevated statusBarHeight={insets.top - 15}>
-            <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
                 <Tooltip title="Tags">
                     <Appbar.Action icon={"filter-variant"} onPress={handleSearch} />
                 </Tooltip>
 
                 <View style={{alignSelf: "center"}}>
                     <SegmentedButtons 
-                        value={value ? "Favorites" : "All Recipes"}
-                        onValueChange={(value) => {setValue(value === "Favorites")}}
+                        value={viewFavorites ? "Favorites" : "All Recipes"}
+                        onValueChange={(value) => {setViewFavorites(value === "Favorites")}}
                         density="small"
                         
                         buttons={[
@@ -163,21 +168,22 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
                         <Appbar.Action icon={recipe.favorited ? "heart" : "heart-outline"} onPress={handleHeart} />
                     </Tooltip>
 
-                    {/** The more button opens a menu with more options. // TODO: Something is wrong with this tooltip */}
+                    {/** The more button opens a menu with more options. */}
                     <Tooltip title="More">
+                        <View>
                         <Menu
                             visible={menuVisible}
                             onDismiss={toggleMenu}
                             anchor={<Appbar.Action icon="dots-vertical" onPress={toggleMenu} />}
                             anchorPosition="bottom"
                         >
-                            
                             <Menu.Item leadingIcon="lead-pencil"  onPress={handleEdit}  title="Edit" />
                             <Menu.Item leadingIcon="tag-multiple" onPress={handleTags}  title="Tags" />
                             <Menu.Item leadingIcon="share"        onPress={handleShare} title="Share" />
                             <Divider />
                             <Menu.Item leadingIcon="trash-can-outline" onPress={handleDelete} title="Delete" />
                         </Menu>
+                        </View>
                     </Tooltip>
                 </>
             }

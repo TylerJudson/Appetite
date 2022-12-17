@@ -17,7 +17,7 @@ const FeaturedRecipeStateContext = React.createContext({ featuredRecipe: State.f
 export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
     const [recipeBook, setRecipeBook] = useReducer(
-        (newValue: RecipeBook) => {
+        (currentValue: RecipeBook, newValue: RecipeBook) => {
             // newValue.saveData();
             return newValue.clone();
         },

@@ -8,6 +8,8 @@ import { RecipeWidget } from "./components/RecipeWidget";
 import { createGlobalStyles } from "./styles/globalStyles";
 import { filterObject } from "../utilities/filter";
 import { Recipe } from "../Models/Recipe";
+
+
 /**
  * Shows a list of the recipes for the user.
  * @param param0 the navigation so the user can navigate between screens
@@ -20,24 +22,33 @@ export default function Recipes({ route }: Route) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
-    const [viewFavorites, setViewFavorites] = useState(false); // TODO: Docume
-    const [tags, setTags] = useState([]);
-    const [search, setSearch] = useState("");
-    const [searching, setSearching] = useState(false);
-    const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes);
+    
+    const [viewFavorites, setViewFavorites] = useState(false); // Whether or not to show only the favorite recipes or not
+    const [tags, setTags] = useState([]); // The tags to filter the list of recipes by
+    const [search, setSearch] = useState(""); // The query in the search bar
+    const [searching, setSearching] = useState(false); // If the user is currently searching recipes
+    const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes); // The list of recipes to display
 
     const animSearchBar = useRef(new Animated.Value(0)).current;
     const searchBar = useRef<TextInput>() as MutableRefObject<TextInput>;
 
+    //#region BEHAVIOR
+
+    /**
+     * Filters the recipe list by favorite then tags then the search query
+     */
     function filter() {
         setFilteredRecipes(filterObject(recipeBook.recipes, (recipe: Recipe) => {
             let ret = true;
+            // If we want to show only the favorites
             if (viewFavorites) {
                 ret = recipe.favorited;
             }
+            // If there are any tags to display
             if (tags) {
-                // ret = ret && recipe.tags.includes(tags[0]) // TODO: fix
+                // ret = ret && recipe.tags.includes(tags[0]) // TODO: Implement this
             }
+            // If the search bar is not empty only filter the list by the query
             if (search != "") {
                 ret = ret && recipe.name.toUpperCase().indexOf(search.toUpperCase()) > -1;
             }
@@ -45,8 +56,12 @@ export default function Recipes({ route }: Route) {
         }));
     }
 
+    // Run filter whenever recipebook, viewFavorites, search, or tags change
     useEffect(filter, [recipeBook, viewFavorites, search, tags]);
 
+    /**
+     * Toggles the focus of the search bar
+     */
     function toggleSearch() {
         if (searching) {
             setSearch("");
@@ -81,11 +96,13 @@ export default function Recipes({ route }: Route) {
             useNativeDriver: true
         }
     );
+    
+    //#endregion
 
 
     return (
         <View style={globalStyles.container}>
-            <Header value={viewFavorites} setValue={setViewFavorites} toggleSearch={toggleSearch} />
+            <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} />
 
             <FlatList 
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
@@ -102,6 +119,7 @@ export default function Recipes({ route }: Route) {
                         >
                             <Text style={styles.title} variant="headlineLarge">Recipes</Text>
                         </Animated.View>
+
                         <Animated.View style={{
                             transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [55, 0]})}],
                             opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [-0.5, 1]}),
@@ -109,6 +127,7 @@ export default function Recipes({ route }: Route) {
                         >
                             <Searchbar style={styles.searchBar} placeholder="Search Recipes" onChangeText={(value) => setSearch(value)} value={search} ref={searchBar} />
                         </Animated.View>
+
                     </View>
                 }
             />
@@ -134,9 +153,6 @@ function createStyles() {
         },
     });
 }
-
-
-
 
 function sortAlpha(a: Recipe, b: Recipe) {
     if (a.name < b.name) return -1;

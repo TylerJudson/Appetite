@@ -16,16 +16,24 @@ export async function saveItem(key: string, value: any) {
 
 /**
  * Get's an item from asyncStorage with the designated key
- * @param key The key of the item to get i.e. SyncInformation
- * @returns The value (or an error) of the item from storage. If the key is incorrect (or there is nothing there) it returns undefined. The item will not be typed.
+ * @param key The key of the item to get i.e. RecipeBook
+ * @param ref The reference of the object to get from storage
+ * @returns A string of the result of the get i.e. "Success" or "Nothing Found" or "Error ..."
  */
-export async function getItem(key: string) {
+export async function getItem(key: string, ref: any) {
     try {
         const result = await AsyncStorage.getItem(key);
         if (result != null) {
-            return JSON.parse(result);
+            const parsedResult = JSON.parse(result);
+            Object.getOwnPropertyNames(ref).forEach(key => {
+                ref[key] = parsedResult[key];
+            })
+            return "Success";
+        }
+        else {
+            return "Nothing Found"
         }
     } catch (error) {
-        return `ERROR loading ${key}`;
+        return `Error loading ${key}`;
     }
 }

@@ -39,13 +39,7 @@ export class RecipeBook implements IRecipeBook {
      * Gets all of the data from async storage (key: RecipeBook)
      */
     async getData() {
-        await getItem("RecipeBook").then(
-            (value) => {
-                if (value) {
-                    this.recipes = value.recipes;
-                }
-            },
-        )
+        await getItem("RecipeBook", this);
     }
 
     /**

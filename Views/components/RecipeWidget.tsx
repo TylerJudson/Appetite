@@ -5,8 +5,9 @@ import { Recipe } from "../../Models/Recipe";
 
 
 /**
- * Displays the tags for a recipe. // TODO: Docs
- * @param tags The tags to display for the recipe
+ * Displays a clickable widget with the picture of a recipe on it.
+ * @param recipe The recipe to display on the widget
+ * @param onPress The function to call when the user presses on the widget
  */
 export function RecipeWidget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunction }) {
     const styles = createStyles();
