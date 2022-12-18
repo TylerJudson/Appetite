@@ -57,7 +57,7 @@ export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }:
                 </View>
 
                 <Tooltip title="Search">
-                    <Appbar.Action icon={"card-search"} onPress={toggleSearch} />
+                    <Appbar.Action icon={"magnify"} onPress={toggleSearch} />
                 </Tooltip>
             </View>
         </Appbar.Header>
