@@ -5,10 +5,11 @@ import { createGlobalStyles } from "./styles/globalStyles";
 import { ViewRecipeHeader as Header } from "./components/Headers";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./navigation";
-import { ViewRecipeTimes as Times } from "./components/ViewRecipeTimes";
-import { ViewRecipeDescription as Description } from "./components/ViewRecipeDescription";
-import { ViewRecipeTags as Tags } from "./components/ViewRecipeTags";
-import { ViewRecipeIngredients } from "./components/ViewRecipeIngredients";
+import { ViewRecipeTimes as Times } from "./components/ViewRecipeComponents/ViewRecipeTimes";
+import { ViewRecipeDescription as Description } from "./components/ViewRecipeComponents/ViewRecipeDescription";
+import { ViewRecipeTags as Tags } from "./components/ViewRecipeComponents/ViewRecipeTags";
+import { ViewRecipeIngredients } from "./components/ViewRecipeComponents/ViewRecipeIngredients";
+import { ViewRecipeInstructions } from "./components/ViewRecipeComponents/ViewRecipeInstructions";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'Recipe'>;
 /**
@@ -57,9 +58,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                     {
                         route.params.recipe.instructions.map((instruction, index) => {
                             return (
-                                <Text key={index} style={[styles.list, { backgroundColor: index % 2 ? colors.backdrop : undefined}]}>
-                                    {index + 1}. {instruction}
-                                </Text>
+                                <ViewRecipeInstructions instruction={instruction} index={index} key={index} />
                             )
                         })
                     }
