@@ -8,6 +8,7 @@ import { RootStackParamList } from "./navigation";
 import { ViewRecipeTimes as Times } from "./components/ViewRecipeTimes";
 import { ViewRecipeDescription as Description } from "./components/ViewRecipeDescription";
 import { ViewRecipeTags as Tags } from "./components/ViewRecipeTags";
+import { ViewRecipeIngredients } from "./components/ViewRecipeIngredients";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'Recipe'>;
 /**
@@ -40,18 +41,18 @@ export default function ViewRecipe({ navigation, route }: navProps) {
 
                 <Description description={route.params.recipe.description}/>
 
+                <View style={styles.ingredientContainer}>
                 <Text variant="titleLarge" style={styles.title} >Ingredients</Text>
-
                     {
                         route.params.recipe.ingredients.map((ingredient, index) => {
                             return (
-                                <Text key={index} style={[styles.list, { backgroundColor: index % 2 ? colors.backdrop : undefined}]}>
-                                    {ingredient}
-                                </Text>
+                                <ViewRecipeIngredients ingredient={ingredient} index={index} key={index}/>
                             )
                         })
                     }
+                </View>
 
+                <View style={styles.instructionContainer}>
                 <Text variant="titleLarge" style={styles.title} >Instructions</Text>
                     {
                         route.params.recipe.instructions.map((instruction, index) => {
@@ -62,6 +63,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                             )
                         })
                     }
+                </View>
 
                 <Tags tags={route.params.recipe.tags}/>
 
@@ -96,6 +98,12 @@ function createStyles() {
         },
         list: {
             padding: 10, paddingHorizontal: 15,
+        },
+        instructionContainer: {
+            paddingVertical: 10,
+        },
+        ingredientContainer: {
+            paddingVertical: 10,
         }
     });
 }
