@@ -16,7 +16,7 @@ const Cupcake = new Recipe("Vanilla Cupcakes",
     8, 22, false, ["Dessert", "Sweet", "Good", "Vanilla", "Cupcake"])
 
 const Pancakes = new Recipe("Old-Fashioned Pancakes",
-    ["1 1/2 cups all-purpose flour", "3 1/2 tsp backing powder", "1 tbsp white sugar", "1/4 tsp salt", "1 1/4 cups milk", "3 tablespoons butter, melted", "1 egg"],
+    ["1 1/2 cups all-purpose flour", "3 1/2 tsp baking powder", "1 tbsp white sugar", "1/4 tsp salt", "1 1/4 cups milk", "3 tablespoons butter, melted", "1 egg"],
     ["Sift flour, baking powder, sugar, and salt together in a large bowl. Make a well in the center and add milk, melted butter, and egg; mix until smooth.", "Heat a lightly oiled griddle or pan over medium-high heat. Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake; cook until bubbles form and the edges are dry, about 2 to 3 minutes. Flip and cook until browned on the other side. Repeat with remaining batter."],
     "I found this pancake recipe in my Grandma's recipe book. Judging from the weathered look of this recipe card, this was a family favorite.",
     5, 15, false, ["Breakfast", "Pancakes"])

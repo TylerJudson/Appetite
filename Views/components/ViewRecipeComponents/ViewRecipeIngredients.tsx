@@ -4,9 +4,9 @@ import { Button, Checkbox, Text, useTheme } from "react-native-paper";
 
 
 /**
- * Displays the prep, cook, and total time for a recipe. // TODO: docs
- * @param prepTime The time it takes to prep the recipe.
- * @param cookTime The time it takes to cook the recip.
+ * Displays an ingredient that the user can mark off
+ * @param ingredient The ingredient to display
+ * @param index The index the ingredient appears
  */
 export function ViewRecipeIngredients({ ingredient, index }: { ingredient: string, index: number }) {
     const styles = createStyles();
@@ -25,7 +25,7 @@ export function ViewRecipeIngredients({ ingredient, index }: { ingredient: strin
                 status={checked ? 'checked' : 'unchecked'}
                 onPress={toggleCheck}
             />
-            <Text key={index} style={{textDecorationLine: checked ? "line-through" : "none"}} variant="bodyMedium" >{ingredient}</Text>
+            <Text style={{textDecorationLine: checked ? "line-through" : "none", paddingRight: 30}} variant="bodyMedium" >{ingredient}</Text>
         </TouchableOpacity>
     );
 }
@@ -36,8 +36,6 @@ export function ViewRecipeIngredients({ ingredient, index }: { ingredient: strin
  * @returns The styles
  */
 function createStyles() {
-    const screenWidth = useWindowDimensions().width;
-
     return StyleSheet.create({
         container: {
             padding: 10,

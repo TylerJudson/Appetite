@@ -58,7 +58,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                     {
                         route.params.recipe.instructions.map((instruction, index) => {
                             return (
-                                <ViewRecipeInstructions instruction={instruction} index={index} key={index} />
+                                <ViewRecipeInstructions instruction={instruction} index={index} key={index} ingredients={route.params.recipe.ingredients}/>
                             )
                         })
                     }
