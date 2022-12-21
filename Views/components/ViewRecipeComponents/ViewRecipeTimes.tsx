@@ -36,12 +36,21 @@ export function ViewRecipeTimes({ prepTime, cookTime }: { prepTime?: number, coo
  */
 function createStyles() {
     const screenWidth = useWindowDimensions().width;
+    const screenIsBig = screenWidth > 700;
+
+    const shouldShrinkContainer = screenWidth < 400 || (700 < screenWidth && screenWidth < 850);
+    const shrink = screenWidth < 400 
+                    ? screenWidth / 400
+                    : shouldShrinkContainer
+                        ? (screenWidth - 450) / (800 - 400)
+                        : 1; 
 
     return StyleSheet.create({
         container: {
             flexDirection: "row", justifyContent: "space-around",
             maxWidth: 450,
-            transform: [{scale: screenWidth < 400 ? screenWidth / 400 : 1}]
+            transform: [{scale: shrink}],
+            marginVertical: screenIsBig ? 15 : undefined
         },
         button: {
             transform: [{scale: 0.9}]            

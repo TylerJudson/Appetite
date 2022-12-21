@@ -11,6 +11,10 @@ export function ViewRecipeDescription({ description }: { description?: string })
     const theme = useTheme();
     const colors = theme.colors;
     const styles = createStyles();
+
+    const screenWidth = useWindowDimensions().width;
+    const screenIsBig = screenWidth > 700;
+
     const [more, setMore] = useState(false);
 
     /** Toggles the more content */
@@ -26,7 +30,7 @@ export function ViewRecipeDescription({ description }: { description?: string })
     return (
         <View style={styles.container}>
             <Text variant="titleMedium">Description</Text>
-            <Text style={{paddingHorizontal: 10}} variant="bodyMedium" numberOfLines={more ? undefined : 1}>{description}</Text>
+            <Text style={{paddingHorizontal: 10}} variant="bodyMedium" numberOfLines={more ? undefined : screenIsBig ? 5 : 1}>{description}</Text>
             <Text style={{paddingHorizontal: 10, color: colors.secondary}} variant="bodySmall" onPress={toggleMore}>{more ? "Show Less ▲" : "Show More ▼"}</Text>
         </View>
     );

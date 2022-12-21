@@ -20,7 +20,7 @@ export function ViewRecipeIngredients({ ingredient, index }: { ingredient: strin
     }
 
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: index % 2 ? colors.backdrop : undefined }]} onPress={toggleCheck}>
+        <TouchableOpacity style={[styles.container, { backgroundColor: index % 2 ? colors.surfaceVariant : undefined }]} onPress={toggleCheck}>
             <Checkbox.Android
                 status={checked ? 'checked' : 'unchecked'}
                 onPress={toggleCheck}

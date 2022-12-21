@@ -69,7 +69,7 @@ export const darkTheme = {
         "onBackground": "rgb(229, 225, 230)",
         "surface": "rgb(27, 27, 31)",
         "onSurface": "rgb(229, 225, 230)",
-        "surfaceVariant": "rgb(70, 70, 79)",
+        "surfaceVariant": "rgb(45, 45, 54)",
         "onSurfaceVariant": "rgb(199, 197, 208)",
         "outline": "rgb(145, 144, 154)",
         "outlineVariant": "rgb(70, 70, 79)",

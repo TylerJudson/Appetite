@@ -114,7 +114,7 @@ export function ViewRecipeInstructions({ instruction, index, ingredients }: { in
 
 
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: index % 2 ? colors.backdrop : undefined}]} onPress={toggleCheck}>
+        <TouchableOpacity style={[styles.container, { backgroundColor: index % 2 ? colors.surfaceVariant : undefined}]} onPress={toggleCheck}>
             <Text style={{ textDecorationLine: checked ? "line-through" : "none", textAlignVertical: 'center' }} variant="bodyLarge" >
                 {index + 1}. {displayInstruction()}
             </Text>
