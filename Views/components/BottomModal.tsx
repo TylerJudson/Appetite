@@ -11,6 +11,7 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
     const styles = createStyles();
 
     const [height, setHeight] = useState(0);
+    const [backDropVisible, setBackDropVisible] = useState(true);
 
     const animModal = useRef(new Animated.Value(0)).current;
     const modalRef = useRef<View>() as MutableRefObject<View>;
@@ -20,37 +21,40 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
             animModal,
             {
                 toValue: 0,
-                duration: 500,
+                duration: 250,
                 useNativeDriver: true
             }
-        ).start(() => setVisible(false));
+            ).start(() => {setVisible(false); setBackDropVisible(true); });
+        setBackDropVisible(false);
     }
 
     useEffect(() => {
-        if (visible) {
+        if (visible && backDropVisible) {
+            setBackDropVisible(true);
             Animated.timing(
                 animModal,
                 {
                     toValue: 1,
-                    duration: 500,
+                    duration: 250,
                     useNativeDriver: true
                 }
                 ).start()
         }
     })
 
-
+    // TODO: fix flash error...
+    
     return (
         <Portal>
             {
                 visible &&
-                <Pressable style={styles.container} onPress={hideModal}>
-                    <Animated.View ref={modalRef} 
+                <Pressable style={[styles.container, {backgroundColor: backDropVisible ? "rgba(0, 0, 0, 0.25)" : "rgba(0, 0, 0, 0)"}]} onPress={hideModal}>
+                    <Animated.View
                             onLayout={() => {modalRef.current.measure((_x, _y, _w, height) => {setHeight(height)})}} 
-                            style={[styles.contentContainer, {transform: [{translateY: animModal.interpolate({inputRange: [0, 1], outputRange: [height, 0]})}]}]} 
+                            style={[styles.contentContainer, {transform: [{translateY: animModal.interpolate({inputRange: [0, 1], outputRange: [height + 50, 0]})}]}]} 
                     >
-                        <Pressable style={{flex: 1}}>
-
+                        <Pressable ref={modalRef}>
+                            {children}
                         </Pressable>
                     </Animated.View>
                 </Pressable>
@@ -69,13 +73,13 @@ function createStyles() {
 
     return StyleSheet.create({
         container: {
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
             flex: 1,
             justifyContent: "flex-end"
         },
         contentContainer: {
             backgroundColor: "#333", // TODO: Dark and light mode
             paddingBottom: insets.bottom,
+            
         }
     });
 }

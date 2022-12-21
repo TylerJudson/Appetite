@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Button, Text } from "react-native-paper";
+import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Button, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Recipe } from "../../Models/Recipe";
 import { useRecipeBookState } from "../../state";
@@ -160,6 +160,17 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
             setSnackBar({ visible: true, message: delteRecipeResult.message })
         }
     }
+    
+
+
+    // TODO: DOcs
+    function handleCreatePost() {
+        console.log("Not yet implemented");
+    }
+    function handleSharePdf() {
+        console.log("Not yet implemented");
+    }
+
     /** Toggles the menu */
     function toggleMenu() {
         setMenuVisible(!menuVisible);
@@ -215,7 +226,14 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
             }
 
             <BottomModal visible={shareModalVisible} setVisible={setShareModalVisible}>
-                
+                <View style={{ padding: 10 }}>
+                    <TouchableRipple onPress={handleCreatePost}>
+                        <Menu.Item leadingIcon="post" title="Create a Post" />
+                    </TouchableRipple>
+                    <TouchableRipple onPress={handleSharePdf} >
+                        <Menu.Item leadingIcon="file" title="Share Pdf" />
+                    </TouchableRipple>
+                </View>
             </BottomModal>
         </Appbar.Header>
     );
