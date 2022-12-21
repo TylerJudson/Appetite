@@ -1,11 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { View } from "react-native";
-import { Appbar, Divider, Menu, Tooltip, SegmentedButtons } from "react-native-paper";
+import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Button, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Recipe } from "../../Models/Recipe";
 import { useRecipeBookState } from "../../state";
 import { RootStackParamList } from "../navigation";
+import { BottomModal } from "./BottomModal";
 
 
 /**
@@ -16,6 +17,7 @@ import { RootStackParamList } from "../navigation";
  */
 export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }: { viewFavorites: boolean, setViewFavorites: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction }) {
     const insets = useSafeAreaInsets();
+
 
     /**
       Handles the action of pressing the search button
@@ -60,6 +62,8 @@ export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }:
                     <Appbar.Action icon={"magnify"} onPress={toggleSearch} />
                 </Tooltip>
             </View>
+
+
         </Appbar.Header>
     )
 }
@@ -88,6 +92,7 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     /** Whether the menu is visible or not. */
     const [menuVisible, setMenuVisible] = useState(false);
     const { recipeBook, setRecipeBook } = useRecipeBookState();
+    const [shareModalVisible, setShareModalVisible] = useState(false);
 
     const insets = useSafeAreaInsets();
 
@@ -98,7 +103,8 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     }
     /** Handles the action of sharing the recipe */
     function handleShare() {
-        console.log("Not yet implemented");
+        toggleMenu();
+        setShareModalVisible(true);
     }
     /** Handles the action of saving the recipe */
     function handleSave() {
@@ -124,7 +130,8 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     }
     /** Handles the action of editting the recipe */
     function handleEdit() {
-        console.log("Not yet implemented");
+        toggleMenu();
+        navigation.navigate("EditCreate", { recipe: recipe })
     }
     /** Handles the action of adding and viewing tags */
     function handleTags() {
@@ -207,7 +214,52 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
                 </>
             }
 
-
+            <BottomModal visible={shareModalVisible} setVisible={setShareModalVisible}>
+                
+            </BottomModal>
         </Appbar.Header>
     );
+}
+
+
+
+
+type anyNavProps = NativeStackNavigationProp<RootStackParamList, any>;
+
+
+/**
+ * Creates a header with a simple back button and an optional title and button
+ * @param navigation the global navigation object that allows the header to navigate
+ * @param title the optional title to display in the center
+ * @param button the option button to show in the right
+ * @param leftButton the button to show on the left omit label to see the back chevron
+ */
+export function BackHeader({ navigation, title, button, leftButton }: { navigation: anyNavProps, title?: string, button?: { label: string, onPress: VoidFunction }, leftButton: { label?: string, onPress: VoidFunction }}) {
+    const insets = useSafeAreaInsets();
+
+    return (
+    <Appbar.Header statusBarHeight={insets.top - 35}>
+        <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", top: 10 }}>
+
+        {
+            leftButton.label
+            ? <Button onPress={leftButton.onPress}>{leftButton.label}</Button>
+            
+            :   <Tooltip title="Back">
+                    <Appbar.BackAction onPress={leftButton.onPress} style={{top: 3}}/>
+                </Tooltip>
+        }       
+        {
+            title &&
+            <Text variant="titleMedium" style={{bottom: 8}}>{title}</Text>
+        }
+
+        {
+            button &&
+            <Button onPress={button.onPress}>{button.label}</Button>
+
+        }
+        </View>
+    </Appbar.Header>
+    )
 }

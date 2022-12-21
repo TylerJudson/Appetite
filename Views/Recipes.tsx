@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { View, ScrollView, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
-import { useTheme, Searchbar, Text, Button } from "react-native-paper";
+import { useTheme, Searchbar, Text, Button, FAB } from "react-native-paper";
 import { Route } from "./navigation";
 import { RecipesHeader as Header } from "./components/Headers";
 import { useRecipeBookState } from "../state";
@@ -96,7 +96,7 @@ export default function Recipes({ route }: Route) {
             useNativeDriver: true
         }
     );
-    
+
     //#endregion
 
 
@@ -132,6 +132,15 @@ export default function Recipes({ route }: Route) {
                 }
             />
 
+            <FAB
+                icon="plus"
+                variant="surface"
+                style={styles.fab}
+                size="small"
+                visible={true}
+                onPress={() => route.navigation.navigate("EditCreate", {})}
+            />
+
         </View>
     );
 }
@@ -150,6 +159,12 @@ function createStyles() {
         searchBar: {
             margin: 10,
             height: 40,
+        },
+        fab: {
+            position: 'absolute',
+            margin: 16,
+            right: 0,
+            bottom: 0,
         },
     });
 }

@@ -6,6 +6,7 @@ import { BottomNavigation, Snackbar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Recipe } from '../../Models/Recipe';
 import { useRecipeBookState } from '../../state';
+import EditCreateRecipe from '../EditCreateRecipe';
 import FeaturedRecipe from '../FeaturedRecipe';
 import Recipes from '../Recipes';
 import Settings from '../Settings';
@@ -27,8 +28,9 @@ export type SnackBarData = {
 
 
 export type RootStackParamList = {
-	Appetite: { snackBar?: SnackBarData }
+	Appetite: { snackBar?: SnackBarData };
 	Recipe: { recipe: Recipe, };
+	EditCreate: { recipe?: Recipe };
 };
 
 
@@ -44,6 +46,7 @@ export default function Navigation() {
 			<Stack.Navigator initialRouteName='Appetite' screenOptions={{ headerShown: false }}>
 				<Stack.Screen name="Appetite" component={Appetite} />
 				<Stack.Screen name="Recipe" component={ViewRecipe} />
+				<Stack.Screen name="EditCreate" component={EditCreateRecipe} options={{gestureEnabled: false}}/>
 			</Stack.Navigator>
       </NavigationContainer>
   );
