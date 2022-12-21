@@ -69,9 +69,9 @@ export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }:
 type navProps = NativeStackNavigationProp<RootStackParamList, 'Recipe'>;
 interface ViewRecipeHeader {
     /** The navigation for the screen */
-    navigation: navProps
+    navigation: navProps;
     /** The recipe (so the user can save or send it.) */
-    recipe: Recipe
+    recipe: Recipe;
     /** Gives the header the ability to set the state of the snackbar */
     setSnackBar: React.Dispatch<React.SetStateAction<{
         visible: boolean;
@@ -114,7 +114,7 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
             
             // Navigate to the new recipe
             navigation.navigate("Recipe", { recipe: clone });
-            setSnackBar({ visible: true, message: "Recipe Saved." })
+            setSnackBar({ visible: true, message: "Recipe Saved" })
 
         } 
         else {
@@ -132,7 +132,26 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     }
     /** Handles the action of deleteing the recipe */
     function handleDelete() {
-        console.log("Not yet implemented");
+        const delteRecipeResult = recipeBook.deleteRecipe(recipe);
+        if (delteRecipeResult.success) {
+            // Save and update the state
+            setRecipeBook(recipeBook);
+
+            // Go back to the Home page.
+            navigation.navigate( "Appetite", { snackBar: {
+                visible: true,
+                message: recipe.name + " Deleted",
+                action: {
+                    label: "undo",
+                    onPressCode: "undoDelete",
+                    recipe: recipe
+                }
+            }}
+            );
+        }
+        else {
+            setSnackBar({ visible: true, message: delteRecipeResult.message })
+        }
     }
     /** Toggles the menu */
     function toggleMenu() {

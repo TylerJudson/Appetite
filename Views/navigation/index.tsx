@@ -1,18 +1,34 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { BottomNavigation, useTheme } from 'react-native-paper';
+import { useEffect, useState } from 'react';
+import { BottomNavigation, Snackbar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Recipe } from '../../Models/Recipe';
+import { useRecipeBookState } from '../../state';
 import FeaturedRecipe from '../FeaturedRecipe';
 import Recipes from '../Recipes';
 import Settings from '../Settings';
 import Social from '../Social';
 import ViewRecipe from '../ViewRecipe';
 
+
+
+export type SnackBarData = {
+		visible: boolean;
+		message?: string;
+		action?: {
+			label: string;
+			onPressCode: "undoDelete";
+			recipe?: Recipe 
+		}
+}
+
+
+
 export type RootStackParamList = {
-	Appetite: undefined, // undefined because we aren't passing any params.
-	Recipe: { recipe: Recipe };
+	Appetite: { snackBar?: SnackBarData }
+	Recipe: { recipe: Recipe, };
 };
 
 
@@ -41,7 +57,7 @@ export type Route = {
 		title: string;
 		focusedIcon: string;
 		unfocusedIcon: string;
-		navigation: NativeStackNavigationProp<RootStackParamList, "Appetite", undefined>
+		navigation: NativeStackNavigationProp<RootStackParamList, "Appetite", undefined>;
 	}
 };
 
@@ -51,15 +67,36 @@ export type Route = {
  * @param param0 navigation and route for the screen
  */
 function Appetite({navigation, route}: Props) {
-	const [index, setIndex] = React.useState(0); // The current tab index
 	const { colors } = useTheme();
+	const { recipeBook, setRecipeBook } = useRecipeBookState();
+
+	const [index, setIndex] = React.useState(0); // The current tab index
+	const [snackBar, setSnackBar] = useState<SnackBarData>({
+		visible: false,
+		message: "",
+		action: undefined
+	});
+
 	
+	useEffect(() =>{
+		if (route.params) {
+			if (route.params.snackBar) {
+				setSnackBar({
+					visible: route.params.snackBar.visible,
+					message: route.params.snackBar.message ? route.params.snackBar.message : "",
+					action: route.params.snackBar.action ? route.params.snackBar.action : undefined
+				})
+			}
+		}
+	}, [route.params])
+	
+
 	// This creates the different tabs on the bottom
 	const [routes] = React.useState([
-		{ key: 'recipes', title: 'Recipes', focusedIcon: 'book', unfocusedIcon: "book-outline", navigation: navigation },
-		{ key: 'featuredRecipe', title: 'Featured', focusedIcon: 'silverware-fork', navigation: navigation },
-		{ key: 'social', title: 'Social', focusedIcon: 'message', unfocusedIcon: "message-outline", navigation: navigation },
-		{ key: 'settings', title: 'Settings', focusedIcon: 'dots-horizontal', navigation: navigation },
+		{ key: 'recipes', 			title: 'Recipes', 	focusedIcon: 'book', unfocusedIcon: "book-outline", 		navigation: navigation },
+		{ key: 'featuredRecipe', 	title: 'Featured', 	focusedIcon: 'silverware-fork', 							navigation: navigation },
+		{ key: 'social', 			title: 'Social', 	focusedIcon: 'message', unfocusedIcon: "message-outline", 	navigation: navigation },
+		{ key: 'settings', 			title: 'Settings', 	focusedIcon: 'dots-horizontal', 							navigation: navigation },
 	]);
 
 	// This is all the different screens that get displayed with the designated tab
@@ -79,6 +116,33 @@ function Appetite({navigation, route}: Props) {
 				shifting={true}
 				sceneAnimationType="opacity"
 			/>
+
+			<Snackbar
+				visible={snackBar.visible}
+				onDismiss={() => { setSnackBar({ ...snackBar, visible: false }) }}
+				duration={3000}
+				action={ snackBar.action ? {
+					label: snackBar.action?.label,
+					onPress: () => {
+						if (snackBar.action?.onPressCode === "undoDelete" && snackBar.action.recipe) {
+							// Try to re-add the recipe to the recipe book
+							const addRecipeResult = recipeBook.addRecipe(snackBar.action.recipe);
+							if (addRecipeResult.success) {
+								// Save and update the state
+								setRecipeBook(recipeBook);
+
+								// Navigate to the new recipe
+								navigation.navigate("Recipe", { recipe: snackBar.action.recipe });
+							}
+							else {
+								setSnackBar({ visible: true, message: addRecipeResult.message })
+							}
+						}
+					}
+				} : undefined}
+			>
+				{snackBar.message}
+			</Snackbar>
 		</SafeAreaView>
 	)
 }
