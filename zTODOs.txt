@@ -1,0 +1,38 @@
+
+|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
+|   _______________     ___________        ___________        ___________             |
+|   |             |   /             \     |           \     /             \    __     |
+|   ‾‾‾‾‾|   |‾‾‾‾‾   |    _____    |     |    ____    \    |    _____    |   |  |    |
+|        |   |        |   |     |   |     |   |    \    |   |   |     |   |    ‾‾     |
+|        |   |        |   |     |   | ___ |   |     |   |   |   |     |   |           |
+|        |   |        |   |     |   |     |   |     /   |   |   |     |   |    __     |
+|        |   |        |    ‾‾‾‾‾    |     |    ‾‾‾‾‾   /    |    ‾‾‾‾‾    |   |  |    |
+|        |   |        \             /     |           /     \             /    ‾‾     |
+|         ‾‾‾           ‾‾‾‾‾‾‾‾‾‾‾        ‾‾‾‾‾‾‾‾‾‾         ‾‾‾‾‾‾‾‾‾‾‾             |
+|_____________________________________________________________________________________|
+
+
+General
+ - MORE RECIPES!!!
+
+UI
+ - tags modal and filtering
+ - Edit/Create screen
+ - Featured Recipe screen
+ - Settings screen
+ - Tags from the menu?
+ - Social Screen
+
+Design
+ - App icon
+ - Splash screen
+ - Colors
+ - Default Image
+ - Remaining Icons
+
+Backend
+ - Accounts
+ - Sync to database
+    - Sync recipeBook
+    - Sync featured
+ - Add Friends and feeds

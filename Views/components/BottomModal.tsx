@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export function BottomModal({ visible, setVisible, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, children: React.ReactNode }) {
     const styles = createStyles();
 
-    const [height, setHeight] = useState(0);
+    const [height, setHeight] = useState(1000);
     const [backDropVisible, setBackDropVisible] = useState(true);
 
     const animModal = useRef(new Animated.Value(0)).current;
@@ -42,8 +42,6 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
         }
     })
 
-    // TODO: fix flash error...
-    
     return (
         <Portal>
             {
