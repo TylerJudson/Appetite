@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-import { ViewRecipeInstructionIngredientWord as SpecialWord} from "./ViewRecipeInstructionIngredientWord";
+import { InstructionIngredientWord as SpecialWord} from "./InstructionIngredientWord";
 
 
 const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespoon", "cups", "and", "into", "cup"]
@@ -12,7 +12,7 @@ const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespo
  * @param index The index the instruction appears.
  * @param ingredients All the ingredients in the recipe, so the instruction can highlight smilar words.
  */
-export function ViewRecipeInstructions({ instruction, index, ingredients }: { instruction: string, index: number, ingredients: string[] }) {
+export function Instructions({ instruction, index, ingredients }: { instruction: string, index: number, ingredients: string[] }) {
     const styles = createStyles();
     const theme = useTheme();
     const colors = theme.colors;

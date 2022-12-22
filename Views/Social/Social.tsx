@@ -3,10 +3,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { View } from "react-native";
 import { Text, useTheme, Button } from "react-native-paper";
-import { Recipe } from "../Models/Recipe";
-import { RecipeBook } from "../Models/RecipeBook";
-import { useRecipeBookState } from "../state";
-import { RootStackParamList, Route } from "./navigation";
+import { Recipe } from "../../Models/Recipe";
+import { RecipeBook } from "../../Models/RecipeBook";
+import { useRecipeBookState } from "../../state";
+import { RootStackParamList, Route } from "../navigation";
+import { createGlobalStyles } from "../styles/globalStyles";
 
 
 const Cupcake = new Recipe("Vanilla Cupcakes",
@@ -30,12 +31,13 @@ type navProps = NativeStackScreenProps<RootStackParamList, 'Appetite'>;
 export default function Social({ route }: Route) {
     const theme = useTheme();
     const colors = theme.colors;
+    const globalStyles = createGlobalStyles();
 
 
     const { recipeBook, setRecipeBook } = useRecipeBookState();
 
     return (
-        <View>
+        <View style={globalStyles.screenContainer}>
             <Text variant="headlineLarge" >Social</Text>
             <Button onPress={() => {
                 recipeBook.addRecipe(Cupcake);

@@ -1,5 +1,7 @@
+import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
-import { useFeaturedRecipeState } from "../state";
+import { useFeaturedRecipeState } from "../../state";
+import { createGlobalStyles } from "../styles/globalStyles";
 
 
 /**
@@ -9,9 +11,12 @@ export default function Settings() {
     const theme = useTheme();
     const colors = theme.colors;
     const { featuredRecipe, setFeaturedRecipe } = useFeaturedRecipeState();
+    const globalStyles = createGlobalStyles();
 
     return (
-        <Text variant="headlineLarge" >Settings</Text>
+        <View style={globalStyles.screenContainer}>
+            <Text variant="headlineLarge" >Settings</Text>
+        </View>
     );
 }
 

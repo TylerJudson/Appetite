@@ -1,14 +1,13 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-import { View, ScrollView, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
-import { useTheme, Searchbar, Text, Button, FAB, Menu, TouchableRipple } from "react-native-paper";
-import { Route } from "./navigation";
-import { RecipesHeader as Header } from "./components/Headers";
-import { useRecipeBookState } from "../state";
-import { RecipeWidget } from "./components/RecipeWidget";
-import { createGlobalStyles } from "./styles/globalStyles";
-import { filterObject } from "../utilities/filter";
-import { Recipe } from "../Models/Recipe";
-import { BottomModal } from "./components/BottomModal";
+import { View, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
+import { useTheme, Searchbar, Text, FAB } from "react-native-paper";
+import { Route } from "../navigation";
+import { Header } from "./Components/Header";
+import { useRecipeBookState } from "../../state";
+import { Widget } from "./Components/Widget";
+import { createGlobalStyles } from "../styles/globalStyles";
+import { filterObject } from "../../utilities/filter";
+import { Recipe } from "../../Models/Recipe";
 
 
 /**
@@ -108,7 +107,7 @@ export default function Recipes({ route }: Route) {
             <FlatList 
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
                 renderItem={ ({item}) => {
-                    return <RecipeWidget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
+                    return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
                 }}
                 numColumns={1}
                 ListHeaderComponent={

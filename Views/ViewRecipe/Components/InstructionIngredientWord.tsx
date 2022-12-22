@@ -8,7 +8,7 @@ import { Divider, Surface, Text, useTheme } from "react-native-paper";
  * @param ingredients the ingredients to display above the highlighted word
  * @param children the word to highlight
  */
-export function ViewRecipeInstructionIngredientWord({ ingredients, children }: { ingredients: string[], children: string }) {
+export function InstructionIngredientWord({ ingredients, children }: { ingredients: string[], children: string }) {
     return (
         <IngredientPopUp anchor={children}>
             {

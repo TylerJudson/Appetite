@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, useWindowDimensions, TouchableOpacity } from "react-native";
-import { Button, Checkbox, Text, useTheme } from "react-native-paper";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Checkbox, Text, useTheme } from "react-native-paper";
 
 
 /**
@@ -8,7 +8,7 @@ import { Button, Checkbox, Text, useTheme } from "react-native-paper";
  * @param ingredient The ingredient to display
  * @param index The index the ingredient appears
  */
-export function ViewRecipeIngredients({ ingredient, index }: { ingredient: string, index: number }) {
+export function Ingredients({ ingredient, index }: { ingredient: string, index: number }) {
     const styles = createStyles();
     const theme = useTheme();
     const colors = theme.colors;

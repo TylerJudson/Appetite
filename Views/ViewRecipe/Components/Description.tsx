@@ -7,7 +7,7 @@ import { Text, useTheme } from "react-native-paper";
  * Creates a description with a show more button
  * @param description The description of the recipe
  */
-export function ViewRecipeDescription({ description }: { description?: string }) {
+export function Description({ description }: { description?: string }) {
     const theme = useTheme();
     const colors = theme.colors;
     const styles = createStyles();

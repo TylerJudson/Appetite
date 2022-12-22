@@ -7,7 +7,7 @@ import { Chip, Text } from "react-native-paper";
  * Displays the tags for a recipe.
  * @param tags The tags to display for the recipe
  */
-export function ViewRecipeTags({ tags }: { tags: string[] }) {
+export function Tags({ tags }: { tags: string[] }) {
     const styles = createStyles();
 
     // If the tags are empty don't display anything
@@ -44,7 +44,7 @@ function createStyles() {
             marginTop: 5, marginBottom: 30
         },
         tag: {
-            flex: 1,
+            flex: 1, // TODO: fix on web
             margin: 3
         }
     });

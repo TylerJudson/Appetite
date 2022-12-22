@@ -6,12 +6,12 @@ import { BottomNavigation, Snackbar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Recipe } from '../../Models/Recipe';
 import { useRecipeBookState } from '../../state';
-import EditCreateRecipe from '../EditCreateRecipe';
-import FeaturedRecipe from '../FeaturedRecipe';
-import Recipes from '../Recipes';
-import Settings from '../Settings';
-import Social from '../Social';
-import ViewRecipe from '../ViewRecipe';
+import EditCreateRecipe from '../EditCreateRecipe/EditCreateRecipe';
+import FeaturedRecipe from '../FeaturedRecipe/FeaturedRecipe';
+import Recipes from '../Recipes/Recipes';
+import Settings from '../Settings/Settings';
+import Social from '../Social/Social';
+import ViewRecipe from '../ViewRecipe/ViewRecipe';
 
 
 

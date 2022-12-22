@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Text, Surface, IconButton } from "react-native-paper";
-import { Recipe } from "../../Models/Recipe";
+import { Recipe } from "../../../Models/Recipe";
 
 
 /**
@@ -9,7 +9,7 @@ import { Recipe } from "../../Models/Recipe";
  * @param recipe The recipe to display on the widget
  * @param onPress The function to call when the user presses on the widget
  */
-export function RecipeWidget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunction }) {
+export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunction }) {
     const styles = createStyles();
 
     return (

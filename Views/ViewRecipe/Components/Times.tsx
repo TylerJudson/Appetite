@@ -8,7 +8,7 @@ import { Button, Text } from "react-native-paper";
  * @param prepTime The time it takes to prep the recipe.
  * @param cookTime The time it takes to cook the recip.
  */
-export function ViewRecipeTimes({ prepTime, cookTime }: { prepTime?: number, cookTime?: number }) {
+export function Times({ prepTime, cookTime }: { prepTime?: number, cookTime?: number }) {
     const styles = createStyles();
 
     return (
