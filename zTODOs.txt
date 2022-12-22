@@ -29,7 +29,7 @@ Design
  - Colors
  - Default Image
  - Remaining Icons
-
+ 
 Backend
  - Accounts
  - Sync to database

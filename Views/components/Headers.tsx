@@ -1,12 +1,14 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import { Appbar, Divider, Menu, Tooltip, SegmentedButtons, Button, Text, TouchableRipple } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Recipe } from "../../Models/Recipe";
 import { useRecipeBookState } from "../../state";
 import { RootStackParamList } from "../navigation";
 import { BottomModal } from "./BottomModal";
+import { Tags } from "./Tags";
+import { ShareRecipe } from "./ViewRecipeComponents/ShareRecipe";
 
 
 /**
@@ -15,15 +17,25 @@ import { BottomModal } from "./BottomModal";
  * @param setViewFavorites the function to change viewFavorites
  * @param toggleSearch the function to toggle the search bar
  */
-export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }: { viewFavorites: boolean, setViewFavorites: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction }) {
+export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch, tags, setTags }: { viewFavorites: boolean, setViewFavorites: Dispatch<SetStateAction<boolean>>, toggleSearch: VoidFunction, tags: string[], setTags: Dispatch<SetStateAction<string[]>> }) {
     const insets = useSafeAreaInsets();
 
+    const screenWidth = useWindowDimensions().width;
+    const [tagsModalVisible, setTagsModalVisible] = useState(false);
+    const [tagsMenuVisible, setTagsMenuVisible] = useState(false);
 
     /**
-      Handles the action of pressing the search button
+      Handles the action of pressing the tags button
      */
-    function handleSearch() {
-        console.log("Not yet implemented");
+    function handleTags() {
+        // If the screen is large show the menu
+        if (screenWidth > 700) {
+            setTagsMenuVisible(true);
+        } 
+        // Else show the modal
+        else {
+            setTagsModalVisible(true);
+        }
     }
 
 
@@ -31,7 +43,10 @@ export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }:
         <Appbar.Header elevated statusBarHeight={insets.top - 15}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
                 <Tooltip title="Tags">
-                    <Appbar.Action icon={"filter-variant"} onPress={handleSearch} />
+                    <Menu anchor={<Appbar.Action icon={"filter-variant"} onPress={handleTags} />} visible={tagsMenuVisible} onDismiss={() => setTagsMenuVisible(false)} anchorPosition="bottom">
+                        <Tags tags={tags} setTags={setTags} />
+                    </Menu>
+                    
                 </Tooltip>
 
                 <View style={{alignSelf: "center"}}>
@@ -63,6 +78,10 @@ export function RecipesHeader({ viewFavorites, setViewFavorites, toggleSearch }:
                 </Tooltip>
             </View>
 
+            <BottomModal visible={tagsModalVisible} setVisible={setTagsModalVisible}>
+                <Tags tags={tags} setTags={setTags} />
+            </BottomModal>
+
 
         </Appbar.Header>
     )
@@ -93,7 +112,9 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     const [menuVisible, setMenuVisible] = useState(false);
     const { recipeBook, setRecipeBook } = useRecipeBookState();
     const [shareModalVisible, setShareModalVisible] = useState(false);
+    const [shareMenuVisible, setShareMenuVisible] = useState(false);
 
+    const screenWidth = useWindowDimensions().width;
     const insets = useSafeAreaInsets();
 
     /** Handles the action of pressing the heart */
@@ -103,8 +124,13 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     }
     /** Handles the action of sharing the recipe */
     function handleShare() {
-        toggleMenu();
-        setShareModalVisible(true);
+        if (screenWidth > 700) {
+            setShareMenuVisible(true);
+        }
+        else {
+            toggleMenu();
+            setShareModalVisible(true);
+        }
     }
     /** Handles the action of saving the recipe */
     function handleSave() {
@@ -163,14 +189,7 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
     
 
 
-    // TODO: DOcs
-    function handleCreatePost() {
-        console.log("Not yet implemented");
-    }
-    function handleSharePdf() {
-        console.log("Not yet implemented");
-    }
-
+   
     /** Toggles the menu */
     function toggleMenu() {
         setMenuVisible(!menuVisible);
@@ -216,7 +235,11 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
                         >
                             <Menu.Item leadingIcon="lead-pencil"  onPress={handleEdit}  title="Edit" />
                             <Menu.Item leadingIcon="tag-multiple" onPress={handleTags}  title="Tags" />
-                            <Menu.Item leadingIcon="share"        onPress={handleShare} title="Share" />
+
+                            <Menu anchor={<Menu.Item leadingIcon="share" onPress={handleShare} title="Share" />} visible={shareMenuVisible} onDismiss={() => setShareMenuVisible(false)} anchorPosition="bottom">
+                                <ShareRecipe recipe={recipe} />
+                            </Menu>
+                            
                             <Divider />
                             <Menu.Item leadingIcon="trash-can-outline" onPress={handleDelete} title="Delete" />
                         </Menu>
@@ -226,14 +249,7 @@ export function ViewRecipeHeader({ navigation, recipe, setSnackBar }: ViewRecipe
             }
 
             <BottomModal visible={shareModalVisible} setVisible={setShareModalVisible}>
-                <View style={{ padding: 10 }}>
-                    <TouchableRipple onPress={handleCreatePost}>
-                        <Menu.Item leadingIcon="post" title="Create a Post" />
-                    </TouchableRipple>
-                    <TouchableRipple onPress={handleSharePdf} >
-                        <Menu.Item leadingIcon="file" title="Share Pdf" />
-                    </TouchableRipple>
-                </View>
+                <ShareRecipe recipe={recipe} />
             </BottomModal>
         </Appbar.Header>
     );

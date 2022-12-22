@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { View, ScrollView, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
-import { useTheme, Searchbar, Text, Button, FAB } from "react-native-paper";
+import { useTheme, Searchbar, Text, Button, FAB, Menu, TouchableRipple } from "react-native-paper";
 import { Route } from "./navigation";
 import { RecipesHeader as Header } from "./components/Headers";
 import { useRecipeBookState } from "../state";
@@ -8,6 +8,7 @@ import { RecipeWidget } from "./components/RecipeWidget";
 import { createGlobalStyles } from "./styles/globalStyles";
 import { filterObject } from "../utilities/filter";
 import { Recipe } from "../Models/Recipe";
+import { BottomModal } from "./components/BottomModal";
 
 
 /**
@@ -24,7 +25,7 @@ export default function Recipes({ route }: Route) {
 
     
     const [viewFavorites, setViewFavorites] = useState(false); // Whether or not to show only the favorite recipes or not
-    const [tags, setTags] = useState([]); // The tags to filter the list of recipes by
+    const [tags, setTags] = useState<string[]>([]); // The tags to filter the list of recipes by
     const [search, setSearch] = useState(""); // The query in the search bar
     const [searching, setSearching] = useState(false); // If the user is currently searching recipes
     const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes); // The list of recipes to display
@@ -102,7 +103,7 @@ export default function Recipes({ route }: Route) {
 
     return (
         <View style={globalStyles.container}>
-            <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} />
+            <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
 
             <FlatList 
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
@@ -140,6 +141,9 @@ export default function Recipes({ route }: Route) {
                 visible={true}
                 onPress={() => route.navigation.navigate("EditCreate", {})}
             />
+
+
+            
 
         </View>
     );
