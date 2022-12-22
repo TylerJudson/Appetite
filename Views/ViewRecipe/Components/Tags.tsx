@@ -44,7 +44,6 @@ function createStyles() {
             marginTop: 5, marginBottom: 30
         },
         tag: {
-            flex: 1, // TODO: fix on web
             margin: 3
         }
     });
