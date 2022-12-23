@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Text, Surface, IconButton } from "react-native-paper";
+import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { Recipe } from "../../../Models/Recipe";
-
 
 /**
  * Displays a clickable widget with the picture of a recipe on it.
@@ -13,13 +13,15 @@ export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunct
     const styles = createStyles();
 
     return (
-        <TouchableOpacity onPress={onPress}>
-            <Surface style={styles.container} elevation={3}>
-                <Image style={styles.image} />
-                <Text style={styles.title} variant="titleMedium">{recipe.name}</Text>
-                <IconButton style={styles.icon} icon="chevron-right" size={40}/>
-            </Surface>
-        </TouchableOpacity>
+        <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut} >
+            <TouchableOpacity onPress={onPress}>
+                <Surface style={styles.container} elevation={3}>
+                    <Image style={styles.image} />
+                    <Text style={styles.title} variant="titleMedium">{recipe.name}</Text>
+                    <IconButton style={styles.icon} icon="chevron-right" size={40}/>
+                </Surface>
+            </TouchableOpacity>
+        </Animated.View>
     );
 }
 

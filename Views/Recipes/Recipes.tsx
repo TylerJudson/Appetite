@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-import { View, StyleSheet, FlatList, Animated, Easing, TextInput } from "react-native";
+import { View, StyleSheet, Animated as animated, Easing, TextInput } from "react-native";
 import { useTheme, Searchbar, Text, FAB } from "react-native-paper";
 import { Route } from "../navigation";
 import { Header } from "./Components/Header";
@@ -9,6 +9,7 @@ import { createGlobalStyles } from "../styles/globalStyles";
 import { filterObject } from "../../utilities/filter";
 import { Recipe } from "../../Models/Recipe";
 
+import Animated, { Layout } from "react-native-reanimated";
 
 /**
  * Shows a list of the recipes for the user.
@@ -29,7 +30,7 @@ export default function Recipes({ route }: Route) {
     const [searching, setSearching] = useState(false); // If the user is currently searching recipes
     const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes); // The list of recipes to display
 
-    const animSearchBar = useRef(new Animated.Value(0)).current;
+    const animSearchBar = useRef(new animated.Value(0)).current;
     const searchBar = useRef<TextInput>() as MutableRefObject<TextInput>;
 
     //#region BEHAVIOR
@@ -76,7 +77,7 @@ export default function Recipes({ route }: Route) {
     }
 
     // Animates the focus of the search bar
-    const SearchAnimationFocus = Animated.timing(
+    const SearchAnimationFocus = animated.timing(
         animSearchBar,
         {
             toValue: 1,
@@ -87,7 +88,7 @@ export default function Recipes({ route }: Route) {
     );
 
     // Animates the blur of the search bar
-    const SearchAnimaionBlur = Animated.timing(
+    const SearchAnimaionBlur = animated.timing(
         animSearchBar,
         {
             toValue: 0,
@@ -104,29 +105,31 @@ export default function Recipes({ route }: Route) {
         <View style={globalStyles.container}>
             <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
 
-            <FlatList 
+            <Animated.FlatList  
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
                 renderItem={ ({item}) => {
                     return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
                 }}
+                //@ts-ignore
+                itemLayoutAnimation={Layout} 
                 numColumns={1}
                 ListHeaderComponent={
                     <View style={{overflow: "hidden" }}>
-                        <Animated.View style={{
+                        <animated.View style={{
                                 transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [0, -50]})}], 
                                 opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [1, 0]}),
                                 position: searching ? "absolute" : 'relative'}}
                         >
                             <Text style={styles.title} variant="headlineLarge">Recipes</Text>
-                        </Animated.View>
+                        </animated.View>
 
-                        <Animated.View style={{
+                        <animated.View style={{
                             transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [55, 0]})}],
                             opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [-0.5, 1]}),
                             position: searching ? "relative" : "absolute"}} 
                         >
                             <Searchbar style={styles.searchBar} placeholder="Search Recipes" onChangeText={(value) => setSearch(value)} value={search} ref={searchBar} />
-                        </Animated.View>
+                        </animated.View>
 
                     </View>
                 }

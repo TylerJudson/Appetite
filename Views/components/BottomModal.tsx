@@ -1,6 +1,6 @@
 import React, { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
-import { Text, Portal, Modal } from "react-native-paper";
+import { Portal } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
