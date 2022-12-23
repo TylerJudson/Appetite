@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-import { View, StyleSheet, Animated as animated, Easing, TextInput } from "react-native";
+import { View, StyleSheet, Animated as animated, Easing, TextInput, useWindowDimensions } from "react-native";
 import { useTheme, Searchbar, Text, FAB } from "react-native-paper";
 import { Route } from "../navigation";
 import { Header } from "./Components/Header";
@@ -22,7 +22,7 @@ export default function Recipes({ route }: Route) {
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
-
+    const screenWidth = useWindowDimensions().width;
     
     const [viewFavorites, setViewFavorites] = useState(false); // Whether or not to show only the favorite recipes or not
     const [tags, setTags] = useState<string[]>([]); // The tags to filter the list of recipes by
@@ -112,7 +112,7 @@ export default function Recipes({ route }: Route) {
                 }}
                 //@ts-ignore
                 itemLayoutAnimation={Layout} 
-                numColumns={1}
+                numColumns={Math.floor(screenWidth / 250)}
                 ListHeaderComponent={
                     <View style={{overflow: "hidden" }}>
                         <animated.View style={{

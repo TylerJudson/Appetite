@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, useWindowDimensions } from "react-native";
 import { Text, Surface, IconButton } from "react-native-paper";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { Recipe } from "../../../Models/Recipe";
@@ -11,17 +11,20 @@ import { Recipe } from "../../../Models/Recipe";
  */
 export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunction }) {
     const styles = createStyles();
+    const screenWidth = useWindowDimensions().width;
 
     return (
+        <View style={{flex: 1 / Math.floor(screenWidth / 250)}}>
         <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut} >
             <TouchableOpacity onPress={onPress}>
                 <Surface style={styles.container} elevation={3}>
                     <Image style={styles.image} />
-                    <Text style={styles.title} variant="titleMedium">{recipe.name}</Text>
-                    <IconButton style={styles.icon} icon="chevron-right" size={40}/>
+                    <Text style={styles.title} variant={screenWidth > 500 ? "titleLarge" : "titleMedium"}>{recipe.name}</Text>
+                    { screenWidth <= 500 && <IconButton style={styles.icon} icon="chevron-right" size={40}/> }
                 </Surface>
             </TouchableOpacity>
         </Animated.View>
+        </View>
     );
 }
 
@@ -31,6 +34,8 @@ export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunct
  * @returns The styles
  */
 function createStyles() {
+    const screenWidth = useWindowDimensions().width;
+
     return StyleSheet.create({
         container: {
             marginBottom: 15, marginHorizontal: 10,
@@ -38,10 +43,12 @@ function createStyles() {
             justifyContent: "center",
         },
         image: {
-            height: 100
+            height: screenWidth > 500 ? undefined : 100,
+            aspectRatio: 1
         },
         title: {
-            position: "absolute", bottom: 3, left: 10
+            position: "absolute", bottom: 3, left: 10,
+            paddingRight: 15
         },
         icon: {
             position: "absolute", right: -10
