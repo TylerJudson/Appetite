@@ -65,7 +65,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
             setRecipeBook(recipeBook);
 
             // Navigate to the new recipe
-            navigation.navigate("Recipe", { recipe: clone });
+            navigation.navigate("Recipe", { recipeId: clone.id });
             setSnackBar({ visible: true, message: "Recipe Saved" })
 
         }
@@ -77,7 +77,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     /** Handles the action of editting the recipe */
     function handleEdit() {
         toggleMenu();
-        navigation.navigate("EditCreate", { recipe: recipe })
+        navigation.navigate("EditCreate", { recipeId: recipe.id })
     }
     /** Handles the action of adding and viewing tags */
     function handleTags() {

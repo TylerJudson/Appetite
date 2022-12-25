@@ -4,7 +4,7 @@ import { auth } from "./firebaseConfig";
 import { Recipe } from "./Models/Recipe";
 import { RecipeBook } from "./Models/RecipeBook";
 import { User } from "./Models/User";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 import { importToObject } from "./utilities/importToObject";
 
 
@@ -24,7 +24,7 @@ export let State: IState = {
 }
 
 
-const UserContext = React.createContext({ user: State.user, setUser: (user: User) => {}});
+const UserContext = React.createContext(State.user);
 const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: (recipeBook: RecipeBook) => {}});
 const FeaturedRecipeStateContext = React.createContext({ featuredRecipe: State.featuredRecipe, setFeaturedRecipe: undefined as unknown as Dispatch<React.SetStateAction<Recipe>> });
 
@@ -33,8 +33,16 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
     const [user, setUser] = React.useState(State.user);
 
     const [recipeBook, setRecipeBook] = useReducer(
-        (currentValue: RecipeBook, newValue: RecipeBook) => {
-            // newValue.saveData();
+        (_currentValue: RecipeBook, newValue: RecipeBook) => {
+            newValue.saveData();
+            
+            if (user) {
+                const db = getDatabase();
+                const updates: any = {};
+                updates['/users/' + user.uid + "/RecipeBook"] = newValue;
+                update(ref(db), updates);
+            }
+
             return newValue.clone();
         },
         State.recipeBook
@@ -47,12 +55,13 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
 
     useEffect(() => {
+        // TODO: Docs
         onAuthStateChanged(auth, (u) => {
             if (u) {
                 setUser(new User(u.uid, u.displayName || "", u.email || "", 0, 0, "Beginner"));
                 const db = getDatabase();
 
-                onValue(ref(db, "users/" + u.uid + "/RecipeBook"), (snapshot) => {
+                onValue(ref(db, "/users/" + u.uid + "/RecipeBook"), (snapshot) => {
                     if (snapshot.val()) {
                         importToObject(recipeBook, snapshot.val());
                         setRecipeBook(recipeBook);
@@ -61,14 +70,13 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
             }
             else {
                 setUser(undefined);
-                setRecipeBook(RecipeBook.Initial());
             }
         } )
     }, [])
     
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={user}>
             <RecipeBookStateContext.Provider value={recipeBookContextValue}>
                 <FeaturedRecipeStateContext.Provider value={featuredRecipeContextValue}>
                 {children}

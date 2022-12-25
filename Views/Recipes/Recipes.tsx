@@ -100,7 +100,6 @@ export default function Recipes({ route }: Route) {
 
     //#endregion
 
-
     return (
         <View style={globalStyles.container}>
             <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
@@ -108,7 +107,7 @@ export default function Recipes({ route }: Route) {
             <Animated.FlatList  
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
                 renderItem={ ({item}) => {
-                    return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
+                    return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipeId: item.id })} />
                 }}
                 //@ts-ignore
                 itemLayoutAnimation={Layout} 

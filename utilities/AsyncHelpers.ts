@@ -23,8 +23,9 @@ export async function saveItem(key: string, value: any) {
 export async function getItem(key: string, ref: any) {
     try {
         const result = await AsyncStorage.getItem(key);
-        if (result != null) {
+        if (result != null && result !== "{}")  {
             const parsedResult = JSON.parse(result);
+            
             Object.getOwnPropertyNames(ref).forEach(key => {
                 ref[key] = parsedResult[key];
             })

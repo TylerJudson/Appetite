@@ -11,6 +11,7 @@ import { Tags } from "./Components/Tags";
 import { Ingredients } from "./Components/Ingredients";
 import { Instructions } from "./Components/Instructions";
 import { useWindowDimensions } from "react-native";
+import { useRecipeBookState } from "../../state";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'Recipe'>;
 /**
@@ -23,6 +24,10 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
+    const { recipeBook } = useRecipeBookState();
+    const recipe = recipeBook.recipes[route.params.recipeId];
+
+
     const [snackBar, setSnackBar] = useState( {
         visible: false,
         message: ""
@@ -31,18 +36,18 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     return (
         <View style={globalStyles.container}>
 
-            <Header navigation={navigation} recipe={route.params.recipe} setSnackBar={setSnackBar} />
+            <Header navigation={navigation} recipe={recipe} setSnackBar={setSnackBar} />
 
             <ScrollView>
                 <View style={styles.imageTitleContainer}>
                     <Image style={styles.image} />
 
                     <View style={styles.titleTimesDescContainer}>
-                        <Text variant="headlineSmall" style={styles.title} >{route.params.recipe.name}</Text>
+                        <Text variant="headlineSmall" style={styles.title} >{recipe.name}</Text>
 
-                        <Times prepTime={route.params.recipe.prepTime} cookTime={route.params.recipe.cookTime} />
+                        <Times prepTime={recipe.prepTime} cookTime={recipe.cookTime} />
 
-                        <Description description={route.params.recipe.description} />
+                        <Description description={recipe.description} />
                     </View>
                 </View>
 
@@ -52,7 +57,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                         <Surface style={styles.surface}>
                             <Text variant="titleLarge" style={styles.title} >Ingredients</Text>
                                 {
-                                    route.params.recipe.ingredients.map((ingredient, index) => {
+                                    recipe.ingredients.map((ingredient, index) => {
                                         return (
                                             <Ingredients ingredient={ingredient} index={index} key={index}/>
                                         )
@@ -65,9 +70,9 @@ export default function ViewRecipe({ navigation, route }: navProps) {
                         <Surface style={styles.surface}>
                             <Text variant="titleLarge" style={styles.title} >Instructions</Text>
                                 {
-                                    route.params.recipe.instructions.map((instruction, index) => {
+                                    recipe.instructions.map((instruction, index) => {
                                         return (
-                                            <Instructions instruction={instruction} index={index} key={index} ingredients={route.params.recipe.ingredients}/>
+                                            <Instructions instruction={instruction} index={index} key={index} ingredients={recipe.ingredients}/>
                                         )
                                     })
                                 }
@@ -76,7 +81,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
 
                 </View>
 
-                <Tags tags={route.params.recipe.tags}/>
+                <Tags tags={recipe.tags}/>
 
             </ScrollView>
 

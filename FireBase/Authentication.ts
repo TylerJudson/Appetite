@@ -3,7 +3,7 @@ import { auth } from "../firebaseConfig";
 import { User } from "../Models/User";
 
 
-
+// TODO: docs
 
 export async function logout() {
     await signOut(auth);

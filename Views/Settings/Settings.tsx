@@ -12,16 +12,13 @@ export default function Settings() {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
-    const { user, setUser } = useUserState();
+    const user = useUserState();
 
 
     function handleUserLogin() {
         loginEmailPassword()
         .then((user) => {
         })
-    }
-    function handleUserLogout() {
-        logout();
     }
 
 
@@ -30,17 +27,17 @@ export default function Settings() {
         <View style={globalStyles.screenContainer}>
             <Text variant="headlineLarge" >Settings</Text>
             {
-                user
-                ?   <View>
-                        <Text>Currently signed in as: {user.displayName}</Text>
-                        <Text>Email: {user.email}</Text>
-                        <Button onPress={handleUserLogout}>Logout</Button>
-                    </View>
-                :
-                    <View>
-                        <Text>You are not currently signed in.</Text>
-                        <Button onPress={handleUserLogin}>Login as guest</Button>
-                    </View>
+            user
+            ?   <View>
+                    <Text>Currently signed in as: {user.displayName}</Text>
+                    <Text>Email: {user.email}</Text>
+                    <Button onPress={logout}>Logout</Button>
+                </View>
+            :
+                <View>
+                    <Text>You are not currently signed in.</Text>
+                    <Button onPress={handleUserLogin}>Login as guest</Button>
+                </View>
 
             }
         </View>

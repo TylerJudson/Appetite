@@ -5,6 +5,8 @@ import { createGlobalStyles } from "../styles/globalStyles";
 import { Header } from "./Components/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation";
+import { useRecipeBookState } from "../../state";
+import { Recipe } from "../../Models/Recipe";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'EditCreate'>;
 /**
@@ -17,6 +19,12 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
+    const { recipeBook } = useRecipeBookState();
+
+    let recipe: Recipe | undefined = undefined;
+    if (route.params.recipeId) {
+        recipe = recipeBook.recipes[route.params.recipeId];
+    }
 
     function handleBack() {
 
@@ -48,8 +56,8 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
         <View style={globalStyles.container}>
 
             <Header
-                title={route.params.recipe ? "Edit" : "Create Recipe"} 
-                button={{label: route.params.recipe ? "Save" : "Create", onPress: () => console.log("Not yet Implemented")}}
+                title={recipe ? "Edit" : "Create Recipe"} 
+                button={{label: recipe ? "Save" : "Create", onPress: () => console.log("Not yet Implemented")}}
                 leftButton={{label: "Cancel", onPress: handleBack }}
             />
 
