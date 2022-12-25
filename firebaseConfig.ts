@@ -1,17 +1,13 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-
-// Optionally import the services that you want to use
-// import {...} from "firebase/auth";
-// import {...} from "firebase/database";
-// import {...} from "firebase/firestore";
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
+import { initializeAuth } from "firebase/auth";
+import { getReactNativePersistence } from "firebase/auth/react-native"
 
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: 'AIzaSyCYwdhrZg3W6efpXCsWUg2AljKWWKOn23w',
     authDomain: 'appetite-0.firebaseapp.com',
-    databaseURL: 'https://project-id.firebaseio.com',
+    databaseURL: 'https://appetite-0-default-rtdb.firebaseio.com',
     projectId: 'appetite-0',
     storageBucket: 'appetite-0.appspot.com',
     messagingSenderId: '942705396476',
@@ -20,5 +16,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// For more information on how to access Firebase in your project,
-// see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
+export const auth = initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage)});
+

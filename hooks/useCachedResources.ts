@@ -1,9 +1,10 @@
 import { FontAwesome } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { auth } from '../firebaseConfig';
 import { Recipe } from '../Models/Recipe';
+import { User } from '../Models/User';
 import { State } from '../state';
 
 

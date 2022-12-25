@@ -35,8 +35,6 @@ export class RecipeBook implements IRecipeBook {
         }
     }
 
-
-
     /**
      * Creates a blank recipe book object
      * @returns A new blank recipe book
