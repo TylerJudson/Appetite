@@ -1,28 +1,25 @@
 import { signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-import { User } from "../Models/User";
 
-
-// TODO: docs
-
+/**
+ * Securly logs the user out of their account.
+ */
 export async function logout() {
     await signOut(auth);
 }
 
 
-export async function loginEmailPassword() {
+/**
+ * Logs a user in with a particular email and password
+ * @param email The email to log the user in with
+ * @param password The password to log the user in with
+ */
+export async function loginEmailPassword(email: string, password: string) {
     const loginEmail = "Guest0@appetite.com";
     const loginPassword = "Guest-0";
 
-    return await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-        .then((userCredential) => {
-            return new User(
-                    userCredential.user.uid, 
-                    userCredential.user.displayName || "", 
-                    userCredential.user.email || "",
-                    0, 0, "Beginner");
-        })
+    await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
         .catch((reason) => {
-            console.log("There was an error.");
+            console.log("There was an error:", reason);
         });
 }

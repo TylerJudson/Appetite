@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 /**
- * Displays a modal at the bottom of the screen // TODO: DOCUMENTATION
+ * Displays a modal at the bottom of the screen
  */
 export function BottomModal({ visible, setVisible, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, children: React.ReactNode }) {
     const styles = createStyles();
@@ -16,6 +16,9 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
     const animModal = useRef(new Animated.Value(0)).current;
     const modalRef = useRef<View>() as MutableRefObject<View>;
 
+    /**
+     * Hides the modal by displaying the hide animation.
+     */
     function hideModal() {
         Animated.timing(
             animModal,

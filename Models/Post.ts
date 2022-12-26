@@ -13,7 +13,7 @@ interface IPost {
     /** the amount of likes the recipe has */
     likes: number;
     /** The time the post was posted */
-    timestamp: string; // TODO: find datetime
+    timestamp: number;
 }
 
 
@@ -22,13 +22,13 @@ export class Post implements IPost {
     recipe: Recipe;
     description: string;
     likes: number;
-    timestamp: string;
+    timestamp: number;
 
     constructor(recipe: Recipe, description: string, likes: number = 0) {
         this.recipe = recipe;
         this.description = description;
         this.likes = likes;
-        this.timestamp = ""
+        this.timestamp = Date.now();
 
         this.id = uuidv4();
     }

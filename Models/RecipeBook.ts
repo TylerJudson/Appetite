@@ -15,7 +15,11 @@ export class RecipeBook implements IRecipeBook {
         this.recipes = recipes
     }
 
-    // TODO: Docs
+    /**
+     * Adds a recipe returning the result.
+     * @param recipe The recipe to add to the book
+     * @returns The Result (true or false) and a corresponding message (if false)
+     */
     addRecipe(recipe: Recipe) {
         if (recipe.id in this.recipes) {
             return new Result(false, "This recipe already exists in your Recipe Book.");
@@ -25,6 +29,11 @@ export class RecipeBook implements IRecipeBook {
             return new Result(true);
         }
     }
+    /**
+     * Deletes a recipe from the recipe book returning the result
+     * @param recipe The recipe to delete from the book
+     * @returns The Result (true or false) and a corresponding message (if false)
+     */
     deleteRecipe(recipe: Recipe) {
         if (recipe.id in this.recipes) {
             delete this.recipes[recipe.id];

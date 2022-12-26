@@ -64,7 +64,6 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 const db = getDatabase();
 
                 onValue(ref(db, "/users/" + u.uid + "/RecipeBook"), (snapshot) => {
-                // onValue(ref(db, "/df/"), (snapshot) => {
                     if (snapshot.val()) {
                         importToObject(recipeBook, snapshot.val());
                         setRecipeBook(recipeBook);
