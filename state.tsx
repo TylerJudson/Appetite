@@ -55,22 +55,31 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
 
     useEffect(() => {
+        let loggedIn = false;
         // TODO: Docs
         onAuthStateChanged(auth, (u) => {
             if (u) {
+                loggedIn = true;
                 setUser(new User(u.uid, u.displayName || "", u.email || "", 0, 0, "Beginner"));
                 const db = getDatabase();
 
                 onValue(ref(db, "/users/" + u.uid + "/RecipeBook"), (snapshot) => {
+                // onValue(ref(db, "/df/"), (snapshot) => {
                     if (snapshot.val()) {
                         importToObject(recipeBook, snapshot.val());
                         setRecipeBook(recipeBook);
                     }
                 })
             }
+            else if (loggedIn) {
+                loggedIn = false;
+                setUser(undefined);
+                setRecipeBook(RecipeBook.Initial());
+            }
             else {
                 setUser(undefined);
             }
+
         } )
     }, [])
     
