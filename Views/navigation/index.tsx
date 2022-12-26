@@ -29,7 +29,7 @@ export type SnackBarData = {
 
 export type RootStackParamList = {
 	Appetite: { snackBar?: SnackBarData };
-	Recipe: { recipeId: string, };
+	Recipe: { recipe: Recipe, };
 	EditCreate: { recipeId?: string };
 };
 
@@ -135,7 +135,7 @@ function Appetite({navigation, route}: Props) {
 								setRecipeBook(recipeBook);
 
 								// Navigate to the new recipe
-								navigation.navigate("Recipe", { recipeId: snackBar.action.recipe.id });
+								navigation.navigate("Recipe", { recipe: snackBar.action.recipe });
 							}
 							else {
 								setSnackBar({ visible: true, message: addRecipeResult.message })

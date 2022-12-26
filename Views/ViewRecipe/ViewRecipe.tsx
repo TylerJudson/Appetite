@@ -25,8 +25,11 @@ export default function ViewRecipe({ navigation, route }: navProps) {
     const styles = createStyles();
 
     const { recipeBook } = useRecipeBookState();
-    const recipe = recipeBook.recipes[route.params.recipeId];
 
+    let recipe = route.params.recipe;
+    if (route.params.recipe.id in recipeBook.recipes) {
+        recipe = recipeBook.recipes[recipe.id];
+    }
 
     const [snackBar, setSnackBar] = useState( {
         visible: false,
