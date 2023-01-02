@@ -121,7 +121,7 @@ function createStyles() {
         image: {
             width: screenIsBig ? 400 : "100%", 
             height: screenIsBig ? 300 : 150,
-            margin: screenIsBig ? 10 : undefined,
+            margin: screenIsBig ? 10 : undefined, marginTop: 0,
             borderWidth: 1, borderColor: "blue"
         },
         list: {
@@ -147,7 +147,7 @@ function createStyles() {
         },
         titleTimesDescContainer: {
             flex: 1,
-            marginTop: screenIsBig ? 20 : undefined
+            marginTop: screenIsBig ? 10 : undefined
         }
     });
 }

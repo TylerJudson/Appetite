@@ -37,6 +37,9 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     const screenWidth = useWindowDimensions().width;
     const insets = useSafeAreaInsets();
 
+
+    //#region BEHAVIOR
+
     /** Handles the action of pressing the heart */
     function handleHeart() {
         recipe.favorited = !recipe.favorited;
@@ -65,7 +68,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
             setRecipeBook(recipeBook);
 
             // Navigate to the new recipe
-            navigation.navigate("Recipe", { recipeId: clone.id });
+            navigation.navigate("Recipe", { recipe: clone });
             setSnackBar({ visible: true, message: "Recipe Saved" })
 
         }
@@ -117,9 +120,11 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
         setMenuVisible(!menuVisible);
     }
 
+    //#endregion
+
 
     return (
-        <Appbar.Header elevated statusBarHeight={insets.top - 10}>
+        <Appbar.Header statusBarHeight={insets.top - 10}>
             {/** This is the button that allows the user to go back to the previous screen */}
             <Tooltip title="Back">
                 <Appbar.BackAction onPress={navigation.goBack} />

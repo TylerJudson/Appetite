@@ -32,9 +32,9 @@ export function Header({ viewFavorites, setViewFavorites, toggleSearch, tags, se
         }
     }
 
-
+    
     return (
-        <Appbar.Header elevated statusBarHeight={insets.top - 15}>
+        <Appbar.Header statusBarHeight={insets.top - 15}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
                 <Tooltip title="Tags">
                     <Menu anchor={<Appbar.Action icon={"filter-variant"} onPress={handleTags} />} visible={tagsMenuVisible} onDismiss={() => setTagsMenuVisible(false)} anchorPosition="bottom">

@@ -113,7 +113,7 @@ export default function Recipes({ route }: Route) {
                 itemLayoutAnimation={Layout} 
                 numColumns={Math.floor(screenWidth / 250)}
                 ListHeaderComponent={
-                    <View style={{overflow: "hidden" }}>
+                    <View style={{ overflow: "hidden" }}>
                         <animated.View style={{
                                 transform: [{translateY: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [0, -50]})}], 
                                 opacity: animSearchBar.interpolate({inputRange: [0, 1], outputRange: [1, 0]}),
@@ -159,10 +159,10 @@ export default function Recipes({ route }: Route) {
 function createStyles() {
     return StyleSheet.create({
         title: {
-            margin: 10
+            margin: 10, marginTop: 0
         },
         searchBar: {
-            margin: 10,
+            margin: 10, marginTop: 0,
             height: 40,
         },
         fab: {
