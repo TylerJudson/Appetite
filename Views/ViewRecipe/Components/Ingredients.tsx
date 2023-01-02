@@ -39,7 +39,8 @@ function createStyles() {
     return StyleSheet.create({
         container: {
             padding: 10,
-            flexDirection: "row", alignItems: "center"
+            flexDirection: "row", alignItems: "center",
+            borderRadius: 10
         },
     });
 }

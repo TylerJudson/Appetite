@@ -129,7 +129,7 @@ function createStyles() {
         },
 
         instructionContainer: {
-            flex: screenIsBig ? 7 : undefined
+            flex: screenIsBig ? 7 : undefined,
         },
         ingredientContainer: {
             flex: screenIsBig ? 3 : undefined
@@ -139,7 +139,7 @@ function createStyles() {
         },
         surface: {
             margin: 5, marginVertical: 10,   
-            borderRadius: 10, // TODO: Small bug, when the surface is lighter it won't round corners on the bottom      
+            borderRadius: 10,  
         },
 
         imageTitleContainer: {

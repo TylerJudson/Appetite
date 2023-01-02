@@ -136,6 +136,7 @@ function createStyles() {
         container: {
             padding: 10,
             flexDirection: "row", alignItems: "center",
+            borderRadius: 10
         },
     });
 }
