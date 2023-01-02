@@ -18,9 +18,16 @@ export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunct
         <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut} >
             <TouchableOpacity onPress={onPress}>
                 <Surface style={styles.container} elevation={3}>
+
+                    {/** Image and title: */}
                     <Image style={styles.image} />
                     <Text style={styles.title} variant={screenWidth > 500 ? "titleLarge" : "titleMedium"}>{recipe.name}</Text>
-                    { screenWidth <= 500 && <IconButton style={styles.icon} icon="chevron-right" size={40}/> }
+
+                    {/** Heart icon */}
+                    { recipe.favorited && <IconButton style={styles.heartIcon} icon="heart" size={30} /> }
+
+                    {/** Chevron to the right on small screens. */}
+                    { screenWidth <= 500 && <IconButton style={styles.chevronIcon} icon="chevron-right" size={40}/> }
                 </Surface>
             </TouchableOpacity>
         </Animated.View>
@@ -50,7 +57,10 @@ function createStyles() {
             position: "absolute", bottom: 3, left: 10,
             paddingRight: 15
         },
-        icon: {
+        heartIcon: {
+            position: "absolute", top: 0
+        },
+        chevronIcon: {
             position: "absolute", right: -10
         }
     });
