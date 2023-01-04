@@ -1,5 +1,5 @@
 import React, { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, View } from "react-native";
+import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -55,6 +55,7 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
                         opacity: animModal.interpolate({ inputRange: [0, 1], outputRange: [0, 0.33] })
                     }} />
 
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} >
                     {/* The actual modal: */}
                     <Animated.View
                             onLayout={() => {modalRef.current.measure((_x, _y, _w, height) => {setHeight(height)})}} 
@@ -66,8 +67,7 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
                             {children}
                         </Pressable>
                     </Animated.View>
-
-                    
+                    </KeyboardAvoidingView>
                 </Pressable>
             }
         </Portal>

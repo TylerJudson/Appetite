@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Animated as animated, Easing, TextInput, useWindowDimensions } from "react-native";
-import { useTheme, Searchbar, Text, FAB } from "react-native-paper";
+import { useTheme, Searchbar, Text, FAB, Chip } from "react-native-paper";
 import { Route } from "../navigation";
 import { Header } from "./Components/Header";
 import { useRecipeBookState } from "../../state";
@@ -9,7 +9,8 @@ import { createGlobalStyles } from "../styles/globalStyles";
 import { filterObject } from "../../utilities/filter";
 import { Recipe } from "../../Models/Recipe";
 
-import Animated, { Layout } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import { AnimatedTag } from "./Components/AnimatedTag";
 
 /**
  * Shows a list of the recipes for the user.
@@ -47,7 +48,7 @@ export default function Recipes({ route }: Route) {
             }
             // If there are any tags to display
             if (tags) {
-                // ret = ret && recipe.tags.includes(tags[0]) // TODO: Implement this
+                ret = ret && (tags.length === 0 || tags.every(tag => recipe.tags.includes(tag)));
             }
             // If the search bar is not empty only filter the list by the query
             if (search != "") {
@@ -98,11 +99,30 @@ export default function Recipes({ route }: Route) {
         }
     );
 
+    /**
+     * Removes a tag from the filtering tags
+     * @param tag The tag to remove from the filtering Tags
+     */
+    function removeTag(tag: string) {
+
+        let newTags: string[] = [];
+        tags.forEach((value) => {
+            if (value != tag) {
+                newTags.push(value);
+            }
+        })
+
+        setTags(newTags);
+    }
+
     //#endregion
 
     return (
         <View style={globalStyles.container}>
             <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
+
+
+            
 
             <Animated.FlatList  
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
@@ -130,6 +150,18 @@ export default function Recipes({ route }: Route) {
                             <Searchbar style={styles.searchBar} placeholder="Search Recipes" onChangeText={(value) => setSearch(value)} value={search} ref={searchBar} />
                         </animated.View>
 
+                        <Animated.FlatList
+                            data={tags}
+                            style={styles.tagContainer}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={({ item }) => {
+                                return <AnimatedTag title={item} onPress={() => removeTag(item)} remove />
+                            }}
+
+                        />
+            
+
                     </View>
                 }
             />
@@ -142,7 +174,6 @@ export default function Recipes({ route }: Route) {
                 visible={true}
                 onPress={() => route.navigation.navigate("EditCreate", {})}
             />
-
 
             
 
@@ -159,10 +190,10 @@ export default function Recipes({ route }: Route) {
 function createStyles() {
     return StyleSheet.create({
         title: {
-            margin: 10, marginTop: 0
+            marginHorizontal: 10
         },
         searchBar: {
-            margin: 10, marginTop: 0,
+            marginHorizontal: 10,
             height: 40,
         },
         fab: {
@@ -170,6 +201,9 @@ function createStyles() {
             margin: 16,
             right: 0,
             bottom: 0,
+        },
+        tagContainer: {
+            margin: 5
         },
     });
 }

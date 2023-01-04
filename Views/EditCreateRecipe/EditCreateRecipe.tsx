@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ScrollView, Alert, Platform } from "react-native";
-import { useTheme } from "react-native-paper";
+import { TextInput, useTheme, Text, IconButton, Chip } from "react-native-paper";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { Header } from "./Components/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -62,9 +62,22 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
             />
 
             <ScrollView>
+                <View style={{ width: "100%", height: 300, borderWidth: 1, borderColor: "#f0f" }}></View>
 
+                <TextInput label="Recipe Name" value={""}/>
+                <TextInput label="Recipe Description" value={""}/>
+                <TextInput label="Prep Time" value={""}/>
+                <TextInput label="Cook Time" value={""}/>
 
+                <Text>Ingredients:</Text>
+                <IconButton icon="plus" />
 
+                <Text>Instructions:</Text>
+                <IconButton icon="plus" />
+
+                <Text>Tags: </Text>
+                <Chip>New Tag</Chip>
+                <TextInput label="Add Tag" />
             </ScrollView>
 
         </View>
