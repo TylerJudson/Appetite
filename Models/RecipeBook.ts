@@ -92,7 +92,11 @@ export class RecipeBook implements IRecipeBook {
      * Gets all of the data from async storage (key: RecipeBook)
      */
     async getData() {
-        await getItem("RecipeBook", this);
+        const cleanRecipeBook = RecipeBook.Initial();
+        await getItem("RecipeBook", cleanRecipeBook);
+        Object.values(cleanRecipeBook.recipes).forEach(recipe => {
+            this.recipes[recipe.id] = new Recipe(recipe.name, recipe.ingredients, recipe.instructions, recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe.tags, recipe.readonly);
+        });
     }
 
     /**

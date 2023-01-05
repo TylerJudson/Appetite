@@ -30,7 +30,7 @@ export type SnackBarData = {
 export type RootStackParamList = {
 	Appetite: { snackBar?: SnackBarData };
 	Recipe: { recipe: Recipe, };
-	EditCreate: { recipeId?: string };
+	EditCreate: { recipe?: Recipe };
 };
 
 
@@ -46,7 +46,7 @@ export default function Navigation() {
 			<Stack.Navigator initialRouteName='Appetite' screenOptions={{ headerShown: false }}>
 				<Stack.Screen name="Appetite" component={Appetite} />
 				<Stack.Screen name="Recipe" component={ViewRecipe} />
-				<Stack.Screen name="EditCreate" component={EditCreateRecipe} options={{gestureEnabled: false}}/>
+				<Stack.Screen name="EditCreate" component={EditCreateRecipe} options={{ gestureEnabled: false }}/>
 			</Stack.Navigator>
       </NavigationContainer>
   );

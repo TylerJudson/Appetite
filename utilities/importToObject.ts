@@ -5,7 +5,7 @@
  * @param data the data to import into the object THIS MUST BE THE SAME TYPE!
  */
 export function importToObject(ref: any, data: any) {
-    Object.getOwnPropertyNames(ref).forEach(key => {
+    Object.getOwnPropertyNames(data).forEach(key => {
         ref[key] = data[key];
     })
 }

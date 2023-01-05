@@ -1,5 +1,6 @@
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from "uuid";
+import { getItem, saveItem } from '../utilities/AsyncHelpers';
 
 
 interface IRecipe {
@@ -41,7 +42,7 @@ export class Recipe implements IRecipe {
     tags: string[];
     readonly: boolean;
 
-    constructor(name: string, ingredients: string[], instructions: string[], description: string = "", prepTime?: number, cookTime?: number, favorited: boolean = false, tags: string[] = [], readonly: boolean = false) {
+    constructor(name: string, ingredients: string[], instructions: string[], description: string = "", image: string = "", id: string = "", prepTime?: number, cookTime?: number, favorited: boolean = false, tags: string[] = [], readonly: boolean = false) {
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
@@ -52,8 +53,8 @@ export class Recipe implements IRecipe {
         this.readonly = readonly;
 
         this.favorited = favorited;
-        this.image = ""; // TODO: find a default image for this
-        this.id = uuidv4();
+        this.image = image; // TODO: find a default image for this
+        this.id = id || uuidv4();
     }    
 
     /**
@@ -68,7 +69,7 @@ export class Recipe implements IRecipe {
      * @returns A blank recipe that is readonly
      */
     static ReadonlyInital() {
-        return new Recipe("", [], [], "", undefined, undefined, false, [], true)
+        return new Recipe("", [], [], "", undefined, undefined, undefined, undefined, false, [], true)
     }
 
     /**
@@ -76,10 +77,7 @@ export class Recipe implements IRecipe {
      * @returns A shallow clone of the Recipe
      */
     clone() {
-        const clone = new Recipe(this.name, this.ingredients, this.instructions, this.description, this.prepTime, this.cookTime, this.favorited, this.tags, this.readonly);
-        clone.id = this.id;
-        clone.image = this.image;
-        return clone;
+        return new Recipe(this.name, this.ingredients, this.instructions, this.description, this.image, this.id, this.prepTime, this.cookTime, this.favorited, this.tags, this.readonly);
     }
 
 }

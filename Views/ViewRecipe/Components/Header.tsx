@@ -80,7 +80,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     /** Handles the action of editting the recipe */
     function handleEdit() {
         toggleMenu();
-        navigation.navigate("EditCreate", { recipeId: recipe.id })
+        navigation.navigate("EditCreate", { recipe: recipe })
     }
     /** Handles the action of adding and viewing tags */
     function handleTags() {
