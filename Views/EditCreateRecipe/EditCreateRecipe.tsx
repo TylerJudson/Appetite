@@ -24,9 +24,8 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
 
     const { recipeBook } = useRecipeBookState();
 
-    const [recipe, setRecipe] = useState(route.params.recipe ? route.params.recipe : Recipe.Initial());
+    const [recipe, setRecipe] = useState(route.params.recipe ? route.params.recipe.clone() : Recipe.Initial());
     const [newIngredient, setNewIngredient] = useState("");
-
 
     function handleBack() {
 

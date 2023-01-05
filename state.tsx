@@ -34,6 +34,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
     const [recipeBook, setRecipeBook] = useReducer(
         (_currentValue: RecipeBook, newValue: RecipeBook) => {
+            
             newValue.saveData();
             
             if (user) {
@@ -65,7 +66,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
                 onValue(ref(db, "/users/" + u.uid + "/RecipeBook"), (snapshot) => {
                     if (snapshot.val()) {
-                        importToObject(recipeBook, snapshot.val());
+                        recipeBook.importData(snapshot.val());
                         setRecipeBook(recipeBook);
                     }
                 })

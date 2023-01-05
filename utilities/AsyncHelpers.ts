@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
  * @param value The value of the item
  */
 export async function saveItem(key: string, value: any) {
-    console.log(JSON.stringify(value));
     try {
         await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (error) {

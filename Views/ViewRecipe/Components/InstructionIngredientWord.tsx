@@ -77,7 +77,7 @@ function IngredientPopUp({ anchor, children} : { anchor: string, children: React
 
     return (
         <Text>
-            <Text style={{ color: colors.primary }} variant="bodyLarge" onPress={openPortal} onLayout={() => {console.log("hi")}}>{anchor}</Text>
+            <Text style={{ color: colors.primary }} variant="bodyLarge" onPress={openPortal} >{anchor}</Text>
             {
             portalVisible &&
             <Animated.View

@@ -89,14 +89,22 @@ export class RecipeBook implements IRecipeBook {
     }
 
     /**
+     * Imports all of the data to recipe book safely
+     * @param data The data to import
+     */
+    importData(data: RecipeBook) {
+        this.recipes = {};
+        Object.values(data.recipes).forEach(recipe => {
+            this.recipes[recipe.id] = new Recipe(recipe.name, recipe.ingredients, recipe.instructions, recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe.tags, recipe.readonly);
+        });
+    }
+    /**
      * Gets all of the data from async storage (key: RecipeBook)
      */
     async getData() {
         const cleanRecipeBook = RecipeBook.Initial();
         await getItem("RecipeBook", cleanRecipeBook);
-        Object.values(cleanRecipeBook.recipes).forEach(recipe => {
-            this.recipes[recipe.id] = new Recipe(recipe.name, recipe.ingredients, recipe.instructions, recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe.tags, recipe.readonly);
-        });
+        this.importData(cleanRecipeBook);
     }
 
     /**
