@@ -11,7 +11,7 @@ import { AnimatedTag } from "./AnimatedTag";
  * @param tags The current tags set to filter
  * @param setTags the function to set the tags to filter
  */
-export function Tags({ tags, setTags }: { tags: string[], setTags: Dispatch<SetStateAction<string[]>> }) {
+export function Tags({ tags, setTags, title, clear=false, addTags=false }: { tags: string[], setTags: Dispatch<SetStateAction<string[]>>, title: string, clear?: boolean, addTags?: boolean }) {
     const styles = createStyles();
     const { recipeBook } = useRecipeBookState();    
     
@@ -28,7 +28,7 @@ export function Tags({ tags, setTags }: { tags: string[], setTags: Dispatch<SetS
                 setText(suggestionTags[0])
             }
             setTimeout(() => {
-                if (allTags.includes(text)) {
+                if (allTags.includes(text) || addTags) {
                     if (!tags.includes(text)) {
                         addTag(text);
                     }
@@ -72,8 +72,8 @@ export function Tags({ tags, setTags }: { tags: string[], setTags: Dispatch<SetS
         <View style={styles.container}>
             <ScrollView style={{height: 350}}>
             <View style={styles.header}>
-                <Text style={{paddingHorizontal: 12}} variant="titleLarge">Filters</Text>
-                <Button onPress={tags.length > 0 ? () => setTags([]) : undefined}>{tags.length > 0 ? "Clear": " "}</Button>
+                <Text style={{paddingHorizontal: 12}} variant="titleLarge">{title}</Text>
+                {clear && <Button onPress={tags.length > 0 ? () => setTags([]) : undefined}>{tags.length > 0 ? "Clear": " "}</Button> }
             </View>
             <View style={styles.tagContainer}>
             {

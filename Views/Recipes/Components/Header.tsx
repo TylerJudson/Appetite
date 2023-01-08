@@ -38,7 +38,7 @@ export function Header({ viewFavorites, setViewFavorites, toggleSearch, tags, se
             <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
                 <Tooltip title="Tags">
                     <Menu anchor={<Appbar.Action icon={"filter-variant"} onPress={handleTags} />} visible={tagsMenuVisible} onDismiss={() => setTagsMenuVisible(false)} anchorPosition="bottom">
-                        <Tags tags={tags} setTags={setTags} />
+                        <Tags title="Filters" clear tags={tags} setTags={setTags} />
                     </Menu>
 
                 </Tooltip>
@@ -73,7 +73,7 @@ export function Header({ viewFavorites, setViewFavorites, toggleSearch, tags, se
             </View>
 
             <BottomModal visible={tagsModalVisible} setVisible={setTagsModalVisible}>
-                <Tags tags={tags} setTags={setTags} />
+                <Tags title="Filters" clear tags={tags} setTags={setTags} />
             </BottomModal>
 
 
