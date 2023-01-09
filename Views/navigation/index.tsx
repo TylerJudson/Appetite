@@ -1,11 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { getDatabase, ref, update } from 'firebase/database';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { BottomNavigation, Snackbar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { updateRecipe } from '../../FireBase/Update';
 import { Recipe } from '../../Models/Recipe';
-import { useRecipeBookState } from '../../state';
+import { useRecipeBookState, useUserState } from '../../state';
 import EditCreateRecipe from '../EditCreateRecipe/EditCreateRecipe';
 import FeaturedRecipe from '../FeaturedRecipe/FeaturedRecipe';
 import Recipes from '../Recipes/Recipes';
@@ -72,6 +74,7 @@ export type Route = {
 function Appetite({navigation, route}: Props) {
 	const { colors } = useTheme();
 	const { recipeBook, setRecipeBook } = useRecipeBookState();
+	const user = useUserState();
 
 	const [index, setIndex] = React.useState(0); // The current tab index
 	const [snackBar, setSnackBar] = useState<SnackBarData>({
@@ -133,6 +136,8 @@ function Appetite({navigation, route}: Props) {
 							if (addRecipeResult.success) {
 								// Save and update the state
 								setRecipeBook(recipeBook);
+
+								updateRecipe(user, snackBar.action.recipe);
 
 								// Navigate to the new recipe
 								navigation.navigate("Recipe", { recipe: snackBar.action.recipe });

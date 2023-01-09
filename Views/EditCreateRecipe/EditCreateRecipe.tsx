@@ -1,16 +1,18 @@
 import React, { MutableRefObject, useRef, useState } from "react";
-import { View, StyleSheet, Alert, Platform, KeyboardAvoidingView, TextInput as Input } from "react-native";
-import { TextInput, useTheme, Text, IconButton, Chip } from "react-native-paper";
+import { View, StyleSheet, Alert, Platform, KeyboardAvoidingView } from "react-native";
+import { TextInput, useTheme } from "react-native-paper";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { Header } from "./Components/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation";
-import { useRecipeBookState } from "../../state";
+import { useRecipeBookState, useUserState } from "../../state";
 import { Recipe } from "../../Models/Recipe";
-import { SwipeToDelete } from "./Components/Swipe";
 import { ScrollView } from "react-native-gesture-handler";
 import { List } from "./Components/List";
 import { Tags } from "../Recipes/Components/Tags";
+import { ImageChoser } from "./Components/ImageChoser";
+import { getDatabase, update, ref } from "firebase/database";
+import { updateRecipe } from "../../FireBase/Update";
 
 type navProps = NativeStackScreenProps<RootStackParamList, 'EditCreate'>;
 
@@ -26,15 +28,49 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
-    const { recipeBook } = useRecipeBookState();
+    const { recipeBook, setRecipeBook } = useRecipeBookState();
+    const user = useUserState();
 
     const create = route.params.recipe ? false : true;
-    const [recipe, setRecipe] = useState(route.params.recipe ? route.params.recipe.clone() : Recipe.Initial());
+    const [recipe, setRecipe] = useState(route.params.recipe ? route.params.recipe.deepClone() : Recipe.Initial());
     const [tags, setTags] = useState<string[]>(recipe.tags); // The tags to filter the list of recipes by
+    const [selectedImage, setSelectedImage] = useState(recipe.image);
 
     const scrollRef = useRef() as MutableRefObject<ScrollView>;
 
 
+    function handleSave() {
+        if (recipe.name === "") {
+            if (Platform.OS === "web") {
+                if (window.confirm("You must include a name before you can save the recipe.")) {
+                }
+            }
+            else {
+                return Alert.alert(
+                    "",
+                    "You must include a name before you can save the recipe.",
+                    [
+                        {
+                            text: "Ok",
+                            style: "cancel"
+                        },
+                    ]
+                )
+            }
+        }
+        else {
+            recipe.image = selectedImage;
+            recipe.tags = tags;
+
+            recipeBook.recipes[recipe.id] = recipe;
+            setRecipeBook(recipeBook);
+            updateRecipe(user, recipe);
+
+            navigation.goBack();
+
+            
+        }
+    }
     function handleBack() {
 
         if (Platform.OS === "web") {
@@ -66,15 +102,15 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
 
             <Header
                 title={create ? "Create Recipe" : "Edit"} 
-                button={{label: create ? "Create" : "Save", onPress: () => console.log("Not yet Implemented")}}
+                button={{label: create ? "Create" : "Save", onPress: handleSave}}
                 leftButton={{label: "Cancel", onPress: handleBack }}
             />
 
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}} keyboardVerticalOffset={5}>
             <ScrollView ref={scrollRef}>
-                <View style={{ width: "100%", height: 200, borderWidth: 1, borderColor: "#f0f" }}></View>
+                <ImageChoser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
 
-                <TextInput style={styles.oneLineTextInput} label="Recipe Name"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>
+                <TextInput style={styles.oneLineTextInput} label="Recipe Name (required)"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>
                 <TextInput style={styles.oneLineTextInput} label="Description" multiline                              value={recipe.description || ""}    onChangeText={text => {recipe.description = text; setRecipe(recipe.clone())}}/>
                 <TextInput style={styles.oneLineTextInput} label="Prep Time"  placeholder="Prep Time (min)"           value={`${recipe.prepTime || ""}`}  onChangeText={text => {recipe.prepTime = parseInt(text); setRecipe(recipe.clone())}}/>
                 <TextInput style={styles.oneLineTextInput} label="Cook Time"  placeholder="Prep Time (min)"           value={`${recipe.cookTime || ""}`}  onChangeText={text => {recipe.cookTime = parseInt(text); setRecipe(recipe.clone())}}/>

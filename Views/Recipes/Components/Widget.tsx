@@ -20,7 +20,7 @@ export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunct
                 <Surface style={styles.container} elevation={3}>
 
                     {/** Image and title: */}
-                    <Image style={styles.image} />
+                    <Image style={styles.image} source={{uri: recipe.image ? recipe.image : undefined}} />
                     <Text style={styles.title} variant={screenWidth > 500 ? "titleLarge" : "titleMedium"}>{recipe.name}</Text>
 
                     {/** Heart icon */}
@@ -51,7 +51,10 @@ function createStyles() {
         },
         image: {
             height: screenWidth > 500 ? undefined : 100,
-            aspectRatio: 1
+            width: screenWidth > 500 ? undefined : "100%",
+            aspectRatio: screenWidth > 500 ? 1 : undefined,
+            borderRadius: 10,
+
         },
         title: {
             position: "absolute", bottom: 3, left: 10,

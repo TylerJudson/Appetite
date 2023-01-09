@@ -95,7 +95,7 @@ export class RecipeBook implements IRecipeBook {
     importData(data: RecipeBook) {
         this.recipes = {};
         Object.values(data.recipes).forEach(recipe => {
-            this.recipes[recipe.id] = new Recipe(recipe.name, recipe.ingredients, recipe.instructions, recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe.tags, recipe.readonly);
+            this.recipes[recipe.id] = new Recipe(recipe.name, recipe?.ingredients || [], recipe?.instructions || [], recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe?.tags || [], recipe.readonly);
         });
     }
     /**

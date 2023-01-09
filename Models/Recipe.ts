@@ -80,4 +80,24 @@ export class Recipe implements IRecipe {
         return new Recipe(this.name, this.ingredients, this.instructions, this.description, this.image, this.id, this.prepTime, this.cookTime, this.favorited, this.tags, this.readonly);
     }
 
+    /**
+     * Creates a deep clone fo the current state of the recipe
+     * @returns A deep clone of the recipe
+     */
+    deepClone() {
+        return new Recipe(this.name, [...this.ingredients], [...this.instructions], this.description, this.image, this.id, this.prepTime, this.cookTime, this.favorited, [...this.tags], this.readonly);
+    }
+
+
+    onlyDefinedProperties() {
+        const ret: any = {};
+        const ref: any = this;
+        Object.keys(ref).forEach(key => {
+            if (ref[key] && key !== "image") {
+                ret[key] = ref[key];
+            }
+        });
+
+        return ret;
+    }
 }

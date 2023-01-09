@@ -4,7 +4,7 @@ import { auth } from "./firebaseConfig";
 import { Recipe } from "./Models/Recipe";
 import { RecipeBook } from "./Models/RecipeBook";
 import { User } from "./Models/User";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildAdded, onChildRemoved } from "firebase/database";
 import { importToObject } from "./utilities/importToObject";
 
 
@@ -34,16 +34,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
     const [recipeBook, setRecipeBook] = useReducer(
         (_currentValue: RecipeBook, newValue: RecipeBook) => {
-            
             newValue.saveData();
-            
-            if (user) {
-                const db = getDatabase();
-                const updates: any = {};
-                updates['/users/' + user.uid + "/RecipeBook"] = newValue;
-                update(ref(db), updates);
-            }
-
             return newValue.clone();
         },
         State.recipeBook
@@ -56,6 +47,20 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
 
     useEffect(() => {
+
+        function updateRecipe(id: string, value: Recipe) {
+            recipeBook.recipes[id] = new Recipe(
+                value.name,
+                value.ingredients || [],
+                value.instructions || [],
+                value.description || "",
+                recipeBook.recipes[value.id]?.image || "",
+                value.id,
+                value.prepTime,
+                value.cookTime,
+                value.favorited);
+            setRecipeBook(recipeBook);
+        }
         let loggedIn = false;
         // TODO: Docs
         onAuthStateChanged(auth, (u) => {
@@ -63,13 +68,44 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 loggedIn = true;
                 setUser(new User(u.uid, u.displayName || "", u.email || "", 0, 0, "Beginner"));
                 const db = getDatabase();
-
-                onValue(ref(db, "/users/" + u.uid + "/RecipeBook"), (snapshot) => {
-                    if (snapshot.val()) {
-                        recipeBook.importData(snapshot.val());
+                const recipesRef = ref(db, "/users/" + u.uid + "/recipes");
+                const recipeImagesRef = ref(db, "/users/" + u.uid + "/recipeImages");
+                
+                get(recipesRef).then(snapshot => {
+                    if (snapshot.exists() && snapshot.val()) {
+                        recipeBook.importData({recipes: snapshot.val()} as any);
                         setRecipeBook(recipeBook);
                     }
                 })
+
+                // get(recipeImagesRef).then(snapshot => {
+                //     if (snapshot.exists() && snapshot.val()) {
+                //         Object.keys(snapshot.val()).forEach((key: string) => {
+                //             if (recipeBook.recipes[key]) {
+                //                 recipeBook.recipes[key].image = snapshot.val()[key];
+                //                 setRecipeBook(recipeBook);
+                //             }
+                //         });
+                //     }
+                // })
+
+                onChildChanged(recipesRef, (data) => {
+                    if (data.exists() && data.key && data.val()) {
+                        updateRecipe(data.key, data.val());
+                    }
+                })
+                onChildAdded(recipesRef, (data) => {
+                    if (data.exists() && data.key && data.val()) {
+                        updateRecipe(data.key, data.val());
+                    }
+                })
+                onChildRemoved(recipesRef, (data) => {
+                    if (data.exists() && data.key && data.val()) {
+                        recipeBook.deleteRecipe(data.val());
+                        setRecipeBook(recipeBook);
+                    }
+                })
+
             }
             else if (loggedIn) {
                 loggedIn = false;

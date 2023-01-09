@@ -1,10 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { getDatabase, ref, remove, update } from "firebase/database";
 import { useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import { Appbar, Tooltip, Menu, Divider } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Recipe } from "../../../Models/Recipe";
-import { useRecipeBookState } from "../../../state";
+import { useRecipeBookState, useUserState } from "../../../state";
 import { BottomModal } from "../../components/BottomModal";
 import { RootStackParamList } from "../../navigation";
 import { ShareRecipe } from "./ShareRecipe";
@@ -31,6 +32,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     /** Whether the menu is visible or not. */
     const [menuVisible, setMenuVisible] = useState(false);
     const { recipeBook, setRecipeBook } = useRecipeBookState();
+    const user = useUserState();
     const [shareModalVisible, setShareModalVisible] = useState(false);
     const [shareMenuVisible, setShareMenuVisible] = useState(false);
 
@@ -44,6 +46,12 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     function handleHeart() {
         recipe.favorited = !recipe.favorited;
         setRecipeBook(recipeBook);
+        if (user) {
+            const db = getDatabase();
+            let updates: any = {};
+            updates['/users/' + user.uid + "/recipes/" + recipe.id + "/favorited"] = recipe.favorited;
+            update(ref(db), updates);
+        }
     }
     /** Handles the action of sharing the recipe */
     function handleShare() {
@@ -92,6 +100,13 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
         if (delteRecipeResult.success) {
             // Save and update the state
             setRecipeBook(recipeBook);
+            
+            
+            if (user) {
+                const db = getDatabase();
+                remove(ref(db, '/users/' + user.uid + "/recipes/" + recipe.id));
+                remove(ref(db, "/users/" + user.uid + "/recipeImages/" + recipe.id));
+            }
 
             // Go back to the Home page.
             navigation.navigate("Appetite", {

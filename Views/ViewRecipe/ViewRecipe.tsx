@@ -43,7 +43,7 @@ export default function ViewRecipe({ navigation, route }: navProps) {
 
             <ScrollView>
                 <View style={styles.imageTitleContainer}>
-                    <Image style={styles.image} />
+                    <Image style={styles.image} source={{ uri: recipe.image ? recipe.image : undefined }}/>
 
                     <View style={styles.titleTimesDescContainer}>
                         <Text variant="headlineSmall" style={styles.title} >{recipe.name}</Text>
@@ -122,7 +122,6 @@ function createStyles() {
             width: screenIsBig ? 400 : "100%", 
             height: screenIsBig ? 300 : 150,
             margin: screenIsBig ? 10 : undefined, marginTop: 0,
-            borderWidth: 1, borderColor: "blue"
         },
         list: {
             padding: 10, paddingHorizontal: 15,

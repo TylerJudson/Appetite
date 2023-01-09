@@ -1,9 +1,9 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Animated as animated, Easing, TextInput, useWindowDimensions } from "react-native";
-import { useTheme, Searchbar, Text, FAB, Chip } from "react-native-paper";
+import { useTheme, Searchbar, Text, FAB, Chip, Button } from "react-native-paper";
 import { Route } from "../navigation";
 import { Header } from "./Components/Header";
-import { useRecipeBookState } from "../../state";
+import { useRecipeBookState, useUserState } from "../../state";
 import { Widget } from "./Components/Widget";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { filterObject } from "../../utilities/filter";
@@ -11,6 +11,7 @@ import { Recipe } from "../../Models/Recipe";
 
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { AnimatedTag } from "./Components/AnimatedTag";
+import { updateRecipe } from "../../FireBase/Update";
 
 /**
  * Shows a list of the recipes for the user.
@@ -18,6 +19,7 @@ import { AnimatedTag } from "./Components/AnimatedTag";
  */
 export default function Recipes({ route }: Route) {
     const { recipeBook } = useRecipeBookState();
+    const user = useUserState();
 
     const theme = useTheme();
     const colors = theme.colors;
@@ -120,12 +122,21 @@ export default function Recipes({ route }: Route) {
     return (
         <View style={globalStyles.container}>
             <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
+{/* 
+            <Button onPress={() => {
+                for (let i = 0; i < 5; i++) {
+                    const y = recipeBook.recipes["b9747c18-9ad6-4670-b532-44b5986bf372"];
+                    const x = new Recipe(y.name, y.ingredients, y.instructions, y.description, y.image, undefined, y.prepTime, y.cookTime, y.favorited);
+                    recipeBook.addRecipe(x);
+                    updateRecipe(user, x);
+                }
 
 
+            }}>dulplicate</Button> */}
             
 
             <Animated.FlatList  
-                data={Object.values(filteredRecipes).sort(sortAlpha)}
+                data={Object.values(filteredRecipes)}
                 renderItem={ ({item}) => {
                     return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
                 }}
