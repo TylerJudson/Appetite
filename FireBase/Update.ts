@@ -4,12 +4,16 @@ import { User } from "../Models/User";
 
 
 
-
-export function updateRecipe(user: User | undefined, recipe: Recipe) {
+// TODO: docs
+export function updateRecipe(user: User | undefined, recipe: Recipe, create: boolean = false) {
     if (user) {
         const db = getDatabase();
         let updates: any = {};
-        updates['/users/' + user.uid + "/recipes/" + recipe.id] = recipe.onlyDefinedProperties();
+        let updatedRecipe = recipe.onlyDefinedProperties();
+        if (create) {
+            updatedRecipe["created"] = Date.now();
+        }
+        updates['/users/' + user.uid + "/recipes/" + recipe.id] = updatedRecipe;
         updates['/users/' + user.uid + "/recipeImages/" + recipe.id] = recipe.image;
         update(ref(db), updates);
     }

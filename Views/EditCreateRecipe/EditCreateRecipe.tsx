@@ -64,7 +64,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
 
             recipeBook.recipes[recipe.id] = recipe;
             setRecipeBook(recipeBook);
-            updateRecipe(user, recipe);
+            updateRecipe(user, recipe, create);
 
             navigation.goBack();
 

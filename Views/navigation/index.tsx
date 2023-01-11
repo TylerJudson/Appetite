@@ -137,7 +137,7 @@ function Appetite({navigation, route}: Props) {
 								// Save and update the state
 								setRecipeBook(recipeBook);
 
-								updateRecipe(user, snackBar.action.recipe);
+								updateRecipe(user, snackBar.action.recipe, true);
 
 								// Navigate to the new recipe
 								navigation.navigate("Recipe", { recipe: snackBar.action.recipe });

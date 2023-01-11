@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, StyleSheet, TouchableOpacity, Image, useWindowDimensions } from "react-native";
 import { Text, Surface, IconButton } from "react-native-paper";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
@@ -68,3 +68,12 @@ function createStyles() {
         }
     });
 }
+
+
+
+export default memo(Widget, (prev, next) => {
+    if (prev.recipe.name !== next.recipe.name || prev.recipe.image !== next.recipe.image || prev.recipe.favorited != next.recipe.favorited) {
+        return false;
+    }
+    return true;
+});

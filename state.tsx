@@ -4,7 +4,7 @@ import { auth } from "./firebaseConfig";
 import { Recipe } from "./Models/Recipe";
 import { RecipeBook } from "./Models/RecipeBook";
 import { User } from "./Models/User";
-import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildAdded, onChildRemoved } from "firebase/database";
+import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildAdded, onChildRemoved, query, limitToLast, orderByChild } from "firebase/database";
 import { importToObject } from "./utilities/importToObject";
 
 
@@ -59,7 +59,6 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 value.prepTime,
                 value.cookTime,
                 value.favorited);
-            setRecipeBook(recipeBook);
         }
         let loggedIn = false;
         // TODO: Docs
@@ -78,25 +77,27 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                     }
                 })
 
-                // get(recipeImagesRef).then(snapshot => {
-                //     if (snapshot.exists() && snapshot.val()) {
-                //         Object.keys(snapshot.val()).forEach((key: string) => {
-                //             if (recipeBook.recipes[key]) {
-                //                 recipeBook.recipes[key].image = snapshot.val()[key];
-                //                 setRecipeBook(recipeBook);
-                //             }
-                //         });
-                //     }
-                // })
+                get(recipeImagesRef).then(snapshot => {
+                    if (snapshot.exists() && snapshot.val()) {
+                        Object.keys(snapshot.val()).forEach((key: string) => {
+                            if (recipeBook.recipes[key]) {
+                                recipeBook.recipes[key].image = snapshot.val()[key];
+                            }
+                        });
+                        setRecipeBook(recipeBook);
+                    }
+                })
 
                 onChildChanged(recipesRef, (data) => {
                     if (data.exists() && data.key && data.val()) {
                         updateRecipe(data.key, data.val());
+                        setRecipeBook(recipeBook);
                     }
                 })
-                onChildAdded(recipesRef, (data) => {
+                onChildAdded(query(recipesRef, orderByChild("created"), limitToLast(1)), (data) => {
                     if (data.exists() && data.key && data.val()) {
                         updateRecipe(data.key, data.val());
+                        setRecipeBook(recipeBook);
                     }
                 })
                 onChildRemoved(recipesRef, (data) => {
@@ -105,12 +106,11 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                         setRecipeBook(recipeBook);
                     }
                 })
-
             }
             else if (loggedIn) {
                 loggedIn = false;
                 setUser(undefined);
-                setRecipeBook(RecipeBook.Initial());
+                // setRecipeBook(RecipeBook.Initial());
             }
             else {
                 setUser(undefined);
