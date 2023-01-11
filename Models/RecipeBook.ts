@@ -93,10 +93,18 @@ export class RecipeBook implements IRecipeBook {
      * @param data The data to import
      */
     importData(data: RecipeBook) {
-        this.recipes = {};
+        // Uploads all of the new data
         Object.values(data.recipes).forEach(recipe => {
-            this.recipes[recipe.id] = new Recipe(recipe.name, recipe?.ingredients || [], recipe?.instructions || [], recipe.description, recipe.image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe?.tags || [], recipe.readonly);
+            const image = recipe.image || this.recipes[recipe.id]?.image;
+            this.recipes[recipe.id] = new Recipe(recipe.name, recipe?.ingredients || [], recipe?.instructions || [], recipe.description, image, recipe.id, recipe.prepTime, recipe.cookTime, recipe.favorited, recipe?.tags || [], recipe.readonly);
         });
+
+        // Deletes recipes that weren't in the new data
+        Object.keys(this.recipes).forEach(key => {
+            if (!(key in data.recipes)) {
+                delete this.recipes[key];
+            }
+        })
     }
     /**
      * Gets all of the data from async storage (key: RecipeBook)
