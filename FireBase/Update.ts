@@ -10,6 +10,7 @@ export function updateRecipe(user: User | undefined, recipe: Recipe, create: boo
         const db = getDatabase();
         let updates: any = {};
         let updatedRecipe = recipe.onlyDefinedProperties();
+        
         if (create) {
             updatedRecipe["created"] = Date.now();
         }

@@ -58,7 +58,8 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 value.id,
                 value.prepTime,
                 value.cookTime,
-                value.favorited);
+                value.favorited,
+                value.tags || []);
         }
         let loggedIn = false;
         // TODO: Docs
@@ -111,7 +112,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
             else if (loggedIn) {
                 loggedIn = false;
                 setUser(undefined);
-                // setRecipeBook(RecipeBook.Initial());
+                setRecipeBook(RecipeBook.Initial());
             }
             else {
                 setUser(undefined);

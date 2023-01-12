@@ -61,8 +61,10 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
         else {
             recipe.image = selectedImage;
             recipe.tags = tags;
+            
 
             recipeBook.recipes[recipe.id] = recipe;
+            
             setRecipeBook(recipeBook);
             updateRecipe(user, recipe, create);
 
