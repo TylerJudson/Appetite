@@ -36,7 +36,7 @@ export function Instructions({ instruction, index, ingredients }: { instruction:
     function instructionInIngredient(instructionWord: string, ingredientsWords: string[][]) {
         let ret: string[] = [];
         ingredientsWords.forEach(ingredientWords => {
-            if (ingredientWords.includes(instructionWord)) {
+            if (ingredientWords.some(word => word.toLowerCase() === instructionWord.toLowerCase())) {
                 ret.push(ingredientWords.join(""));
             }
         });
