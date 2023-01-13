@@ -32,14 +32,10 @@ export function SettingWidget({ title, icon, onPress, rightIcon, roundUpperCorne
 
     return (
         <View>
-            <TouchableOpacity onPress={onPress}>
-                {
-                    icon
-                }
-                <Text>{title}</Text>
-                {
-                    rightIcon
-                }
+            <TouchableOpacity onPress={onPress} style={[styles.container, roundUpperCorners && styles.roundUpperCorners, roundBottomCorners && styles.roundBottomCorners]}>
+                <View style={[styles.icon, styles.leftIcon]}>{icon}</View>
+                <Text style={styles.title}>{title}</Text>
+                <View style={[styles.icon, styles.rightIcon]}>{rightIcon}</View>
             </TouchableOpacity>
         </View>
     );
@@ -54,6 +50,26 @@ function createStyles() {
     const screenWidth = useWindowDimensions().width;
 
     return StyleSheet.create({
-        
+        container: {
+
+        },
+        roundUpperCorners: {
+            
+        },
+        roundBottomCorners: {
+
+        },
+        title: {
+
+        },
+        icon: {
+
+        },
+        leftIcon: {
+
+        },
+        rightIcon: {
+
+        }
     });
 }
