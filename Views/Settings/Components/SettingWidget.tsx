@@ -12,6 +12,7 @@ import { Recipe } from "../../../Models/Recipe";
 
 interface SettingWidgetProps {
     title: string,
+    subTitle?: string,
     icon: JSX.Element,
     onPress?: VoidFunction,
     rightIcon?: JSX.Element,
@@ -27,14 +28,17 @@ interface SettingWidgetProps {
  * @param recipe The recipe to display on the widget
  * @param onPress The function to call when the user presses on the widget
  */
-export function SettingWidget({ title, icon, onPress, rightIcon, roundUpperCorners=false, roundBottomCorners=false }: SettingWidgetProps) {
+export function SettingWidget({ title, subTitle, icon, onPress, rightIcon, roundUpperCorners=false, roundBottomCorners=false }: SettingWidgetProps) {
     const styles = createStyles();
 
     return (
         <View>
             <TouchableOpacity onPress={onPress} style={[styles.container, roundUpperCorners && styles.roundUpperCorners, roundBottomCorners && styles.roundBottomCorners]}>
                 <View style={[styles.icon, styles.leftIcon]}>{icon}</View>
-                <Text style={styles.title}>{title}</Text>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{title}</Text>
+                    { subTitle && <Text style={styles.subTitle}>{subTitle}</Text>}
+                </View>
                 <View style={[styles.icon, styles.rightIcon]}>{rightIcon}</View>
             </TouchableOpacity>
         </View>
@@ -59,7 +63,13 @@ function createStyles() {
         roundBottomCorners: {
 
         },
+        titleContainer: {
+
+        },
         title: {
+
+        },
+        subTitle: {
 
         },
         icon: {

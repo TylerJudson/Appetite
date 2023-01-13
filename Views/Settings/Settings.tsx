@@ -7,11 +7,43 @@ import { auth } from "../../firebaseConfig";
 import { Route } from "../navigation";
 import { SettingWidget } from "./Components/SettingWidget";
 import { ScrollView } from "react-native-gesture-handler";
+import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Account } from "./Components/Account";
+import { PublicProfile } from "./Components/PublicProfile";
+import { Friends } from "./Components/Friends";
+
+
+export type SettingsStackParamList = {
+    Settings: undefined;
+    Account: undefined;
+
+    PublicProfile: undefined;
+    Friends: undefined;
+};
+
+
+const Stack = createNativeStackNavigator<SettingsStackParamList>();
+
+export default function SettingsNavigation() {
+    return (
+        <Stack.Navigator initialRouteName='Settings' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="PublicProfile" component={PublicProfile} />
+            <Stack.Screen name="Friends" component={Friends} />
+        </Stack.Navigator>
+    )
+}
+
+
+
+
+type SettingsNavProps = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 
 /**
  * This contains options that the user can tweek to get the right specifications.
  */
-export default function Settings({ route }: Route) {
+function Settings({ navigation }: SettingsNavProps) {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
@@ -37,10 +69,11 @@ export default function Settings({ route }: Route) {
                             user 
                             ? <>
                                 <SettingWidget  
-                                    title="Account Information" 
+                                    title={user.displayName} 
+                                    subTitle={user.email}
                                     icon={<></>} 
                                     roundUpperCorners 
-                                    onPress={() => { }} 
+                                    onPress={() => navigation.navigate("Account")} 
                                 />
                                 <SettingWidget 
                                     title="Log Out" 
@@ -78,13 +111,13 @@ export default function Settings({ route }: Route) {
                                 title="Public Profile" 
                                 icon={<></>} 
                                 roundUpperCorners 
-                                onPress={() => { }} 
+                                onPress={() => navigation.navigate("PublicProfile")} 
                             />
                             <SettingWidget  
                                 title="Friends" 
                                 icon={<></>} 
                                 roundBottomCorners
-                                onPress={() => { }} 
+                                onPress={() => navigation.navigate("Friends")} 
                             />
                     </View>
 

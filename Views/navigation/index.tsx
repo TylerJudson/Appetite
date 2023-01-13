@@ -11,7 +11,7 @@ import { useRecipeBookState, useUserState } from '../../state';
 import EditCreateRecipe from '../EditCreateRecipe/EditCreateRecipe';
 import FeaturedRecipe from '../FeaturedRecipe/FeaturedRecipe';
 import Recipes from '../Recipes/Recipes';
-import Settings from '../Settings/Settings';
+import SettingsNavigation from '../Settings/Settings';
 import Social from '../Social/Social';
 import ViewRecipe from '../ViewRecipe/ViewRecipe';
 
@@ -110,7 +110,7 @@ function Appetite({navigation, route}: Props) {
 		recipes: Recipes as any,
 		featuredRecipe: FeaturedRecipe as any,
 		social: Social as any,
-		settings: Settings as any,
+		settings: SettingsNavigation as any,
 	});
 
 	return (
