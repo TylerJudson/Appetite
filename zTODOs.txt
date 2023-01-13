@@ -12,27 +12,31 @@
 |_____________________________________________________________________________________|
 
 
+
+UP NEXT!:
+   - Style the settings screen
+   - Design (not implement) the discover screen
+   - Design the social Screen
+   - Make everyone Accounts
+   - Add recipes
+
+
 General
  - MORE RECIPES!!!
 
 UI
- - tags modal and filtering
- - Edit/Create screen
- - Featured Recipe screen
  - Settings screen
- - Tags from the menu?
+ - Discover screen
+ - Tags from the menu? Maybe change this to focus mode?
  - Social Screen
 
 Design
  - App icon
  - Splash screen
  - Colors
- - Default Image
  - Remaining Icons
  
 Backend
  - Accounts
- - Sync to database
-    - Sync recipeBook
-    - Sync featured
+ - Discover
  - Add Friends and feeds

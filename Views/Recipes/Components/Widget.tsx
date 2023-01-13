@@ -92,7 +92,7 @@ function createStyles() {
 
 
 export default memo(Widget, (prev, next) => {
-    if (prev.recipe.name !== next.recipe.name || prev.recipe.image !== next.recipe.image || prev.recipe.favorited != next.recipe.favorited) {
+    if (prev.recipe.name !== next.recipe.name || prev.recipe.image !== next.recipe.image || prev.recipe.favorited !== next.recipe.favorited) {
         return false;
     }
     return true;
