@@ -15,11 +15,21 @@ export async function logout() {
  * @param password The password to log the user in with
  */
 export async function loginEmailPassword(email: string, password: string) {
-    const loginEmail = "Guest0@appetite.com";
-    const loginPassword = "Guest-0";
+    return await signInWithEmailAndPassword(auth, email, password)
+        .then(result => {
+            return "Success";
+        })
+        .catch((error) => {
+            if (error.code === "auth/invalid-email") {
+                return "Couldn't find your Account";
+            }
+            else if (error.code === "auth/wrong-password") {
+                return "Wrong Password. Try again or click Forgot password.";
+            }
+            else {
+                return error.code
+            }
+            
 
-    await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-        .catch((reason) => {
-            console.log("There was an error:", reason);
         });
 }

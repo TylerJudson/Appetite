@@ -1,16 +1,16 @@
 import { useWindowDimensions, View, StyleSheet } from "react-native";
-import { Button, IconButton, Text, useTheme } from "react-native-paper";
+import { IconButton, Text, useTheme } from "react-native-paper";
 import { useUserState } from "../../state";
 import { createGlobalStyles } from "../styles/globalStyles";
-import { loginEmailPassword, logout } from "../../FireBase/Authentication";
-import { auth } from "../../firebaseConfig";
-import { Route } from "../navigation";
+import { logout } from "../../FireBase/Authentication";
 import { SettingWidget } from "./Components/SettingWidget";
 import { ScrollView } from "react-native-gesture-handler";
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Account } from "./Components/Account";
 import { PublicProfile } from "./Components/PublicProfile";
 import { Friends } from "./Components/Friends";
+import { useState } from "react";
+import { LogIn } from "./LogIn";
 
 
 export type SettingsStackParamList = {
@@ -49,135 +49,160 @@ function Settings({ navigation }: SettingsNavProps) {
     const globalStyles = createGlobalStyles();
     const user = useUserState();
 
+    const [loginModalVisible, setLoginModalVisible] = useState(false);
+
     const styles = createStyles();
 
 
-    function handleUserLogin() {
-        loginEmailPassword("", "");
-    }
+
 
 
     return (
         <View style={globalStyles.screenContainer}>
-        <View style={styles.container}>
-            <ScrollView>
-                <Text variant="headlineLarge" >Settings</Text>
-                
-                <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>ACCOUNT</Text>
-                        {
-                            user 
-                            ? <>
+            <View style={styles.container}>
+                <ScrollView>
+                    <Text variant="headlineLarge" >Settings</Text>
+                    
+                    <View style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>ACCOUNT</Text>
+                        <View style={styles.widgetContainer}>
+                            {
+                                user 
+                                ? <>
+                                    <SettingWidget  
+                                        title={user.displayName} 
+                                        subTitle={user.email}
+                                        icon={<IconButton icon="" />} 
+                                        roundUpperCorners 
+                                        rightIcon={<IconButton icon="chevron-right" />}
+                                        onPress={() => navigation.navigate("Account")} 
+                                    />
+                                    <View style={styles.seperator} />
+                                    <SettingWidget 
+                                        title="Log Out" 
+                                        icon={<></>}
+                                        roundBottomCorners
+                                        rightIcon={<IconButton icon="logout" />}
+                                        onPress={logout} 
+                                    />
+                                </>
+                                : <>
+                                    <SettingWidget
+                                        title="Log In"
+                                        icon={<></>}
+                                        roundUpperCorners
+                                        roundBottomCorners
+                                        rightIcon={<IconButton icon="login" />}
+                                        onPress={() => setLoginModalVisible(true)}
+                                    />
+                                    <View style={styles.seperator} />
+                                    <SettingWidget
+                                        title="Create Account"
+                                        icon={<IconButton icon="" />}
+                                        roundUpperCorners
+                                        roundBottomCorners
+                                        rightIcon={<IconButton icon="chevron-right" />}
+                                        onPress={() => { }}
+                                    />
+                                </>
+                        }
+                        </View>
+                    </View>
+
+
+                    {
+                        user && 
+                        <>
+                        <View style={styles.sectionContainer}>
+                            <Text>PROFILE</Text>
                                 <SettingWidget  
-                                    title={user.displayName} 
-                                    subTitle={user.email}
-                                    icon={<></>} 
+                                    title="Public Profile" 
+                                    icon={<IconButton icon="" />} 
                                     roundUpperCorners 
-                                    onPress={() => navigation.navigate("Account")} 
+                                    rightIcon={<IconButton icon="chevron-right" />}
+                                    onPress={() => navigation.navigate("PublicProfile")} 
                                 />
-                                <SettingWidget 
-                                    title="Log Out" 
-                                    icon={<></>}
+                                <View style={styles.seperator} />
+                                <SettingWidget  
+                                    title="Friends" 
+                                    icon={<IconButton icon="" />} 
                                     roundBottomCorners
-                                    onPress={logout} 
+                                    rightIcon={<IconButton icon="chevron-right" />}
+                                    onPress={() => navigation.navigate("Friends")} 
                                 />
-                            </>
-                            : <>
-                                <SettingWidget
-                                    title="Log In"
-                                    icon={<></>}
-                                    roundUpperCorners
+                        </View>
+
+                        <View style={styles.sectionContainer}>
+                            <Text>NOTIFICATIONS</Text>
+                                <SettingWidget  
+                                    title="Some Notification Setting" 
+                                    icon={<IconButton icon="" />} 
+                                    roundUpperCorners 
+                                    rightIcon={<IconButton icon="chevron-right" />}
+                                    onPress={() => { }} 
+                                />
+                                <View style={styles.seperator} />
+                                <SettingWidget  
+                                    title="Some Notification Setting" 
+                                    icon={<IconButton icon="" />} 
                                     roundBottomCorners
-                                    onPress={handleUserLogin}
+                                    rightIcon={<IconButton icon="chevron-right" />}
+                                    onPress={() => { }} 
                                 />
-                                <SettingWidget
-                                    title="Create Account"
-                                    icon={<></>}
-                                    roundUpperCorners
-                                    roundBottomCorners
-                                    onPress={() => { }}
-                                />
-                            </>
+                        </View>
+                        </>
                     }
-                </View>
 
-
-                {
-                    user && 
-                    <>
                     <View style={styles.sectionContainer}>
-                        <Text>PROFILE</Text>
-                            <SettingWidget  
-                                title="Public Profile" 
-                                icon={<></>} 
-                                roundUpperCorners 
-                                onPress={() => navigation.navigate("PublicProfile")} 
+                        <Text>GENERAL</Text>
+                            <SettingWidget
+                                title="Show Favorites at Top"
+                                icon={<IconButton icon="heart" />}
+                                roundUpperCorners
+                                rightIcon={<IconButton icon="chevron-right" />}
+                                onPress={() => { }}
                             />
+                            <View style={styles.seperator} />
                             <SettingWidget  
-                                title="Friends" 
-                                icon={<></>} 
+                                title="About Appetite" 
+                                icon={<IconButton icon="" />} 
                                 roundBottomCorners
-                                onPress={() => navigation.navigate("Friends")} 
+                                rightIcon={<IconButton icon="chevron-right" />}
+                                onPress={() => { }} 
                             />
                     </View>
 
                     <View style={styles.sectionContainer}>
-                        <Text>NOTIFICATIONS</Text>
-                            <SettingWidget  
-                                title="Some Notification Setting" 
-                                icon={<></>} 
-                                roundUpperCorners 
-                                onPress={() => { }} 
+                        <Text>SUPPORT</Text>
+                            <SettingWidget
+                                title="Get Help"
+                                roundUpperCorners
+                                icon={<IconButton icon="" />}
+                                rightIcon={<IconButton icon="chevron-right" />}
+                                onPress={() => { }}
                             />
-                            <SettingWidget  
-                                title="Some Notification Setting" 
-                                icon={<></>} 
+                            <View style={styles.seperator} />
+                            <SettingWidget
+                                title="See terms of service"
+                                icon={<IconButton icon="" />}
+                                rightIcon={<IconButton icon="chevron-right" />}
+                                onPress={() => { }}
+                            />
+                            <View style={styles.seperator} />
+                            <SettingWidget
+                                title="See privacy policy"
                                 roundBottomCorners
-                                onPress={() => { }} 
+                                icon={<IconButton icon="" />}
+                                rightIcon={<IconButton icon="chevron-right" />}
+                                onPress={() => { }}
                             />
                     </View>
-                    </>
-                }
 
-                <View style={styles.sectionContainer}>
-                    <Text>GENERAL</Text>
-                        <SettingWidget
-                            title="Show Favorites at Top"
-                            roundUpperCorners
-                            icon={<IconButton icon="heart" />}
-                            onPress={() => { }}
-                        />
-                        <SettingWidget  
-                            title="About Appetite" 
-                            icon={<></>} 
-                            roundBottomCorners
-                            onPress={() => { }} 
-                        />
-                </View>
+                </ScrollView>
+            </View>
 
-                <View style={styles.sectionContainer}>
-                    <Text>SUPPORT</Text>
-                        <SettingWidget
-                            title="Get Help"
-                            roundUpperCorners
-                            icon={<></>}
-                            onPress={() => { }}
-                        />
-                        <SettingWidget
-                            title="See terms of service"
-                            icon={<></>}
-                            onPress={() => { }}
-                        />
-                        <SettingWidget
-                            title="See privacy policy"
-                            roundBottomCorners
-                            icon={<></>}
-                            onPress={() => { }}
-                        />
-                </View>
-
-            </ScrollView>
-        </View>
+            <LogIn loginModalVisible={loginModalVisible} setLoginModalVisible={setLoginModalVisible} />
+            
         </View>
     );
 }
@@ -189,6 +214,7 @@ function Settings({ navigation }: SettingsNavProps) {
  */
 function createStyles() {
     const screenWidth = useWindowDimensions().width;
+    const colors = useTheme().colors;
 
     return StyleSheet.create({
         container: {
@@ -198,6 +224,12 @@ function createStyles() {
 
         },
         sectionTitle: {
+
+        },
+        widgetContainer: {
+
+        },
+        seperator: {
 
         }
     });
