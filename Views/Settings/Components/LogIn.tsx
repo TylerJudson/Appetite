@@ -1,8 +1,8 @@
 import { MutableRefObject, useState, useRef, useEffect } from "react";
 import { ScrollView, View, StyleSheet, TextInput as input, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { TextInput, Text, Button, HelperText } from "react-native-paper";
-import { forgotPassword, loginEmailPassword } from "../../FireBase/Authentication";
-import { Modal } from "../components/Modal";
+import { forgotPassword, loginEmailPassword } from "../../../FireBase/Authentication";
+import { Modal } from "../../components/Modal";
 
 
 
@@ -14,9 +14,8 @@ import { Modal } from "../components/Modal";
 
 export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalVisible: boolean, setLoginModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
 
-    const [email, setEmai] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [changeToHide, setChangeToHide] = useState("");
 
     const passwordRef = useRef<input>() as MutableRefObject<input>;
     
@@ -24,7 +23,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
     const [passwordError, setPasswordError] = useState("");
     
         useEffect(() => {
-            setEmai("");
+            setEmail("");
             setPassword("");
             setEmailError("");
             setPasswordError("");
@@ -52,7 +51,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
             loginEmailPassword(email, password)
             .then(result => {
                 if (result === "Success") {
-                    setChangeToHide(Math.random().toString());
+                    setLoginModalVisible(false);
                 }
                 else if (result === "Invalid Email") {
                     setEmailError("Couldn't find your Account");
@@ -72,7 +71,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
         forgotPassword(email)
         .then(result => {
             if (result === "Success") {
-                setChangeToHide(Math.random().toString());
+                setLoginModalVisible(false);
 
                 if (Platform.OS === "web") {
                     if (window.confirm(`Email Sent \n An password reset email has been sent to ${email}.`)) {
@@ -104,7 +103,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
 
     return (
 
-        <Modal visible={loginModalVisible} setVisible={setLoginModalVisible} headerTitle="Appetite" headerButton="Cancel" changeToHide={changeToHide}>
+        <Modal visible={loginModalVisible} setVisible={setLoginModalVisible} headerTitle="Appetite" headerButton="Cancel">
             <ScrollView style={{ height: "100%"}}>
                 <View style={styles.container}>
                     <Text style={styles.title} variant="headlineMedium">Log In</Text>
@@ -112,19 +111,20 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                         style={styles.textInput}
                         autoFocus
                         value={email}
-                        onChangeText={text => {setEmai(text)}}
-                        onSubmitEditing={() => setTimeout(() => passwordRef.current.focus(), 250)}
+                        onChangeText={setEmail}
+                        onSubmitEditing={() => passwordRef.current.focus()}
                         error={emailError !== ""}
                         returnKeyType="next"
                         keyboardType="email-address"
                         label="Email"
                         mode="outlined"
+                        blurOnSubmit={false}
                     />
                     <HelperText type="error" visible={emailError !== ""} padding="none" style={styles.helperText}>{emailError}</HelperText>
                     <TextInput
                         ref={passwordRef}
                         style={styles.textInput}
-                        onChangeText={text => {setPassword(text)}}
+                        onChangeText={setPassword}
                         onSubmitEditing={handleUserLogin}
                         enablesReturnKeyAutomatically
                         error={passwordError !== ""}

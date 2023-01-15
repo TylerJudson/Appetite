@@ -10,7 +10,8 @@ import { Account } from "./Components/Account";
 import { PublicProfile } from "./Components/PublicProfile";
 import { Friends } from "./Components/Friends";
 import { useState } from "react";
-import { LogIn } from "./LogIn";
+import { LogIn } from "./Components/LogIn";
+import { CreateAccount } from "./Components/CreateAccount";
 
 
 export type SettingsStackParamList = {
@@ -50,6 +51,7 @@ function Settings({ navigation }: SettingsNavProps) {
     const user = useUserState();
 
     const [loginModalVisible, setLoginModalVisible] = useState(false);
+    const [createModalVisible, setCreateModalVisible] = useState(false);
 
     const styles = createStyles();
 
@@ -102,7 +104,7 @@ function Settings({ navigation }: SettingsNavProps) {
                                         roundUpperCorners
                                         roundBottomCorners
                                         rightIcon={<IconButton icon="chevron-right" />}
-                                        onPress={() => { }}
+                                        onPress={() => setCreateModalVisible(true)}
                                     />
                                 </>
                         }
@@ -202,7 +204,8 @@ function Settings({ navigation }: SettingsNavProps) {
             </View>
 
             <LogIn loginModalVisible={loginModalVisible} setLoginModalVisible={setLoginModalVisible} />
-            
+            <CreateAccount modalVisible={createModalVisible} setModalVisible={setCreateModalVisible} />
+
         </View>
     );
 }

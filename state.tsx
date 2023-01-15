@@ -67,6 +67,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
             if (u) {
                 loggedIn = true;
                 setUser(new User(u.uid, u.displayName || "", u.email || "", 0, 0, "Beginner"));
+                
                 const db = getDatabase();
                 const recipesRef = ref(db, "/users/" + u.uid + "/recipes");
                 const recipeImagesRef = ref(db, "/users/" + u.uid + "/recipeImages");

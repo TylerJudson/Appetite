@@ -6,14 +6,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
-// TODO: docs
+// TODO: docs and fix on light mode
 /**
  * Displays a modal at the bottom of the screen
  */
-export function Modal({ visible, setVisible, headerTitle, headerButton, children, changeToHide }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, headerTitle?: string, headerButton?: string, changeToHide?: string, children: React.ReactNode }) {
+export function Modal({ visible, setVisible, headerTitle, headerButton, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, headerTitle?: string, headerButton?: string, changeToHide?: string, children: React.ReactNode }) {
     const styles = createStyles();
 
     const [height, setHeight] = useState(1000);
+    const [isVisible, setIsVisible] = useState(false);
 
 
     const animModal = useRef(new Animated.Value(0)).current;
@@ -31,11 +32,12 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                 easing: Easing.in(Easing.circle),
                 useNativeDriver: true
             }
-        ).start(() => setVisible(false));
+        ).start(() => setIsVisible(false));
     }
 
     useEffect(() => {
         if (visible) {
+            setIsVisible(true);
             Animated.timing(
                 animModal,
                 {
@@ -46,19 +48,17 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                 }
             ).start()
         }
-    })
-
-    useEffect(() => {
-        if (changeToHide !== "") {
+        else if (isVisible) {
             hideModal();
         }
-    }, [changeToHide])
+    }, [visible])
+
 
     return (
         <Portal>
             {
-                visible &&
-                <Pressable style={styles.container} onPress={hideModal}>
+                isVisible &&
+                <Pressable style={styles.container} onPress={() => setVisible(false)}>
 
                     {/* This is the animated backdrop color: */}
                     <Animated.View style={{
@@ -80,7 +80,7 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                                     (headerTitle || headerButton) &&
                                     <View style={styles.header}>
                                         { headerTitle && <View style={styles.headerTitle}><Text style={{ fontWeight: "600", fontSize: 20 }} >{headerTitle}</Text></View>}
-                                        { headerButton && <Button style={styles.headerButton} onPress={hideModal}>{headerButton}</Button>}
+                                        { headerButton && <Button style={styles.headerButton} onPress={() => setVisible(false)}>{headerButton}</Button>}
                                     </View>
                                 }
                                 {children}

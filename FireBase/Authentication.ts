@@ -1,4 +1,4 @@
-import { sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 /**
@@ -56,4 +56,26 @@ export async function forgotPassword(email: string) {
                 return error.code;
             }
         });
+}
+
+
+export async function createAccount(email: string, password: string) {
+    return await createUserWithEmailAndPassword(auth, email, password)
+    .then((u) => {
+        return {code: "Success", uid: u.user.uid};
+    })
+    .catch(error => {
+        if (error.code === "auth/invalid-email") {
+            return "Invalid Email";
+        }
+        else if (error.code === "auth/weak-password") {
+            return "Weak Password";
+        }
+        else if (error.code === "auth/email-already-in-use") {
+            return "Account Exists";
+        }
+        else {
+            return error.code
+        }
+    })
 }

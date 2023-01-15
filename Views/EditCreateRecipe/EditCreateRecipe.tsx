@@ -10,7 +10,7 @@ import { Recipe } from "../../Models/Recipe";
 import { ScrollView } from "react-native-gesture-handler";
 import { List } from "./Components/List";
 import { Tags } from "../Recipes/Components/Tags";
-import { ImageChoser } from "./Components/ImageChoser";
+import { ImageChooser } from "./Components/ImageChooser";
 import { getDatabase, update, ref } from "firebase/database";
 import { updateRecipe } from "../../FireBase/Update";
 
@@ -113,7 +113,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}} keyboardVerticalOffset={5}>
             <ScrollView ref={scrollRef}>
                 <View style={styles.imageTitleContainer}>
-                    <ImageChoser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                    <ImageChooser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
                     
                     <View style={styles.titleContainer}>
                         <TextInput style={styles.oneLineTextInput} label="Recipe Name (required)"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>

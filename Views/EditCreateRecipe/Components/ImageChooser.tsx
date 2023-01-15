@@ -1,7 +1,7 @@
 import { Pressable, View, Image, StyleSheet, useWindowDimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { Text } from "react-native-paper";
+import { Avatar, Text } from "react-native-paper";
 import * as ImageManipulator from 'expo-image-manipulator';
 
 
@@ -11,8 +11,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
  * Displays an image and allows the user to change it
  * @param selectedImage The selected image the user has chosen
  * @param setSelectedImage The function to select the new image
+ * @param profile Whether or not the picture should be a profile or not
  */
-export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>> }) {
+export function ImageChooser({ selectedImage, setSelectedImage, profile=false }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>>, profile?: boolean }) {
 
     const styles = createStyles();
 
@@ -28,7 +29,7 @@ export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage
             // Compress the image further
             const manipResult = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
-                [{ resize: { width: 750, height: 750 } }],
+                [{ resize: { width: profile ? 200 : 750, height: profile ? 200 : 750 } }],
                 { base64: true, compress: 0 }
             )
             setSelectedImage('data:image/jpeg;base64,' + manipResult.base64)
@@ -39,9 +40,16 @@ export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage
     return (
         <View style={{ marginBottom: 10 }}>
             <Pressable onPress={pickImageAsync} >
-                <Image style={styles.image} source={{ uri: selectedImage ? selectedImage : undefined}} />
+                {
+                    profile
+                    ? <View style={styles.profileContainer}>
+                            <Avatar.Image size={150} source={selectedImage ? {uri: selectedImage} : require("../../../assets/images/defaultProfilePic.jpeg")}></Avatar.Image>
+                            {!selectedImage && <Text style={styles.editProfile} variant="labelLarge" >Edit</Text>}
+                      </View>
+                    : <Image style={styles.image} source={{ uri: selectedImage ? selectedImage : undefined}} />
+                }
             </Pressable>
-            <Text style={{alignSelf: "center"}} variant="labelSmall">Click on the image above to select an image from your device.</Text>
+            {!profile && <Text style={{alignSelf: "center"}} variant="labelSmall">Click on the image above to select an image from your device.</Text>}
         </View>
     )
 }
@@ -62,6 +70,15 @@ function createStyles() {
             width: screenWidth > 700 ? undefined : "100%",
             aspectRatio: screenWidth > 700 ? 1 : undefined,
             margin: screenWidth > 700 ? 10 : undefined
+        },
+        profileContainer: {
+            justifyContent: "center",
+            alignItems: "center"
+        },
+        editProfile: {
+            position: "absolute",
+            color: "white",
+            bottom: 10,
         }
     });
 }

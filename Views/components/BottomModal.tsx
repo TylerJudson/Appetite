@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
  */
 export function BottomModal({ visible, setVisible, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, children: React.ReactNode }) {
     const styles = createStyles();
+    const [isVisible, setIsVisible] = useState(false);
 
     const [height, setHeight] = useState(1000);
 
@@ -26,11 +27,12 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
                 duration: 250,
                 useNativeDriver: true
             }
-            ).start(() => setVisible(false));
+            ).start(() => setIsVisible(false));
     }
 
     useEffect(() => {
         if (visible) {
+            setIsVisible(true)
             Animated.timing(
                 animModal,
                 {
@@ -40,13 +42,17 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
                 }
                 ).start()
         }
-    })
+        else if (isVisible) {
+            hideModal();
+        }
+
+    }, [visible])
 
     return (
         <Portal>
             {
-                visible &&
-                <Pressable style={styles.container} onPress={hideModal}>
+                isVisible &&
+                <Pressable style={styles.container} onPress={() => setVisible(false)}>
 
                     {/* This is the animated backdrop color: */}
                     <Animated.View style={{
