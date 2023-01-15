@@ -14,31 +14,31 @@ import { Modal } from "../components/Modal";
 
 export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalVisible: boolean, setLoginModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
 
-    const [userName, setUserName] = useState("");
+    const [email, setEmai] = useState("");
     const [password, setPassword] = useState("");
     const [changeToHide, setChangeToHide] = useState("");
 
     const passwordRef = useRef<input>() as MutableRefObject<input>;
-
-    useEffect(() => {
-        setUserName("");
-        setPassword("");
-        setUserNameError("");
-        setPasswordError("");
-    }, [loginModalVisible])
-
-    const [userNameError, setUserNameError] = useState("");
+    
+    const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    
+        useEffect(() => {
+            setEmai("");
+            setPassword("");
+            setEmailError("");
+            setPasswordError("");
+        }, [loginModalVisible])
 
     function handleUserLogin() {
         let error = false;
 
-        if (userName === "") {
-            setUserNameError("Enter an email");
+        if (email === "") {
+            setEmailError("Enter an email");
             error = true;
         }
         else {
-            setUserNameError("");
+            setEmailError("");
         }
         if (password === "") {
             setPasswordError("Enter a password");
@@ -49,19 +49,19 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
         }
 
         if (!error) {
-            loginEmailPassword(userName, password)
+            loginEmailPassword(email, password)
             .then(result => {
                 if (result === "Success") {
                     setChangeToHide(Math.random().toString());
                 }
                 else if (result === "Invalid Email") {
-                    setUserNameError("Couldn't find your Account");
+                    setEmailError("Couldn't find your Account");
                 }
                 else if (result === "Wrong Password") {
                     setPasswordError("Wrong Password. Try again or click Forgot password.");
                 }
                 else {
-                    setUserNameError(result);
+                    setEmailError(result);
                 }
             })
         }
@@ -69,19 +69,19 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
     }
 
     function handleForgotPassword() {
-        forgotPassword(userName)
+        forgotPassword(email)
         .then(result => {
             if (result === "Success") {
                 setChangeToHide(Math.random().toString());
 
                 if (Platform.OS === "web") {
-                    if (window.confirm(`Email Sent \n An password reset email has been sent to ${userName}.`)) {
+                    if (window.confirm(`Email Sent \n An password reset email has been sent to ${email}.`)) {
                     }
                 }
                 else {
                     return Alert.alert(
                         "Email Sent",
-                        `A password reset email has been sent to ${userName}.`,
+                        `A password reset email has been sent to ${email}.`,
                         [
                             {
                                 text: "Okay",
@@ -92,10 +92,10 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                 }
             }
             else if (result === "Invalid Email") {
-                setUserNameError("Enter a valid email to reset your password.");
+                setEmailError("Enter a valid email to reset your password.");
             }
             else {
-                setUserNameError(result);
+                setEmailError(result);
             }
         })
     }
@@ -111,16 +111,16 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                     <TextInput
                         style={styles.textInput}
                         autoFocus
-                        value={userName}
-                        onChangeText={text => {setUserName(text)}}
+                        value={email}
+                        onChangeText={text => {setEmai(text)}}
                         onSubmitEditing={() => setTimeout(() => passwordRef.current.focus(), 250)}
-                        error={userNameError !== ""}
+                        error={emailError !== ""}
                         returnKeyType="next"
                         keyboardType="email-address"
                         label="Email"
                         mode="outlined"
                     />
-                    <HelperText type="error" visible={userNameError !== ""} padding="none" style={styles.helperText}>{userNameError}</HelperText>
+                    <HelperText type="error" visible={emailError !== ""} padding="none" style={styles.helperText}>{emailError}</HelperText>
                     <TextInput
                         ref={passwordRef}
                         style={styles.textInput}
@@ -134,7 +134,6 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                     />
                     <HelperText type="error" visible={passwordError !== ""} padding="none" style={styles.helperText}>{passwordError}</HelperText>
                     <View style={styles.buttonContainer}>
-                        {/** // TODO: forgot password? */}
                         <Button onPress={handleForgotPassword}>Forgot Password?</Button>
                         <Button onPress={handleUserLogin}>Log In</Button>
                     </View>
