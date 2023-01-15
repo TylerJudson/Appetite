@@ -8,14 +8,11 @@ import { MutableRefObject, useState } from 'react';
 
 
 
-// TODO: Docs
 
 /**
- * Creates a header with a simple back button and an optional title and button
- * @param navigation the global navigation object that allows the header to navigate
- * @param title the optional title to display in the center
- * @param button the option button to show in the right
- * @param leftButton the button to show on the left omit label to see the back chevron
+ * Creates a element that allows the user to swipe it to delete it
+ * @param onSwipe the function to call when the user swipes the element
+ * @param scrollRef The gestured scroll reference the swipe is in
  */
 export function SwipeToDelete({ onSwipe, children, scrollRef }: {onSwipe: VoidFunction, children: JSX.Element, scrollRef: MutableRefObject<ScrollView>}) {
 

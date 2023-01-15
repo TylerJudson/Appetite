@@ -53,7 +53,7 @@ export class Recipe implements IRecipe {
         this.readonly = readonly;
 
         this.favorited = favorited;
-        this.image = image; // TODO: find a default image for this
+        this.image = image;
         this.id = id || uuidv4();
     }    
 

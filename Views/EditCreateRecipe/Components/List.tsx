@@ -7,7 +7,6 @@ import { SwipeToDelete } from "./Swipe";
 
 
 
-// TODO: docs
 
 interface ListProps {
     title: string, 
@@ -21,6 +20,10 @@ interface ListProps {
     multiline?: boolean
 }
 
+/**
+ * Displays a changeable list
+ * @param ListProps The properties for the list
+ */
 export function List({ title, list, onDelete, onItemChange, onAdd, addPlaceholder, scrollRef, affix="Index", multiline=false }: ListProps) {
     
     const [addItem, setAddItem] = useState("");
@@ -31,7 +34,7 @@ export function List({ title, list, onDelete, onItemChange, onAdd, addPlaceholde
         <>
         <View style={styles.listContainer}>
             <Text variant="titleLarge" style={{ margin: 5 }}>{title}</Text>
-                {
+                { // Displays all of the items in the lsit
                     list.map((item, index) => {
                         return (
                             <View style={{marginBottom: 1}} key={index}>
@@ -49,6 +52,7 @@ export function List({ title, list, onDelete, onItemChange, onAdd, addPlaceholde
                     })
                 }
         </View>
+        {/** Displays a text box that allows the user to add items to the list */}
         <View style={styles.listInputContainer}>
             <IconButton icon="plus" size={20} />
             <TextInput 
@@ -59,11 +63,12 @@ export function List({ title, list, onDelete, onItemChange, onAdd, addPlaceholde
                 placeholderTextColor={colors.onSurfaceVariant}
                 scrollEnabled={false}
                 onChangeText={text => {
+                    // If the last character is a newline add the item to the list
                     if (text[text.length - 1] === "\n") {
                         setAddItem("");
-
                         onAdd(text.substring(0, text.length - 1));
                     }
+                    // else just change the text
                     else {
                         setAddItem(text)
                     }

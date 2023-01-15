@@ -7,18 +7,16 @@ import * as ImageManipulator from 'expo-image-manipulator';
 
 
 
-// TODO: Docs
 /**
- * Creates a header with a simple back button and an optional title and button
- * @param navigation the global navigation object that allows the header to navigate
- * @param title the optional title to display in the center
- * @param button the option button to show in the right
- * @param leftButton the button to show on the left omit label to see the back chevron
+ * Displays an image and allows the user to change it
+ * @param selectedImage The selected image the user has chosen
+ * @param setSelectedImage The function to select the new image
  */
 export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>> }) {
 
     const styles = createStyles();
 
+    /** Picks the image */
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -27,7 +25,7 @@ export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage
         });
 
         if (!result.canceled) {
-
+            // Compress the image further
             const manipResult = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
                 [{ resize: { width: 750, height: 750 } }],

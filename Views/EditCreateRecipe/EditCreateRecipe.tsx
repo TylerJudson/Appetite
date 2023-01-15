@@ -17,14 +17,12 @@ import { updateRecipe } from "../../FireBase/Update";
 type navProps = NativeStackScreenProps<RootStackParamList, 'EditCreate'>;
 
 
-// TODO: docs
 /**
- * Shows a recipe to the user.
- * @param param0 The navigation and parameters (recipe) to navigate between screens and view the recipe
+ * Displays a screen that allows the user to edit or create a recipe
+ * @param navigation The navigation 
+ * @param route The route params. This should include the recipe to edit (if there is one)
  */
 export default function EditCreateRecipe({ navigation, route }: navProps) {
-    const theme = useTheme();
-    const colors = theme.colors;
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
@@ -33,13 +31,16 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
 
     const create = route.params.recipe ? false : true;
     const [recipe, setRecipe] = useState(route.params.recipe ? route.params.recipe.deepClone() : Recipe.Initial());
-    const [tags, setTags] = useState<string[]>(recipe.tags); // The tags to filter the list of recipes by
+    const [tags, setTags] = useState<string[]>(recipe.tags);
     const [selectedImage, setSelectedImage] = useState(recipe.image);
 
     const scrollRef = useRef() as MutableRefObject<ScrollView>;
 
-
+    /**
+     * Handles the action of saving the recipe
+     */
     function handleSave() {
+        // If the recipe has no name display an alert saying that the user needs to include a name
         if (recipe.name === "") {
             if (Platform.OS === "web") {
                 if (window.confirm("You must include a name before you can save the recipe.")) {
@@ -61,7 +62,6 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
         else {
             recipe.image = selectedImage;
             recipe.tags = tags;
-            
 
             recipeBook.recipes[recipe.id] = recipe;
             
@@ -69,10 +69,12 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
             updateRecipe(user, recipe, create);
 
             navigation.goBack();
-
-            
         }
     }
+
+    /**
+     * Displays an alert verifying the user wants to discard the recipe 
+     */
     function handleBack() {
 
         if (Platform.OS === "web") {

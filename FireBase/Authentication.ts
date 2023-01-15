@@ -35,7 +35,11 @@ export async function loginEmailPassword(email: string, password: string) {
 }
 
 
-// TODO: docs
+/**
+ * handles the acion of forgetting the password
+ * @param email The email to sent the forgot password notification to
+ * @returns The result, "Succes" or "Invalid Email"
+ */
 export async function forgotPassword(email: string) {
     return await sendPasswordResetEmail(auth, email)
         .then(() => {

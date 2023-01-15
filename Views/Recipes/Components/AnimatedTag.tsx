@@ -3,11 +3,11 @@ import { Chip } from "react-native-paper";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 
-// TODO: Docs
 /**
- * Displays a clickable widget with the picture of a recipe on it.
- * @param recipe The recipe to display on the widget
- * @param onPress The function to call when the user presses on the widget
+ * Displays a tag that is animated
+ * @param title The title to show on the tag
+ * @param onPress The function to call when the user clicks on the tag
+ * @param remove Whether or not to show the remove button
  */
 export function AnimatedTag({ title, onPress, remove=false }: { title: string, onPress: VoidFunction, remove?: boolean }) {
     return (
