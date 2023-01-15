@@ -1,4 +1,4 @@
-import { Pressable, View, Image, StyleSheet } from "react-native";
+import { Pressable, View, Image, StyleSheet, useWindowDimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Text } from "react-native-paper";
@@ -56,9 +56,14 @@ export function ImageChoser({ selectedImage, setSelectedImage }: { selectedImage
  * @returns The styles
  */
 function createStyles() {
+    const screenWidth = useWindowDimensions().width;
+
     return StyleSheet.create({
         image: {
-            height: 200, width: "100%",
+            height: screenWidth > 700 ? undefined : 200, 
+            width: screenWidth > 700 ? undefined : "100%",
+            aspectRatio: screenWidth > 700 ? 1 : undefined,
+            margin: screenWidth > 700 ? 10 : undefined
         }
     });
 }

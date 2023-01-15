@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useRef, useState } from "react";
-import { View, StyleSheet, Alert, Platform, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet, Alert, Platform, KeyboardAvoidingView, useWindowDimensions } from "react-native";
 import { TextInput, useTheme } from "react-native-paper";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { Header } from "./Components/Header";
@@ -110,12 +110,17 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
 
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}} keyboardVerticalOffset={5}>
             <ScrollView ref={scrollRef}>
-                <ImageChoser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                <View style={styles.imageTitleContainer}>
+                    <ImageChoser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                    
+                    <View style={styles.titleContainer}>
+                        <TextInput style={styles.oneLineTextInput} label="Recipe Name (required)"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>
+                        <TextInput style={styles.oneLineTextInput} label="Description" multiline                              value={recipe.description || ""}    onChangeText={text => {recipe.description = text; setRecipe(recipe.clone())}}/>
+                        <TextInput style={styles.oneLineTextInput} label="Prep Time"  placeholder="Prep Time (min)"           value={`${recipe.prepTime || ""}`}  onChangeText={text => {recipe.prepTime = parseInt(text); setRecipe(recipe.clone())}}/>
+                        <TextInput style={styles.oneLineTextInput} label="Cook Time"  placeholder="Prep Time (min)"           value={`${recipe.cookTime || ""}`}  onChangeText={text => {recipe.cookTime = parseInt(text); setRecipe(recipe.clone())}}/>
+                    </View>
+                </View>
 
-                <TextInput style={styles.oneLineTextInput} label="Recipe Name (required)"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>
-                <TextInput style={styles.oneLineTextInput} label="Description" multiline                              value={recipe.description || ""}    onChangeText={text => {recipe.description = text; setRecipe(recipe.clone())}}/>
-                <TextInput style={styles.oneLineTextInput} label="Prep Time"  placeholder="Prep Time (min)"           value={`${recipe.prepTime || ""}`}  onChangeText={text => {recipe.prepTime = parseInt(text); setRecipe(recipe.clone())}}/>
-                <TextInput style={styles.oneLineTextInput} label="Cook Time"  placeholder="Prep Time (min)"           value={`${recipe.cookTime || ""}`}  onChangeText={text => {recipe.cookTime = parseInt(text); setRecipe(recipe.clone())}}/>
 
                 <List 
                     title={"Ingredients:"}
@@ -158,9 +163,19 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
  */
 function createStyles() {
     const colors = useTheme().colors;
+    const screenWidth = useWindowDimensions().width;
+
     return StyleSheet.create({
         oneLineTextInput: {
             marginVertical: 10
+        },
+        imageTitleContainer: {
+            flexDirection: screenWidth > 700 ? "row" : undefined
+        },
+        titleContainer: {
+            flex: 1,
+            margin: screenWidth > 700 ? 10 : undefined,
+            justifyContent: screenWidth > 700 ? "space-between" : undefined,
         },
     }); 
 }

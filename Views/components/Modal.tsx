@@ -1,5 +1,5 @@
 import React, { Dispatch, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react";
-import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Animated, KeyboardAvoidingView, Platform, Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { Portal, Text, useTheme, Button } from "react-native-paper";
 import { Easing } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -70,11 +70,11 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                         {/* The actual modal: */}
                         <Animated.View
                             onLayout={() => { modalRef.current.measure((_x, _y, _w, height) => { setHeight(height) }) }}
-                            style={{
-                                justifyContent: "flex-end",
+                            style={[styles.modalContainer, {
                                 transform: [{ translateY: animModal.interpolate({ inputRange: [0, 1], outputRange: [height  + height / 4, 0] }) }],
-                            }}
+                            }]}
                         >
+                            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                             <Pressable style={styles.contentContainer} ref={modalRef}>
                                 {
                                     (headerTitle || headerButton) &&
@@ -85,7 +85,9 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                                 }
                                 {children}
                             </Pressable>
+                            </KeyboardAvoidingView>
                         </Animated.View>
+
                 </Pressable>
             }
         </Portal>
@@ -98,19 +100,24 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
  * @returns The styles
  */
 function createStyles() {
-    const insets = useSafeAreaInsets();
+    const screenWidth = useWindowDimensions().width;
     const colors = useTheme().colors;
 
     return StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: "flex-end"
+            justifyContent: screenWidth > 700 ? "center" : "flex-end",
+            alignItems: screenWidth > 700 ? "center" : undefined
         },
+        modalContainer: {
+            justifyContent: "flex-end",
+        },  
         header: {
             borderTopLeftRadius: 10, borderTopRightRadius: 10,
             width: "100%", height: 50,
             flexDirection: "row", justifyContent: "center",
-            backgroundColor: colors.elevation.level1
+            backgroundColor: colors.elevation.level1,
+            
         },
         headerTitle: {
             justifyContent: "center",
@@ -122,9 +129,11 @@ function createStyles() {
             right: 5
         },
         contentContainer: {
-            height: "97%",
+            height: screenWidth > 700 ? 600 : "97%",
+            maxWidth: screenWidth > 700 ? 600 : undefined,
+            
             backgroundColor: colors.background,
-            borderTopLeftRadius: 10, borderTopRightRadius: 10,
+            borderRadius: 10
         }
     });
 }

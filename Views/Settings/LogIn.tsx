@@ -1,7 +1,7 @@
 import { MutableRefObject, useState, useRef, useEffect } from "react";
-import { ScrollView, View, StyleSheet, TextInput as input, KeyboardAvoidingView, Platform } from "react-native";
+import { ScrollView, View, StyleSheet, TextInput as input, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { TextInput, Text, Button, HelperText } from "react-native-paper";
-import { loginEmailPassword } from "../../FireBase/Authentication";
+import { forgotPassword, loginEmailPassword } from "../../FireBase/Authentication";
 import { Modal } from "../components/Modal";
 
 
@@ -54,15 +54,50 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                 if (result === "Success") {
                     setChangeToHide(Math.random().toString());
                 }
-                else if (result === "Couldn't find your Account") {
+                else if (result === "Invalid Email") {
                     setUserNameError("Couldn't find your Account");
                 }
-                else if (result === "Wrong Password. Try again or click Forgot password.") {
+                else if (result === "Wrong Password") {
                     setPasswordError("Wrong Password. Try again or click Forgot password.");
+                }
+                else {
+                    setUserNameError(result);
                 }
             })
         }
 
+    }
+
+    function handleForgotPassword() {
+        forgotPassword(userName)
+        .then(result => {
+            if (result === "Success") {
+                setChangeToHide(Math.random().toString());
+
+                if (Platform.OS === "web") {
+                    if (window.confirm(`Email Sent \n An password reset email has been sent to ${userName}.`)) {
+                    }
+                }
+                else {
+                    return Alert.alert(
+                        "Email Sent",
+                        `A password reset email has been sent to ${userName}.`,
+                        [
+                            {
+                                text: "Okay",
+                                style: "cancel"
+                            },
+                        ]
+                    )
+                }
+            }
+            else if (result === "Invalid Email") {
+                setUserNameError("Enter a valid email to reset your password.");
+            }
+            else {
+                setUserNameError(result);
+            }
+        })
     }
     
     const styles = createStyles();
@@ -70,7 +105,6 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
     return (
 
         <Modal visible={loginModalVisible} setVisible={setLoginModalVisible} headerTitle="Appetite" headerButton="Cancel" changeToHide={changeToHide}>
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <ScrollView style={{ height: "100%"}}>
                 <View style={styles.container}>
                     <Text style={styles.title} variant="headlineMedium">Log In</Text>
@@ -79,7 +113,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                         autoFocus
                         value={userName}
                         onChangeText={text => {setUserName(text)}}
-                        onSubmitEditing={() => passwordRef.current.focus()}
+                        onSubmitEditing={() => setTimeout(() => passwordRef.current.focus(), 250)}
                         error={userNameError !== ""}
                         returnKeyType="next"
                         keyboardType="email-address"
@@ -101,13 +135,12 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                     <HelperText type="error" visible={passwordError !== ""} padding="none" style={styles.helperText}>{passwordError}</HelperText>
                     <View style={styles.buttonContainer}>
                         {/** // TODO: forgot password? */}
-                        <Button>Forgot Password?</Button>
+                        <Button onPress={handleForgotPassword}>Forgot Password?</Button>
                         <Button onPress={handleUserLogin}>Log In</Button>
                     </View>
                 </View>
 
             </ScrollView>
-            </KeyboardAvoidingView>
         </Modal>
     )
 }

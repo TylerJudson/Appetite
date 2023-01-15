@@ -16,7 +16,7 @@ export function Header({ title, button, leftButton }: { title?: string, button?:
     const insets = useSafeAreaInsets();
 
     return (
-        <Appbar.Header statusBarHeight={insets.top - 35}>
+        <Appbar.Header statusBarHeight={insets.top > 20 ? insets.top - 35 : insets.top}>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", top: insets.top ? insets.top - 35 : undefined}}>
 
                 {

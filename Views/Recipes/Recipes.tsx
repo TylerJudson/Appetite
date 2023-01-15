@@ -126,12 +126,14 @@ export default function Recipes({ route }: Route) {
             
             <Animated.FlatList  
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
+                keyExtractor={item => item.id}
                 renderItem={ ({item}) => {
                     return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
                 }}
                 //@ts-ignore
                 itemLayoutAnimation={Layout} 
                 numColumns={Math.floor(screenWidth / 250)}
+                key={Math.floor(screenWidth / 250)}
                 ListHeaderComponent={
                     <View style={{ overflow: "hidden" }}>
                         <animated.View style={{

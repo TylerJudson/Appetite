@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 /**
@@ -21,15 +21,35 @@ export async function loginEmailPassword(email: string, password: string) {
         })
         .catch((error) => {
             if (error.code === "auth/invalid-email") {
-                return "Couldn't find your Account";
+                return "Invalid Email";
             }
             else if (error.code === "auth/wrong-password") {
-                return "Wrong Password. Try again or click Forgot password.";
+                return "Wrong Password";
             }
             else {
-                return error.code
+                return error.code;
             }
             
 
+        });
+}
+
+
+// TODO: docs
+export async function forgotPassword(email: string) {
+    return await sendPasswordResetEmail(auth, email)
+        .then(() => {
+            return "Success";
+        })
+        .catch((error) => {
+            if (error.code === "auth/missing-email") {
+                return "Invalid Email";
+            }
+            else if (error.code === "auth/invalid-email") {
+                return "Invalid Email";
+            }
+            else {
+                return error.code;
+            }
         });
 }
