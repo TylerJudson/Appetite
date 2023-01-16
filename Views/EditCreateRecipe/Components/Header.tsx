@@ -15,10 +15,9 @@ import { RootStackParamList } from "../../navigation";
 export function Header({ title, button, leftButton }: { title?: string, button?: { label: string, onPress: VoidFunction }, leftButton: { label?: string, onPress: VoidFunction } }) {
     const insets = useSafeAreaInsets();
 
-    {/** // TODO fix this header on all screen sizes */}
     return (
-        <Appbar.Header statusBarHeight={insets.top > 20 ? insets.top - 35 : insets.top} >
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", top: insets.top ? insets.top - 35 : undefined}}>
+        <Appbar.Header statusBarHeight={insets.top > 20 ? insets.top - 35 : insets.top - 35} >
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", top: insets.top > 20 ? insets.top - 35 : insets.top > 0 ? 10 : undefined}}>
 
                 {
                     leftButton.label

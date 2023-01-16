@@ -8,7 +8,6 @@ import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildA
 import { importToObject } from "./utilities/importToObject";
 
 
-// TODO: Documentation
 
 
 interface IState {
@@ -62,7 +61,6 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 value.tags || []);
         }
         let loggedIn = false;
-        // TODO: Docs
         onAuthStateChanged(auth, (u) => {
             if (u) {
                 loggedIn = true;
