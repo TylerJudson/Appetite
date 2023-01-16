@@ -13,7 +13,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
  * @param setSelectedImage The function to select the new image
  * @param profile Whether or not the picture should be a profile or not
  */
-export function ImageChooser({ selectedImage, setSelectedImage, profile=false, editable=true }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>>, profile?: boolean, editable?: boolean }) {
+export function ImageChooser({ selectedImage, setSelectedImage, profile=false, editable=true }: { selectedImage: string, setSelectedImage?: React.Dispatch<React.SetStateAction<string>>, profile?: boolean, editable?: boolean }) {
 
     const styles = createStyles();
 
@@ -32,7 +32,7 @@ export function ImageChooser({ selectedImage, setSelectedImage, profile=false, e
                 [{ resize: { width: profile ? 200 : 750, height: profile ? 200 : 750 } }],
                 { base64: true, compress: 0 }
             )
-            setSelectedImage('data:image/jpeg;base64,' + manipResult.base64)
+            setSelectedImage?.('data:image/jpeg;base64,' + manipResult.base64)
         }
     };
 

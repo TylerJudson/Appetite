@@ -33,7 +33,7 @@ export function SettingWidget({ title, subTitle, icon, onPress, rightIcon, round
 
     return (
         <View>
-            <TouchableOpacity onPress={onPress} style={[styles.container, roundUpperCorners && styles.roundUpperCorners, roundBottomCorners && styles.roundBottomCorners]}>
+            <TouchableOpacity onPress={onPress} disabled={onPress === undefined} style={[styles.container, roundUpperCorners && styles.roundUpperCorners, roundBottomCorners && styles.roundBottomCorners]}>
                 <View style={[styles.icon, styles.leftIcon]}>{icon}</View>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{title}</Text>

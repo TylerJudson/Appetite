@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 /**
@@ -58,7 +58,7 @@ export async function forgotPassword(email: string) {
         });
 }
 
-
+// TODO: dcos
 export async function createAccount(email: string, password: string) {
     return await createUserWithEmailAndPassword(auth, email, password)
     .then((u) => {
@@ -78,4 +78,28 @@ export async function createAccount(email: string, password: string) {
             return error.code
         }
     })
+}
+
+
+
+export async function changePassword(newPassword: string) {
+    const user = auth.currentUser;
+    if (user) {
+        return await updatePassword(user, newPassword)
+        .then(() => {
+            return "Success";
+        }).catch((error) => {
+            console.log(error);
+            
+            if (error.code === "auth/weak-password") {
+                return "Weak Password";
+            }
+            else {
+                return error.code
+            }
+        });
+    }
+    else {
+        return "Not Signed In";
+    }
 }

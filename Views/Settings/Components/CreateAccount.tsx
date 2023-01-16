@@ -81,8 +81,8 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
             }
             else {
                 if (password !== verifyPassword) {
-                    setVerifyPasswordError("Passwords don't match");
-                    setPasswordError("Passwords don't match");
+                    setVerifyPasswordError("Passwords must match");
+                    setPasswordError("Passwords must match");
                     error = true;
                 }
                 else {
