@@ -192,10 +192,10 @@ export default function Recipes({ route }: Route) {
 function createStyles() {
     return StyleSheet.create({
         title: {
-            marginHorizontal: 10
+            marginHorizontal: 10, marginTop: 5,
         },
         searchBar: {
-            marginHorizontal: 10,
+            marginHorizontal: 10, marginTop: 5,
             height: 40,
         },
         fab: {
