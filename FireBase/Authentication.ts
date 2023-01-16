@@ -58,7 +58,12 @@ export async function forgotPassword(email: string) {
         });
 }
 
-// TODO: dcos
+/**
+ * Creates an account with the designated email and password
+ * @param email The email to create the account with
+ * @param password The password to create the account with
+ * @returns The result "Success" or "Invalid Email" or "Weak Password" or "Account Exsists"
+ */
 export async function createAccount(email: string, password: string) {
     return await createUserWithEmailAndPassword(auth, email, password)
     .then((u) => {

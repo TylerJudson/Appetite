@@ -22,11 +22,9 @@ interface SettingWidgetProps {
 
 
 
-// TODO: docs
 /**
- * Displays a clickable widget with the picture of a recipe on it.
- * @param recipe The recipe to display on the widget
- * @param onPress The function to call when the user presses on the widget
+ * Creates a customizable setting widget
+ * @param SettingProps The properties of the widget
  */
 export function SettingWidget({ title, subTitle, icon, onPress, rightIcon, roundUpperCorners=false, roundBottomCorners=false }: SettingWidgetProps) {
     const styles = createStyles();

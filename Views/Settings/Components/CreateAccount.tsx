@@ -15,12 +15,13 @@ import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
 
 
 
-// TODO: docs
-
-
+/**
+ * Creates a modal that allows the user to create an accoung
+ * @param modalVisible whether or not the create account modal is visible or not
+ * @param setModalVisible the function to change the visibility of the modal
+ */ 
 export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible: boolean, setModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
 
-    const user = useUserState();
     const {recipeBook} = useRecipeBookState();
 
     const [profilePicture, setProfilePicture] = useState("");
@@ -40,22 +41,31 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
 
     const [skillLevelModalVisible,setSkillLevelModalVisible] = useState(false);
     
-        useEffect(() => {
-            setProfilePicture("");
-            setEmail("");
-            setDisplayName("");
-            setSkillLevel("Beginner");
-            setPassword("");
+    /**
+     * When the visibility changes -> reset all of the properties
+     */
+    useEffect(() => {
+        setProfilePicture("");
+        setEmail("");
+        setDisplayName("");
+        setSkillLevel("Beginner");
+        setPassword("");
 
-            setEmailError("");
-            setDisplayNameError("");
-            setPasswordError("");
-            setVerifyPasswordError("");
-        }, [modalVisible])
+        setEmailError("");
+        setDisplayNameError("");
+        setPasswordError("");
+        setVerifyPasswordError("");
+    }, [modalVisible])
 
+    /**
+     * Handles the action of creating an account
+     */
     function handleCreate() {
         let error = false;
 
+        //#region Validation
+
+        // check each of the entries for empty strngs
         if (email === "") {
             setEmailError("Enter an email");
             error = true;
@@ -80,6 +90,7 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                 error = true;
             }
             else {
+                // Check to make sure the passwords match
                 if (password !== verifyPassword) {
                     setVerifyPasswordError("Passwords must match");
                     setPasswordError("Passwords must match");
@@ -91,14 +102,18 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                 }
             }
         }
+        //#endregion
+
 
         if (!error) {
             createAccount(email, password)
             .then(result => {
+                // If the result was successful then add the users recipe to the database, show a success alert, and close the modal.
                 if (result.code === "Success") {
                     if (result.uid) {
                         const db = getDatabase();
                         
+                        // Get all of the recipes and images to send to the database
                         const recipeImages: {[id: string]: string} = {};
                         const recipes: {[id: string]: {}} = {};
                         Object.values(recipeBook.recipes).map(recipe => {
@@ -109,11 +124,13 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                         });
 
                         setTimeout(() => {
+                            // Send data to the database
                             set(ref(db, 'users/' + result.uid), {
                                 recipeImages: recipeImages,
                                 recipes: recipes,
                             });
 
+                            // Send user info to the databse
                             set(ref(db, 'users-publicInfo/' + result.uid), {
                                 displayName: displayName,
                                 numOfFriends: 0,
@@ -124,8 +141,8 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                         }, 2000)
                     }
 
-
                     setModalVisible(false);
+
                     if (Platform.OS === "web") {
                         if (window.confirm(`Account Created \n Your account was successfully created.`)) {
                         }
@@ -143,6 +160,7 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                         )
                     }
                 }
+                // Show errors when the result sends back errors
                 else if (result === "Invalid Email") {
                     setEmailError("Invalid Email. Please enter a valid email to create an account.")
                 }

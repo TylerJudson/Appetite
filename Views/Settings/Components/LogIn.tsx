@@ -9,9 +9,11 @@ import { Modal } from "../../components/Modal";
 
 
 
-// TODO: docs
-
-
+/**
+ * Crates a screen that allows the user to sign in
+ * @param loginModalVisible whether or not the login modal is visible or not
+ * @param setLoginModalVisible sets the visibility of the login modal
+ */
 export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalVisible: boolean, setLoginModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
 
     const [email, setEmail] = useState("");
@@ -22,16 +24,21 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     
-        useEffect(() => {
-            setEmail("");
-            setPassword("");
-            setEmailError("");
-            setPasswordError("");
-        }, [loginModalVisible])
+    // Set all the properties back to default when the visibility changes
+    useEffect(() => {
+        setEmail("");
+        setPassword("");
+        setEmailError("");
+        setPasswordError("");
+    }, [loginModalVisible])
 
+    /**
+     * Handles the action of logging in
+     */
     function handleUserLogin() {
         let error = false;
 
+        // Check to make sure all the fields are not empty
         if (email === "") {
             setEmailError("Enter an email");
             error = true;
@@ -47,6 +54,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
             setPasswordError("");
         }
 
+        // Log the user in and show any errors
         if (!error) {
             loginEmailPassword(email, password)
             .then(result => {
@@ -67,14 +75,18 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
 
     }
 
+    /**
+     *  Handles the action of pressing the forgot password button
+     */
     function handleForgotPassword() {
         forgotPassword(email)
         .then(result => {
             if (result === "Success") {
                 setLoginModalVisible(false);
 
+                // Show a success alert
                 if (Platform.OS === "web") {
-                    if (window.confirm(`Email Sent \n An password reset email has been sent to ${email}.`)) {
+                    if (window.confirm(`Email Sent \n A password reset email has been sent to ${email}.`)) {
                     }
                 }
                 else {
@@ -90,6 +102,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
                     )
                 }
             }
+            // Show any errors
             else if (result === "Invalid Email") {
                 setEmailError("Enter a valid email to reset your password.");
             }

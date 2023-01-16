@@ -21,20 +21,31 @@ export function Tags({ tags, setTags, title, clear=false, addTags=false }: { tag
     const [suggestions, setSuggestions] = useState(false);
     const suggestionTags = allTags.filter((tag) => tag.toUpperCase().includes(text.toUpperCase()) && !tags.includes(tag));
 
-    // TODO: docs
+    /**
+     * Submits the text to be added or not added
+     */
     function submitText() {
+        // Check to make sure the text isn't empty
         if (text !== "") {
+            // If the text doesn't exsist in all tags and there are suggestions and the first suggestion is not already in use
+            // then set the text to be the first suggestion
             if (!allTags.includes(text) && suggestionTags.length > 0 && !tags.includes(suggestionTags[0])) {
                 setText(suggestionTags[0])
             }
+            
             setTimeout(() => {
+                // Check to make sure the text is in all tags
+                // Or if we are adding new tags
                 if (allTags.includes(text) || addTags) {
+                    // Make sure the text isn't already included
                     if (!tags.includes(text)) {
+                        // add the tag
                         addTag(text);
                     }
                     setText("");
                 }
                 else {
+                    // If the text is not in all tags -> take the first suggestion if the suggestion is not already in use
                     if (suggestionTags.length > 0 && !tags.includes(suggestionTags[0])) {
                         addTag(suggestionTags[0]);
                         setText("");
@@ -44,7 +55,10 @@ export function Tags({ tags, setTags, title, clear=false, addTags=false }: { tag
         }
     }
 
-    // TODO: docs.
+    /**
+     * Adds a tag to the current tag-filters
+     * @param tag The tag to add
+     */
     function addTag(tag: string) {
         setTags([...tags, tag]);
     }
@@ -64,6 +78,10 @@ export function Tags({ tags, setTags, title, clear=false, addTags=false }: { tag
         
         setTags(newTags);
     }
+
+    /**
+     * Toggles the suggestions that appear under the text entry
+     */
     function toggleSuggestions() {
         setSuggestions(!suggestions);
     }

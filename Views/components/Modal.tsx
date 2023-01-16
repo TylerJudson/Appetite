@@ -6,9 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
-// TODO: docs and fix on light mode
 /**
- * Displays a modal at the bottom of the screen
+ * Displays a modal that looks good on all screen sizes
+ * @param visible Whether the modal is visible or not
+ * @param setVisible the function to set the visibility
+ * @param headerTitle The optional title to display at the top of the modal
+ * @param headerButton The optional button to display along the top of the modal
  */
 export function Modal({ visible, setVisible, headerTitle, headerButton, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, headerTitle?: string, headerButton?: string, changeToHide?: string, children: React.ReactNode }) {
     const styles = createStyles();
@@ -35,6 +38,9 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
         ).start(() => setIsVisible(false));
     }
 
+    /**
+     * When the visibility changes animate the modal
+     */
     useEffect(() => {
         if (visible) {
             setIsVisible(true);
@@ -74,7 +80,7 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                                 transform: [{ translateY: animModal.interpolate({ inputRange: [0, 1], outputRange: [height  + height / 4, 0] }) }],
                             }]}
                         >
-                            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ justifyContent: "flex-end" }}>
                             <Pressable style={styles.contentContainer} ref={modalRef}>
                                 {
                                     (headerTitle || headerButton) &&
@@ -110,14 +116,14 @@ function createStyles() {
             alignItems: screenWidth > 700 ? "center" : undefined
         },
         modalContainer: {
-            justifyContent: "flex-end",
+            justifyContent: "flex-end", 
+            height: screenWidth > 700 ? 600 : "97%",
         },  
         header: {
             borderTopLeftRadius: 10, borderTopRightRadius: 10,
             width: "100%", height: 50,
             flexDirection: "row", justifyContent: "center",
             backgroundColor: colors.elevation.level1,
-            
         },
         headerTitle: {
             justifyContent: "center",
@@ -129,7 +135,7 @@ function createStyles() {
             right: 5
         },
         contentContainer: {
-            height: screenWidth > 700 ? 600 : "97%",
+            height: screenWidth > 700 ? 600 : "98%",
             width: screenWidth > 700 ? 600 : undefined,
             backgroundColor: colors.background,
             borderRadius: 10

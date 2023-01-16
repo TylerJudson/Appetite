@@ -17,7 +17,7 @@ export function Header({ title, button, leftButton }: { title?: string, button?:
 
     {/** // TODO fix this header on all screen sizes */}
     return (
-        <Appbar.Header statusBarHeight={insets.top > 20 ? insets.top - 35 : insets.top}>
+        <Appbar.Header statusBarHeight={insets.top > 20 ? insets.top - 35 : insets.top} >
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", top: insets.top ? insets.top - 35 : undefined}}>
 
                 {

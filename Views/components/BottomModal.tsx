@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /**
  * Displays a modal at the bottom of the screen
+ * @param visible Whether the modal is visible or not
+ * @param setVisible the function to set the visibility
  */
 export function BottomModal({ visible, setVisible, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, children: React.ReactNode }) {
     const styles = createStyles();
