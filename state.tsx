@@ -13,19 +13,16 @@ import { importToObject } from "./utilities/importToObject";
 interface IState {
     user: undefined | User;
     recipeBook: RecipeBook;
-    featuredRecipe: Recipe;
 }
 
 export let State: IState = {
     user: undefined,
     recipeBook: RecipeBook.Initial(),
-    featuredRecipe: Recipe.ReadonlyInital(),
 }
 
 
 const UserContext = React.createContext(State.user);
 const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: (recipeBook: RecipeBook) => {}});
-const FeaturedRecipeStateContext = React.createContext({ featuredRecipe: State.featuredRecipe, setFeaturedRecipe: undefined as unknown as Dispatch<React.SetStateAction<Recipe>> });
 
 export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
@@ -41,8 +38,6 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
     const recipeBookContextValue = { recipeBook, setRecipeBook };
 
-    const [featuredRecipe, setFeaturedRecipe] = React.useState(State.featuredRecipe);
-    const featuredRecipeContextValue = { featuredRecipe, setFeaturedRecipe };
 
 
     useEffect(() => {
@@ -137,9 +132,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
     return (
         <UserContext.Provider value={user}>
             <RecipeBookStateContext.Provider value={recipeBookContextValue}>
-                <FeaturedRecipeStateContext.Provider value={featuredRecipeContextValue}>
                 {children}
-                </FeaturedRecipeStateContext.Provider>
             </RecipeBookStateContext.Provider>
         </UserContext.Provider>
     );
@@ -147,4 +140,3 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
 export const useUserState = () => React.useContext(UserContext);
 export const useRecipeBookState = () => React.useContext(RecipeBookStateContext);
-export const useFeaturedRecipeState = () => React.useContext(FeaturedRecipeStateContext);

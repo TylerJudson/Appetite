@@ -9,7 +9,7 @@ import { updateRecipe } from '../../FireBase/Update';
 import { Recipe } from '../../Models/Recipe';
 import { useRecipeBookState, useUserState } from '../../state';
 import EditCreateRecipe from '../EditCreateRecipe/EditCreateRecipe';
-import FeaturedRecipe from '../FeaturedRecipe/FeaturedRecipe';
+import Discover from '../Discover/Discover';
 import Recipes from '../Recipes/Recipes';
 import SettingsNavigation from '../Settings/Settings';
 import Social from '../Social/Social';
@@ -99,16 +99,16 @@ function Appetite({navigation, route}: Props) {
 
 	// This creates the different tabs on the bottom
 	const [routes] = React.useState([
-		{ key: 'recipes', 			title: 'Recipes', 	focusedIcon: 'book', unfocusedIcon: "book-outline", 		navigation: navigation },
-		{ key: 'featuredRecipe', 	title: 'Featured', 	focusedIcon: 'silverware-fork', 							navigation: navigation },
-		{ key: 'social', 			title: 'Social', 	focusedIcon: 'message', unfocusedIcon: "message-outline", 	navigation: navigation },
-		{ key: 'settings', 			title: 'Settings', 	focusedIcon: 'dots-horizontal', 							navigation: navigation },
+		{ key: 'recipes', 	title: 'Recipes', 	focusedIcon: 'book', unfocusedIcon: "book-outline", 		navigation: navigation },
+		{ key: 'discover', 	title: 'Discover', 	focusedIcon: 'magnify', 									navigation: navigation },
+		{ key: 'social', 	title: 'Social', 	focusedIcon: 'message', unfocusedIcon: "message-outline", 	navigation: navigation },
+		{ key: 'settings', 	title: 'Settings', 	focusedIcon: 'dots-horizontal', 							navigation: navigation },
 	]);
 
 	// This is all the different screens that get displayed with the designated tab
 	const renderScene = BottomNavigation.SceneMap({
 		recipes: Recipes as any,
-		featuredRecipe: FeaturedRecipe as any,
+		discover: Discover as any,
 		social: Social as any,
 		settings: SettingsNavigation as any,
 	});
@@ -120,6 +120,7 @@ function Appetite({navigation, route}: Props) {
 				onIndexChange={setIndex}
 				renderScene={renderScene}
 				shifting={true}
+				sceneAnimationEnabled
 				sceneAnimationType="opacity"
 			/>
 

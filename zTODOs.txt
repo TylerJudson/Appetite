@@ -15,9 +15,9 @@
 
 UP NEXT!:
    - Style the settings screen
+   - Make everyone Accounts
    - Design (not implement) the discover screen
    - Design the social Screen
-   - Make everyone Accounts
    - Add recipes
 
 
@@ -37,6 +37,5 @@ Design
  - Remaining Icons
  
 Backend
- - Accounts
  - Discover
  - Add Friends and feeds

@@ -204,7 +204,7 @@ function createStyles() {
         container: {
             alignItems: "center",
             flex: 1,
-            padding: 15, paddingBottom: 300
+            padding: 15
         },
         title: {
             marginTop: 40, marginBottom: 10,
