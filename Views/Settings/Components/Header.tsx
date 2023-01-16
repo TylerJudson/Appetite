@@ -10,13 +10,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
  * @param button the option button to show in the right
  * @param leftButton the button to show on the left omit label to see the back chevron
  */
-export function Header({ title, onBack }: { title?: string, onBack: VoidFunction }) {
+export function Header({ title, onBack, editing, setEditing }: { title?: string, onBack: VoidFunction, editing?: boolean, setEditing?: (editing: boolean) => void }) {
     const insets = useSafeAreaInsets();
 
     return (
         <Appbar.Header statusBarHeight={insets.top - 20} >
             <Appbar.BackAction onPress={onBack} />
             <Appbar.Content title={title} />
+            {
+                setEditing &&
+                <Button onPress={() => setEditing(!editing)}>{editing ? "Save" : "Edit"}</Button>
+            }
         </Appbar.Header>
     )
 }

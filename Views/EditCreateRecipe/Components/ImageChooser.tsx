@@ -13,7 +13,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
  * @param setSelectedImage The function to select the new image
  * @param profile Whether or not the picture should be a profile or not
  */
-export function ImageChooser({ selectedImage, setSelectedImage, profile=false }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>>, profile?: boolean }) {
+export function ImageChooser({ selectedImage, setSelectedImage, profile=false, editable=true }: { selectedImage: string, setSelectedImage: React.Dispatch<React.SetStateAction<string>>, profile?: boolean, editable?: boolean }) {
 
     const styles = createStyles();
 
@@ -39,12 +39,12 @@ export function ImageChooser({ selectedImage, setSelectedImage, profile=false }:
 
     return (
         <View style={{ marginBottom: 10 }}>
-            <Pressable onPress={pickImageAsync} >
+            <Pressable onPress={editable ? pickImageAsync : undefined} >
                 {
                     profile
                     ? <View style={styles.profileContainer}>
                             <Avatar.Image size={150} source={selectedImage ? {uri: selectedImage} : require("../../../assets/images/defaultProfilePic.jpeg")}></Avatar.Image>
-                            {!selectedImage && <Text style={styles.editProfile} variant="labelLarge" >Edit</Text>}
+                            {!selectedImage && editable && <Text style={styles.editProfile} variant="labelLarge" >Edit</Text>}
                       </View>
                     : <Image style={styles.image} source={{ uri: selectedImage ? selectedImage : undefined}} />
                 }

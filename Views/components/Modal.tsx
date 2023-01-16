@@ -130,8 +130,7 @@ function createStyles() {
         },
         contentContainer: {
             height: screenWidth > 700 ? 600 : "97%",
-            maxWidth: screenWidth > 700 ? 600 : undefined,
-            
+            width: screenWidth > 700 ? 600 : undefined,
             backgroundColor: colors.background,
             borderRadius: 10
         }

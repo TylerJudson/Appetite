@@ -1,5 +1,5 @@
 import { useWindowDimensions, View, StyleSheet } from "react-native";
-import { IconButton, Text, useTheme } from "react-native-paper";
+import { Avatar, IconButton, Text, useTheme } from "react-native-paper";
 import { useUserState } from "../../state";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { logout } from "../../FireBase/Authentication";
@@ -74,7 +74,7 @@ function Settings({ navigation }: SettingsNavProps) {
                                     <SettingWidget  
                                         title={user.displayName} 
                                         subTitle={user.email}
-                                        icon={<IconButton icon="" />} 
+                                        icon={<Avatar.Image size={30} source={user?.profilePicture ? {uri: user?.profilePicture} : require("../../assets/images/defaultProfilePic.jpeg")} />} 
                                         roundUpperCorners 
                                         rightIcon={<IconButton icon="chevron-right" />}
                                         onPress={() => navigation.navigate("Account")} 

@@ -66,12 +66,25 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
         onAuthStateChanged(auth, (u) => {
             if (u) {
                 loggedIn = true;
-                setUser(new User(u.uid, u.displayName || "", u.email || "", 0, 0, "Beginner"));
+                setUser(new User(u.uid, "", u.email || "", 0, 0, "Beginner", ""));
                 
                 const db = getDatabase();
+
+                get(ref(db, "users-publicInfo/" + u.uid))
+                .then(snapshot => {
+                    if (snapshot.exists() && snapshot.val()) {
+                        setUser(new User(u.uid, snapshot.val().displayName, u.email || "", snapshot.val().numOfFriends, snapshot.val().numOfPosts, snapshot.val().skillLevel, snapshot.val().profilePicture));
+                    }
+                }) 
+                onValue(ref(db, "users-publicInfo/" + u.uid), (snapShot) => {
+                    if (snapShot.exists() && snapShot.val()) {
+                        setUser(new User(u.uid, snapShot.val().displayName, user?.email || "", snapShot.val().numOfFriends, snapShot.val().numOfPosts, snapShot.val().skillLevel, snapShot.val().profilePicture));
+                    }
+                })
+
                 const recipesRef = ref(db, "/users/" + u.uid + "/recipes");
                 const recipeImagesRef = ref(db, "/users/" + u.uid + "/recipeImages");
-                
+
                 get(recipesRef).then(snapshot => {
                     if (snapshot.exists() && snapshot.val()) {
                         recipeBook.importData({recipes: snapshot.val()} as any);

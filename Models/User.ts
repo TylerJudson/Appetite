@@ -12,6 +12,8 @@ interface IUser {
     numOfPosts: number;
     /** The skillLevel of the user. Beginner or Intermediate or Advanced. */
     skillLevel: "Beginner" | "Intermediate" | "Advanced";
+    /** The profile pciture of the user */
+    profilePicture: string;
 }
 
 
@@ -24,15 +26,17 @@ export class User implements IUser {
     numOfFriends: number;
     numOfPosts: number;
     skillLevel: "Beginner" | "Intermediate" | "Advanced";
+    profilePicture: string;
 
 
-    constructor(uid: string, displayName: string, email: string, numOfFriends: number, numOfPosts: number, skillLevel: "Beginner" | "Intermediate" | "Advanced") {
+    constructor(uid: string, displayName: string, email: string, numOfFriends: number, numOfPosts: number, skillLevel: "Beginner" | "Intermediate" | "Advanced", profilePicture: string) {
         this.uid = uid;
         this.displayName = displayName;
         this.email = email;
         this.numOfFriends = numOfFriends;
         this.numOfPosts = numOfPosts;
         this.skillLevel = skillLevel;
+        this.profilePicture = profilePicture;
     }
 
 }
