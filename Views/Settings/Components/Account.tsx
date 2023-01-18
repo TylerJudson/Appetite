@@ -104,19 +104,19 @@ export function Account({ navigation }: AccountInfoNavProps) {
                 <View style={styles.container}>
 
                     <ImageChooser selectedImage={user?.profilePicture || ""}  profile editable={false} />
-                    <Text variant="titleLarge">{user?.displayName}</Text>
+                    <Text style={{margin: 10}} variant="titleLarge">{user?.displayName}</Text>
                     
-                    <View style={{maxWidth: 700}}>
+                    <View style={{maxWidth: 700, width: "100%", padding: 10}}>
                         <SettingWidget 
                             title={"Email"} 
                             icon={<IconButton icon="email" />}  
-                            rightIcon={<Text>{user?.email}</Text>}   
+                            rightIcon={<Text style={{marginRight: 10}}>{user?.email}</Text>}   
                             roundUpperCorners               
                         />
                         <SettingWidget
                             title={"User Id:"}
                             icon={<IconButton icon="card-account-details"/>}
-                            rightIcon={<Text>{user?.uid}</Text>}
+                            rightIcon={<Text style={{ marginRight: 10 }}>{user?.uid}</Text>}
                         />
                         <SettingWidget
                             title={"Change Password"}
@@ -126,6 +126,7 @@ export function Account({ navigation }: AccountInfoNavProps) {
                             roundBottomCorners
                         />
                     </View>
+
 
                 </View>
             </ScrollView>
@@ -204,7 +205,6 @@ function createStyles() {
         container: {
             alignItems: "center",
             flex: 1,
-            padding: 15
         },
         title: {
             marginTop: 40, marginBottom: 10,

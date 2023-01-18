@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import { Appbar, Tooltip, Menu, Divider } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { updateRecipe } from "../../../FireBase/Update";
 import { Recipe } from "../../../Models/Recipe";
 import { useRecipeBookState, useUserState } from "../../../state";
 import { BottomModal } from "../../components/BottomModal";
@@ -74,6 +75,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
         if (addRecipeResult.success) {
             // Save and update the state
             setRecipeBook(recipeBook);
+            updateRecipe(user, recipe, true);
 
             // Navigate to the new recipe
             navigation.navigate("Recipe", { recipe: clone });
@@ -179,7 +181,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
                                 <Menu.Item leadingIcon="tag-multiple" onPress={handleTags} title="Tags" />
 
                                 <Menu anchor={<Menu.Item leadingIcon="share" onPress={handleShare} title="Share" />} visible={shareMenuVisible} onDismiss={() => setShareMenuVisible(false)} anchorPosition="bottom">
-                                    <ShareRecipe recipe={recipe} />
+                                    <ShareRecipe recipe={recipe} hideModal={() => setShareMenuVisible(false)} />
                                 </Menu>
 
                                 <Divider />
@@ -191,7 +193,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
             }
 
             <BottomModal visible={shareModalVisible} setVisible={setShareModalVisible}>
-                <ShareRecipe recipe={recipe} />
+                <ShareRecipe recipe={recipe} hideModal={() => setShareModalVisible(false)} />
             </BottomModal>
         </Appbar.Header>
     );

@@ -119,7 +119,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                         <TextInput style={styles.oneLineTextInput} label="Recipe Name (required)"                                                   value={recipe.name}                 onChangeText={text => {recipe.name = text; setRecipe(recipe.clone())}}/>
                         <TextInput style={styles.oneLineTextInput} label="Description" multiline                              value={recipe.description || ""}    onChangeText={text => {recipe.description = text; setRecipe(recipe.clone())}}/>
                         <TextInput style={styles.oneLineTextInput} label="Prep Time"  placeholder="Prep Time (min)"           value={`${recipe.prepTime || ""}`}  onChangeText={text => {recipe.prepTime = parseInt(text); setRecipe(recipe.clone())}}/>
-                        <TextInput style={styles.oneLineTextInput} label="Cook Time"  placeholder="Prep Time (min)"           value={`${recipe.cookTime || ""}`}  onChangeText={text => {recipe.cookTime = parseInt(text); setRecipe(recipe.clone())}}/>
+                        <TextInput style={styles.oneLineTextInput} label="Cook Time"  placeholder="Cook Time (min)"           value={`${recipe.cookTime || ""}`}  onChangeText={text => {recipe.cookTime = parseInt(text); setRecipe(recipe.clone())}}/>
                     </View>
                 </View>
 
