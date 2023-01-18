@@ -20,6 +20,7 @@ export function PublicProfile({ navigation }: NavProps) {
     const user = useUserState();
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
+    const colors = useTheme().colors;
 
     const [editing, setEditing] = useState(false);
     const [skillLevelModalVisible, setSkillLevelModalVisible] = useState(false);
@@ -79,7 +80,7 @@ export function PublicProfile({ navigation }: NavProps) {
 
                     <View style={styles.textInput}>
                         <TouchableOpacity style={styles.skillLevelContainer} onPress={() => setSkillLevelModalVisible(true)} disabled={!editing}>
-                            <Text variant="titleMedium" style={{ color: useTheme().colors.onSurfaceVariant }}>Skill Level</Text>
+                            <Text variant="titleMedium" style={{ color: colors.onSurfaceVariant }}>Skill Level</Text>
                             <Text variant="titleMedium">{skillLevel}</Text>
                         </TouchableOpacity>
                     </View>

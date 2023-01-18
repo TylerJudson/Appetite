@@ -10,9 +10,8 @@ import { Recipe } from "../../../Models/Recipe";
  * @param recipe The recipe to display on the widget
  * @param onPress The function to call when the user presses on the widget
  */
-export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunction }) {
-    const styles = createStyles();
-    const screenWidth = useWindowDimensions().width;
+export function Widget({ recipe, onPress, screenWidth }: { recipe: Recipe, onPress: VoidFunction, screenWidth: number }) {
+    const styles = createStyles(screenWidth);
 
     return (
         <View style={{flex: 1 / Math.floor(screenWidth / 250)}}>
@@ -53,8 +52,7 @@ export function Widget({ recipe, onPress }: { recipe: Recipe, onPress: VoidFunct
  * Creates the styles for the component
  * @returns The styles
  */
-function createStyles() {
-    const screenWidth = useWindowDimensions().width;
+function createStyles(screenWidth: number) {
 
     return StyleSheet.create({
         container: {

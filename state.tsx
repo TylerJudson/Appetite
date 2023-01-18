@@ -63,15 +63,9 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 
                 const db = getDatabase();
 
-                get(ref(db, "users-publicInfo/" + u.uid))
-                .then(snapshot => {
-                    if (snapshot.exists() && snapshot.val()) {
-                        setUser(new User(u.uid, snapshot.val().displayName, u.email || "", snapshot.val().numOfFriends, snapshot.val().numOfPosts, snapshot.val().skillLevel, snapshot.val().profilePicture));
-                    }
-                }) 
                 onValue(ref(db, "users-publicInfo/" + u.uid), (snapShot) => {
                     if (snapShot.exists() && snapShot.val()) {
-                        setUser(new User(u.uid, snapShot.val().displayName, user?.email || "", snapShot.val().numOfFriends, snapShot.val().numOfPosts, snapShot.val().skillLevel, snapShot.val().profilePicture));
+                        setUser(new User(u.uid, snapShot.val().displayName, u.email || "", snapShot.val().numOfFriends, snapShot.val().numOfPosts, snapShot.val().skillLevel, snapShot.val().profilePicture));
                     }
                 })
 
@@ -81,8 +75,6 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
                 get(recipesRef).then(snapshot => {
                     if (snapshot.exists() && snapshot.val()) {
                         recipeBook.importData({recipes: snapshot.val()} as any);
-                        
-                        setRecipeBook(recipeBook);
                         get(recipeImagesRef).then(snapshot => {
                             if (snapshot.exists() && snapshot.val()) {
                                 Object.keys(snapshot.val()).forEach((key: string) => {

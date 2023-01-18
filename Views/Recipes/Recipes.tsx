@@ -126,9 +126,8 @@ export default function Recipes({ route }: Route) {
             
             <Animated.FlatList  
                 data={Object.values(filteredRecipes).sort(sortAlpha)}
-                keyExtractor={item => item.id}
                 renderItem={ ({item}) => {
-                    return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} />
+                    return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} screenWidth={screenWidth} />
                 }}
                 //@ts-ignore
                 itemLayoutAnimation={Layout} 

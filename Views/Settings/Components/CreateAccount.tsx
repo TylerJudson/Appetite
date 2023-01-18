@@ -181,6 +181,7 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
 
 
     const styles = createStyles();
+    const colors = useTheme().colors;
 
     return (
 
@@ -221,7 +222,7 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
 
                     <View style={styles.textInput}>
                         <TouchableOpacity style={styles.skillLevelContainer} onPress={() => setSkillLevelModalVisible(true)}>
-                            <Text variant="titleMedium" style={{color: useTheme().colors.onSurfaceVariant}}>Skill Level</Text>
+                            <Text variant="titleMedium" style={{color: colors.onSurfaceVariant}}>Skill Level</Text>
                             <Text variant="titleMedium">{skillLevel}</Text>
                         </TouchableOpacity>
                         <HelperText type="info" padding="none">Help Appetite suggest recipes.</HelperText>
