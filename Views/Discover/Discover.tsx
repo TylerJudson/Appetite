@@ -50,7 +50,7 @@ export default function Discover({ route }: Route) {
             if (snapshot.exists() && snapshot.val()) {
                 let x = snapshot.val();
                 const rec = new Recipe(x.name, x?.ingredients || [], x?.instructions || [], x.description, image, x.id, x.prepTime, x.cookTime, x.favorited, x?.tags || [], true);
-                setTimeout(() => route.navigation.navigate("Recipe", { recipe: rec }), 0)
+                setTimeout(() => route.navigation.navigate("Recipe", { recipe: rec }), 250)
             }
         })
         .catch(reason => console.log(reason));

@@ -1,4 +1,4 @@
-import { useWindowDimensions, View, StyleSheet, Switch } from "react-native";
+import { useWindowDimensions, View, StyleSheet, Switch, Platform } from "react-native";
 import { Avatar, IconButton, Text, useTheme } from "react-native-paper";
 import { useUserState } from "../../state";
 import { createGlobalStyles } from "../styles/globalStyles";
@@ -16,39 +16,13 @@ import { AboutAppetite } from "./Components/AboutAppetite";
 import { GetHelp } from "./Components/GetHelp";
 import { TermsOfService } from "./Components/TermsOfService";
 import { PrivacyPolicy } from "./Components/PrivacyPolicy";
+import { Route } from "../navigation";
 
-
-export type SettingsStackParamList = {
-    Settings: undefined;
-    Account: undefined;
-
-    PublicProfile: undefined;
-    Friends: undefined;
-};
-
-
-const Stack = createNativeStackNavigator<SettingsStackParamList>();
-
-export default function SettingsNavigation() {
-    return (
-        <Stack.Navigator initialRouteName='Settings' screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen name="Account" component={Account} />
-            <Stack.Screen name="PublicProfile" component={PublicProfile} />
-            <Stack.Screen name="Friends" component={Friends} />
-        </Stack.Navigator>
-    )
-}
-
-
-
-
-type SettingsNavProps = NativeStackScreenProps<SettingsStackParamList, 'Settings'>;
 
 /**
  * This contains options that the user can tweek to get the right specifications.
  */
-function Settings({ navigation }: SettingsNavProps) {
+export function Settings({ route }: Route) {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
@@ -106,7 +80,7 @@ function Settings({ navigation }: SettingsNavProps) {
                                         icon={<Avatar.Image size={30} source={user?.profilePicture ? {uri: user?.profilePicture} : require("../../assets/images/defaultProfilePic.jpeg")} style={{margin: 10}} />} 
                                         roundUpperCorners 
                                         rightIcon={<IconButton icon="chevron-right" />}
-                                        onPress={() => navigation.navigate("Account")} 
+                                        onPress={() => route.navigation.navigate("Account")} 
                                     />
                                     <SettingWidget 
                                         title="Log Out" 
@@ -146,14 +120,14 @@ function Settings({ navigation }: SettingsNavProps) {
                                     icon={<IconButton icon="account" />} 
                                     roundUpperCorners 
                                     rightIcon={<IconButton icon="chevron-right" />}
-                                    onPress={() => navigation.navigate("PublicProfile")} 
+                                    onPress={() => route.navigation.navigate("PublicProfile")} 
                                 />
                                 <SettingWidget  
                                     title="Friends" 
                                     icon={<IconButton icon="account-group" />} 
                                     roundBottomCorners
                                     rightIcon={<IconButton icon="chevron-right" />}
-                                    onPress={() => navigation.navigate("Friends")} 
+                                    onPress={() => route.navigation.navigate("Friends")} 
                                 />
                         </View>
 

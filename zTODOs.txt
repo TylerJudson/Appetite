@@ -14,7 +14,6 @@
 
 
 UP NEXT!:
-   - Style the settings screen
    - Make everyone Accounts
    - Design (not implement) the discover screen
    - Design the social Screen
@@ -25,7 +24,6 @@ General
  - MORE RECIPES!!!
 
 UI
- - Settings screen
  - Discover screen
  - Tags from the menu? Maybe change this to focus mode?
  - Social Screen

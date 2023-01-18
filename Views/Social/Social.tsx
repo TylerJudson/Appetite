@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { Route } from "../navigation";
 import { createGlobalStyles } from "../styles/globalStyles";
+import { Header } from "./Components/Header";
 
 
 
@@ -16,8 +17,9 @@ export default function Social({ route }: Route) {
     const globalStyles = createGlobalStyles();
 
     return (
-        <View style={globalStyles.screenContainer}>
-            <Text variant="headlineLarge" >Social</Text>
+        <View style={globalStyles.container}>
+            <Header navigation={route.navigation} />
+            <Text style={{paddingLeft: 10}} variant="headlineLarge">Social</Text>
         </View>
     );
 }

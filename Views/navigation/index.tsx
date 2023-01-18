@@ -11,9 +11,12 @@ import { useRecipeBookState, useUserState } from '../../state';
 import EditCreateRecipe from '../EditCreateRecipe/EditCreateRecipe';
 import Discover from '../Discover/Discover';
 import Recipes from '../Recipes/Recipes';
-import SettingsNavigation from '../Settings/Settings';
 import Social from '../Social/Social';
 import ViewRecipe from '../ViewRecipe/ViewRecipe';
+import { Account } from '../Settings/Components/Account';
+import { PublicProfile } from '../Settings/Components/PublicProfile';
+import { Friends } from '../Settings/Components/Friends';
+import { Settings } from '../Settings/Settings';
 
 
 
@@ -33,6 +36,9 @@ export type RootStackParamList = {
 	Appetite: { snackBar?: SnackBarData };
 	Recipe: { recipe: Recipe, };
 	EditCreate: { recipe?: Recipe };
+	Account: undefined;
+	PublicProfile: undefined;
+	Friends: undefined;
 };
 
 
@@ -49,6 +55,9 @@ export default function Navigation() {
 				<Stack.Screen name="Appetite" component={Appetite} />
 				<Stack.Screen name="Recipe" component={ViewRecipe} />
 				<Stack.Screen name="EditCreate" component={EditCreateRecipe} options={{ gestureEnabled: false }}/>
+				<Stack.Screen name="Account" component={Account} />
+				<Stack.Screen name="PublicProfile" component={PublicProfile} />
+				<Stack.Screen name="Friends" component={Friends} />
 			</Stack.Navigator>
       </NavigationContainer>
   );
@@ -110,7 +119,7 @@ function Appetite({navigation, route}: Props) {
 		recipes: Recipes as any,
 		discover: Discover as any,
 		social: Social as any,
-		settings: SettingsNavigation as any,
+		settings: Settings as any,
 	});
 
 	return (
