@@ -19,7 +19,6 @@ import { Recipe } from "../../../Models/Recipe";
  */
 export function Widget({ recipeId, title, image, onPress }: { recipeId: string, title: string, image: string, onPress: VoidFunction }) {
     const styles = createStyles();
-    const screenWidth = useWindowDimensions().width;
 
     return (
         <View style={{ flex: 1 }}>
@@ -40,10 +39,9 @@ export function Widget({ recipeId, title, image, onPress }: { recipeId: string, 
                             />
                         }
 
-                        <Text style={[styles.title, { color: image || useTheme().dark ? "#fff" : "#000" }]} variant={screenWidth > 500 ? "titleLarge" : "titleMedium"}>{title}</Text>
+                        <Text style={[styles.title, { color: image || useTheme().dark ? "#fff" : "#000" }]} variant={"titleMedium"}>{title}</Text>
 
-                        {/** Chevron to the right on small screens. */}
-                        {screenWidth <= 500 && <IconButton style={styles.chevronIcon} icon="chevron-right" size={40} />}
+                        <IconButton style={styles.chevronIcon} icon="chevron-right" size={40} />
 
                     </Surface>
                 </TouchableOpacity>
@@ -58,8 +56,6 @@ export function Widget({ recipeId, title, image, onPress }: { recipeId: string, 
  * @returns The styles
  */
 function createStyles() {
-    const screenWidth = useWindowDimensions().width;
-
     return StyleSheet.create({
         container: {
             marginBottom: 15, marginHorizontal: 10,

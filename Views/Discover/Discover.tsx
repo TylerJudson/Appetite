@@ -7,7 +7,7 @@ import { Modal } from "../components/Modal";
 import { Route } from "../navigation";
 import { Widget } from "./Components/Widget";
 import { createGlobalStyles } from "../styles/globalStyles";
-import { get, getDatabase, limitToFirst, orderByChild, query, ref } from "firebase/database";
+import { endAt, get, getDatabase, limitToFirst, orderByChild, query, ref, startAt } from "firebase/database";
 
 
 
@@ -29,20 +29,14 @@ export default function Discover({ route }: Route) {
 
     function onSearch(value: string) {
         setSearch(value);
-        if (value.length > 0) {
-        }
-        else {
-            const db = getDatabase();
-            get(query(ref(db, "publicRecipes/shallow"), limitToFirst(10)))
-            .then((snapShot) => {
-                if (snapShot.exists() && snapShot.val()) {
-                    setList(Object.values(snapShot.val()));
-                }
-            })
-            .catch((reason) => {
-                console.log(reason);
-            });
-        }
+        const db = getDatabase();
+        const listQuery = query(ref(db, "publicRecipes/shallow/"), orderByChild("name"), startAt(value), endAt(value + "\uf8ff"), limitToFirst(10))
+        get(listQuery)
+        .then((snapShot) => {
+            if (snapShot.exists() && snapShot.val()) {
+                setList((Object.values(snapShot.val()) as any).sort(sortAlpha));
+            }
+        })
     }
 
 
@@ -51,16 +45,12 @@ export default function Discover({ route }: Route) {
         setSearchModalVisible(false);
         const db = getDatabase();
 
-        console.log(id);
-        
-        get(ref(db, "publicRecipe/deep/" + id))
+        get(ref(db, "/publicRecipes/deep/" + id))
         .then(snapshot => {
             if (snapshot.exists() && snapshot.val()) {
                 let x = snapshot.val();
-                console.log(x);
-                
-                const rec = new Recipe(x.name, x?.ingredients || [], x?.instructions || [], x.description, image, x.id, x.prepTime, x.cookTime, x.favorited, x?.tags || [], x.readonly);
-                setTimeout(() => route.navigation.navigate("Recipe", { recipe: rec }), 250)
+                const rec = new Recipe(x.name, x?.ingredients || [], x?.instructions || [], x.description, image, x.id, x.prepTime, x.cookTime, x.favorited, x?.tags || [], true);
+                setTimeout(() => route.navigation.navigate("Recipe", { recipe: rec }), 0)
             }
         })
         .catch(reason => console.log(reason));
@@ -73,7 +63,7 @@ export default function Discover({ route }: Route) {
                 <View>
                     <View style={styles.headerContainer} >
                         <Text variant="headlineLarge" style={{ flex: 1}}>Discover</Text>
-                        <IconButton icon="magnify" onPress={() => setSearchModalVisible(true)}/>
+                        <IconButton icon="magnify" onPress={() => {setSearchModalVisible(true); onSearch("")}}/>
                     </View>
                 </View>
 
@@ -87,13 +77,14 @@ export default function Discover({ route }: Route) {
             <Modal visible={searchModalVisible} setVisible={setSearchModalVisible} >
                 <View style={styles.searchContainer}>
                     <View style={{ flex: 1 }}>
-                        <Searchbar style={styles.searchBar} value={search} onChangeText={text => onSearch(text)}  placeholder="Search Recipes"  autoFocus/>
+                        <Searchbar style={styles.searchBar} value={search} onChangeText={text => onSearch(text)}  placeholder="Search Recipes"  autoFocus autoCapitalize="words"/>
                     </View>
                     <Button onPress={() => {setSearchModalVisible(false); onSearch("");}}>Done</Button>
                 </View>
 
                 <Animated.FlatList
                     style={styles.list}
+                    scrollEnabled={false}
                     data={list}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => {
@@ -130,4 +121,13 @@ function createStyles() {
             marginTop: 10
         }
     });
+}
+
+
+
+
+function sortAlpha(a: Recipe, b: Recipe) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
 }
