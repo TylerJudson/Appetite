@@ -66,7 +66,7 @@ export function Settings({ route }: Route) {
     return (
         <View style={globalStyles.screenContainer}>
             <View style={styles.container}>
-                <ScrollView>
+                <ScrollView style={{padding: 10}}>
                     <Text variant="headlineLarge" style={styles.header}>Settings</Text>
                     
                     <View style={styles.sectionContainer}>
@@ -227,7 +227,7 @@ function createStyles() {
 
     return StyleSheet.create({
         container: {
-            padding: 10, paddingBottom: 0, flex: 1
+            paddingBottom: 0, flex: 1
         },
         header: {
             margin: 10, marginBottom: 20
