@@ -3,7 +3,7 @@ import { Appbar, Tooltip, Button, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
-/**
+/** // TODO: Docs
  * Creates a header with a simple back button and an optional title and button
  * @param navigation the global navigation object that allows the header to navigate
  * @param title the optional title to display in the center
@@ -16,7 +16,7 @@ export function Header({ title, onBack, editing, setEditing }: { title?: string,
     return (
         <Appbar.Header statusBarHeight={insets.top - 20} >
             <Appbar.BackAction onPress={onBack} />
-            <Appbar.Content title={title} />
+            <Appbar.Content title={title} mode="center-aligned" />
             {
                 setEditing &&
                 <Button onPress={() => setEditing(!editing)}>{editing ? "Save" : "Edit"}</Button>

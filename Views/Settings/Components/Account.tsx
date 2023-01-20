@@ -6,15 +6,15 @@ import { changePassword, loginEmailPassword } from "../../../FireBase/Authentica
 import { useUserState } from "../../../state";
 import { Modal } from "../../components/Modal";
 import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
+import { RootStackParamList } from "../../navigation";
 import { createGlobalStyles } from "../../styles/globalStyles";
-import { SettingsStackParamList } from "../Settings";
 import { Header } from "./Header";
 import { SettingWidget } from "./SettingWidget";
 
 
 
 
-type AccountInfoNavProps = NativeStackScreenProps<SettingsStackParamList, 'Account'>;
+type AccountInfoNavProps = NativeStackScreenProps<RootStackParamList, 'Account'>;
 
 export function Account({ navigation }: AccountInfoNavProps) {
     

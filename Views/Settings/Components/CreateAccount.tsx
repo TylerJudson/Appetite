@@ -138,6 +138,7 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
                                 skillLevel: skillLevel,
                                 profilePicture: profilePicture
                             });
+
                         }, 2000)
                     }
 

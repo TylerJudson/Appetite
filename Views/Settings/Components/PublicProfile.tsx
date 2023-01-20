@@ -6,14 +6,14 @@ import { Text, TextInput, useTheme } from "react-native-paper";
 import { useUserState } from "../../../state";
 import { BottomModal } from "../../components/BottomModal";
 import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
+import { RootStackParamList } from "../../navigation";
 import { createGlobalStyles } from "../../styles/globalStyles";
-import { SettingsStackParamList } from "../Settings";
 import { Header } from "./Header";
 
 
 
 
-type NavProps = NativeStackScreenProps<SettingsStackParamList, 'PublicProfile'>;
+type NavProps = NativeStackScreenProps<RootStackParamList, 'PublicProfile'>;
 
 export function PublicProfile({ navigation }: NavProps) {
 
