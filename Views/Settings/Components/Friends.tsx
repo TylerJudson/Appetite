@@ -1,10 +1,11 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { get, getDatabase, limitToFirst, orderByChild, query, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { Button, ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Appbar, Avatar, IconButton, Searchbar, Text } from "react-native-paper";
-import Animated, { Layout } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useUserState } from "../../../state";
 import { Modal } from "../../components/Modal";
 import { RootStackParamList } from "../../navigation";
 import { createGlobalStyles } from "../../styles/globalStyles";
@@ -13,6 +14,7 @@ import { createGlobalStyles } from "../../styles/globalStyles";
 
 
 type NavProps = NativeStackScreenProps<RootStackParamList, 'Friends'>;
+type navigation = NativeStackNavigationProp<RootStackParamList, "Friends", undefined>
 
 // TODO: docs
 export function Friends({ navigation }: NavProps) {
@@ -22,7 +24,7 @@ export function Friends({ navigation }: NavProps) {
 
     return (
         <View style={globalStyles.container}>
-            <Header title="Friends" onBack={navigation.goBack} />
+            <Header title="Friends" onBack={navigation.goBack} navigation={navigation} />
 
 
         </View>
@@ -36,7 +38,7 @@ export function Friends({ navigation }: NavProps) {
  * Creates a header with a simple back button and an optional title and button
  * @param title the optional title to display in the center
  */
-function Header({ title, onBack }: { title?: string, onBack: VoidFunction }) {
+function Header({ title, onBack, navigation }: { title?: string, onBack: VoidFunction, navigation: navigation }) {
     const insets = useSafeAreaInsets();
     const [addFriendModalVisible, setAddFriendModalVisible] = useState(false);
 
@@ -46,16 +48,18 @@ function Header({ title, onBack }: { title?: string, onBack: VoidFunction }) {
             <Appbar.Content title={title} mode="center-aligned" />
             <Appbar.Action onPress={() => setAddFriendModalVisible(true)} icon="plus" />
 
-            <AddFriendModal visible={addFriendModalVisible} setVisible={setAddFriendModalVisible} />
+            <AddFriendModal visible={addFriendModalVisible} setVisible={setAddFriendModalVisible} navigation={navigation} />
         </Appbar.Header>
     )
 }
 
 
 
-
-function AddFriendModal({visible, setVisible}: {visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>>}) {
+// TODO: docs
+function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>>, navigation: navigation}) {
     
+    const user = useUserState();
+
     type people = {
         id: string;
         name: string;
@@ -72,14 +76,20 @@ function AddFriendModal({visible, setVisible}: {visible: boolean, setVisible: Re
             const db = getDatabase();
             get(ref(db, "users-publicInfo")).then(snapshot => {
                 if (snapshot.exists() && snapshot.val()) {
-                    const people = Object.values(snapshot.val()).sort((a: any, b: any) => {if (a.displayName < b.displayName) return -1; if (a.displayName > b.displayName) return 1; return 0 })
-                                    .map((value: any) => {
-                                        return {
-                                            name: value.displayName,
-                                            id: value.id,
-                                            picture: value.profilePicture
+                    
+                    const people: people[] = [] 
+                    Object.keys(snapshot.val())
+                                    .map((key: any) => {
+                                        if (key !== user?.uid) {
+                                            let value = snapshot.val()[key];
+                                            people.push( {
+                                                name: value.displayName,
+                                                id: key,
+                                                picture: value.profilePicture
+                                            } )
                                         }
                                     });
+                                    
                     setMasterList(people);
                     setList(people);
                 }
@@ -105,13 +115,12 @@ function AddFriendModal({visible, setVisible}: {visible: boolean, setVisible: Re
     return (
         <Modal visible={visible} setVisible={setVisible} headerTitle="Add Friend" headerButton="Done">
             <Searchbar style={styles.searchBar} value={search} onChangeText={text => onSearch(text)} placeholder="Search People"  />
-
                 <Animated.FlatList
                     //@ts-ignore
                     itemLayoutAnimation={Layout} 
                     data={list}
                     renderItem={({ item }) => {
-                        return <PersonWidget id={item.id} name={item.name} picture={item.picture} />
+                        return <PersonWidget name={item.name} picture={item.picture} onPress={() => { setVisible(false); setTimeout(() => navigation.navigate("PublicProfile", { id: item.id }), 250);}}/>
                     }}
                 />
         </Modal>
@@ -122,8 +131,8 @@ function AddFriendModal({visible, setVisible}: {visible: boolean, setVisible: Re
 
 
 
-
-function PersonWidget({id, name, picture=""}: {id: string, name: string, picture?: string}) {
+// TODO: Docs
+function PersonWidget({name, picture="", onPress}: {name: string, picture?: string, onPress: VoidFunction}) {
 
 
 
@@ -139,11 +148,13 @@ function PersonWidget({id, name, picture=""}: {id: string, name: string, picture
     });
 
     return (
-        <TouchableOpacity style={styles.container} onPress={undefined} >
-            <Avatar.Image size={30} source={picture ? { uri: picture } : require("../../../assets/images/defaultProfilePic.jpeg")} style={{ margin: 10 }} />
-            <Text variant="labelLarge" style={styles.title}>{name}</Text>
-            <IconButton icon="chevron-right" />
-        </TouchableOpacity>
+        <Animated.View entering={FadeIn.delay(100)} exiting={FadeOut} >
+            <TouchableOpacity style={styles.container} onPress={onPress} >
+                <Avatar.Image size={30} source={picture ? { uri: picture } : require("../../../assets/images/defaultProfilePic.jpeg")} style={{ margin: 10 }} />
+                <Text variant="labelLarge" style={styles.title}>{name}</Text>
+                <IconButton icon="chevron-right" />
+            </TouchableOpacity>
+        </Animated.View>
     )
 
 } 

@@ -1,8 +1,9 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { getDatabase, ref, set } from "firebase/database";
-import { useState } from "react";
+import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
-import { Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Snackbar, Text, TextInput, useTheme } from "react-native-paper";
+import { User } from "../../../Models/User";
 import { useUserState } from "../../../state";
 import { BottomModal } from "../../components/BottomModal";
 import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
@@ -13,14 +14,31 @@ import { Header } from "./Header";
 
 
 
+export type SnackBarData = {
+    visible: boolean;
+    message?: string;
+    action?: {
+        label: string;
+        onPressCode: "undoFriendRequest";
+    }
+}
 type NavProps = NativeStackScreenProps<RootStackParamList, 'PublicProfile'>;
 
-export function PublicProfile({ navigation }: NavProps) {
-
+export function PublicProfile({ navigation, route }: NavProps) {
+    
     const user = useUserState();
+
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
     const colors = useTheme().colors;
+
+    const [isFriend, setIsFriend] = useState(false);
+    const [isPendingFriend, setIsPendingFriend] = useState(false);
+    const [snackBar, setSnackBar] = useState<SnackBarData>({
+        visible: false,
+        message: "",
+        action: undefined
+    });
 
     const [editing, setEditing] = useState(false);
     const [skillLevelModalVisible, setSkillLevelModalVisible] = useState(false);
@@ -31,6 +49,47 @@ export function PublicProfile({ navigation }: NavProps) {
 
     const [displayNameError, setDisplayNameError] = useState("");
 
+    useEffect(() => {
+        if (route.params && route.params.id) {
+            const db = getDatabase();
+            get(ref(db, "users-publicInfo/" + route.params.id)).then(snapshot => {
+                if (snapshot.exists() && snapshot.val() && route.params) {
+                    setProfilePic(snapshot.val().profilePicture);
+                    setDisplayName(snapshot.val().displayName);
+                    setSkillLevel(snapshot.val().skillLevel);
+                }
+            })
+            if (user) {
+                // Check to see if we are a pending friend
+                get(ref(db, '/users-social/users/' + route.params.id + "/pendingFriends/" + user.uid)).then(snapshot => {
+                    if (snapshot.exists() && snapshot.val()) {
+                        setIsPendingFriend(true);
+                    }   
+                })
+            }
+            // TODO: check to see if the user is a friend
+        }
+    })
+
+
+    function handleButtonPress() {
+        if (route.params) {
+            if (isFriend) {
+                // TODO: delete friend
+            }
+            else {
+                if (user) {
+                    const db = getDatabase();
+                    let updates: any = {};
+                    updates['/users-social/users/' + route.params.id + "/pendingFriends/" + user.uid] = Date.now();
+                    updates['/users-social/users/' + route.params.id + "/inbox/friendRequests/" + user.uid] = Date.now();
+                    update(ref(db), updates);
+                    setIsPendingFriend(true);
+                    setSnackBar({ visible: true, message: "Friend request sent!", action: { label: "undo", onPressCode: "undoFriendRequest" } })
+                }
+            }
+        }
+    }
 
     function handleEdit(edit: boolean) {
         if (edit) {
@@ -60,7 +119,7 @@ export function PublicProfile({ navigation }: NavProps) {
 
     return (
         <View style={globalStyles.container}>
-            <Header title="Public Profile" onBack={navigation.goBack} editing={editing} setEditing={handleEdit} />
+            <Header title={route.params ? displayName :  "Public Profile"} onBack={navigation.goBack} editing={editing} setEditing={route.params ? undefined : handleEdit} />
             <ScrollView>
                 <View style={styles.container}>
 
@@ -85,8 +144,30 @@ export function PublicProfile({ navigation }: NavProps) {
                         </TouchableOpacity>
                     </View>
                     
+
+                    {route.params && <Button mode="outlined" disabled={isPendingFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
                 </View>
             </ScrollView>
+
+
+            <Snackbar
+                visible={snackBar.visible}
+                onDismiss={() => { setSnackBar({ ...snackBar, visible: false }) }}
+                duration={3000}
+                action={snackBar.action ? {
+                    label: snackBar.action?.label,
+                    onPress: () => {
+                        if (snackBar.action?.onPressCode === "undoFriendRequest" && route.params?.id && user?.uid) {
+                            const db = getDatabase();
+                            remove(ref(db, "users-social/users/" + route.params.id + "/pendingFriends/" + user?.uid));
+                            remove(ref(db, "users-social/users/" + route.params.id + "/inbox/friendRequests/" + user?.uid));
+                            setIsPendingFriend(false);
+                        }
+                    }
+                } : undefined}
+            >
+                {snackBar.message}
+            </Snackbar>
 
 
             <BottomModal visible={skillLevelModalVisible} setVisible={setSkillLevelModalVisible}>

@@ -37,7 +37,7 @@ export type RootStackParamList = {
 	Recipe: { recipe: Recipe, };
 	EditCreate: { recipe?: Recipe };
 	Account: undefined;
-	PublicProfile: undefined;
+	PublicProfile: { id: string } | undefined;
 	Friends: undefined;
 };
 
