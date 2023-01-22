@@ -21,7 +21,11 @@ type friend = {
     picture: string;
 }
 
-// TODO: docs
+
+/**
+ * Displays a list of the users friends
+ * @param navigation The navigation
+ */
 export function Friends({ navigation }: NavProps) {
 
     const user = useUserState();
@@ -31,23 +35,30 @@ export function Friends({ navigation }: NavProps) {
 
     const [friends, setFriends] = useState<friend[]>([]);
 
+
     useEffect(() => {
         if (user) {
             const db = getDatabase();
+            // Get the list of friends
             onValue(ref(db, "users-social/users/" + user.uid + "/friends"), async (snapshot) => {
                 if (snapshot.exists() && snapshot.val()) {
 
                     const frnds: friend[] = [];
                     const keys = Object.keys(snapshot.val());
                     
+                    // For each friend pull in the information need to display them
                     for (let i = 0; i < keys.length; i++) {
                         const key = keys[i];
+                        // Get the friend
                         await get(ref(db, "users-publicInfo/" + key)).then(data => {
                             if (data.exists() && data.val()) {
+                                // Add the friend to the list
                                 frnds.push({ picture: data.val().profilePicture, name: data.val().displayName, id: key } );
                             }
                         });
+                        // To prevent sending an empty list we wait till the for loop is finsihed before seeting the list of firends
                         if (i == keys.length - 1) {
+                            // Sort by name
                             frnds.sort((a, b) => a.name.localeCompare(b.name));
                             setFriends(frnds);
                         }
@@ -63,7 +74,7 @@ export function Friends({ navigation }: NavProps) {
 
     return (
         <View style={globalStyles.container}>
-            <Header title="Friends" onBack={navigation.goBack} navigation={navigation} />
+            <Header title="Friends" navigation={navigation} />
 
             <Animated.FlatList
                 //@ts-ignore
@@ -81,20 +92,20 @@ export function Friends({ navigation }: NavProps) {
 
 
 
-/** // TODO: docs
- * Creates a header with a simple back button and an optional title and button
+/** 
+ * Creates a header with a simple back button and an add friend button in the top left
  * @param title the optional title to display in the center
+ * @param navigation THe navigation
  */
-function Header({ title, onBack, navigation }: { title?: string, onBack: VoidFunction, navigation: navigation }) {
+function Header({ title, navigation }: { title?: string, navigation: navigation }) {
     const insets = useSafeAreaInsets();
     const [addFriendModalVisible, setAddFriendModalVisible] = useState(false);
 
     return (
         <Appbar.Header statusBarHeight={insets.top - 20} >
-            <Appbar.BackAction onPress={onBack} />
+            <Appbar.BackAction onPress={navigation.goBack} />
             <Appbar.Content title={title} mode="center-aligned" />
-            <Appbar.Action onPress={() => setAddFriendModalVisible(true)} icon="plus" />
-
+            <Appbar.Action onPress={() => setAddFriendModalVisible(true)} icon="account-plus" />
             <AddFriendModal visible={addFriendModalVisible} setVisible={setAddFriendModalVisible} navigation={navigation} />
         </Appbar.Header>
     )
@@ -102,7 +113,13 @@ function Header({ title, onBack, navigation }: { title?: string, onBack: VoidFun
 
 
 
-// TODO: docs
+
+/**
+ * Creates a add friend modal where the user can look up people
+ * @param visible Whether or not the modal is visible
+ * @param setVisible The function to set the visibility of the modal
+ * @param naviagtion The navigation
+ */
 function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>>, navigation: navigation}) {
     
     const user = useUserState();
@@ -114,6 +131,7 @@ function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, se
     const [list, setList] = useState<friend[]>([]);
 
     useEffect(() => {
+        // Only get the list of users when the modal is visible
         if (visible) {
             const db = getDatabase();
             get(ref(db, "users-publicInfo")).then(snapshot => {
@@ -122,6 +140,7 @@ function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, se
                     const people: friend[] = [] 
                     Object.keys(snapshot.val())
                                     .map((key: any) => {
+                                        // Check to make sure the person isn't the user
                                         if (key !== user?.uid) {
                                             let value = snapshot.val()[key];
                                             people.push( {
@@ -139,7 +158,10 @@ function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, se
         }
     }, [visible])
 
-    
+    /**
+     * handles the action of searching
+     * @param text The string to filter the list with
+     */
     function onSearch(text: string) {
         setSearch(text);
         const filteredList = masterList.filter(value => value.name.toUpperCase().includes(text.toUpperCase()));
@@ -173,8 +195,13 @@ function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, se
 
 
 
-
-// TODO: Docs
+/**
+ * Creates a clickable widget with a person's picture and name
+ * @param name The name of the person
+ * @param picture The picture of the person
+ * @param onPress THe function to call when the user clicks on the widget
+ * @param small Whether or not to display the people smaller
+ */
 function PersonWidget({name, picture="", onPress, small=false}: {name: string, picture?: string, onPress: VoidFunction, small?: boolean}) {
 
 

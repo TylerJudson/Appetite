@@ -80,9 +80,14 @@ export function PublicProfile({ navigation, route }: NavProps) {
     function removeFriend(id: string, name: string) {
         if (user) {
             const db = getDatabase();
+            // Remove friend from friends
             remove(ref(db, "users-social/users/" + user.uid + "/friends/" + id));
             remove(ref(db, "users-social/users/" + id + "/friends/" + user.uid));
-            // TODO: remove posts from friend feed and notifications
+            // TODO: remove posts from friend feed 
+            
+
+            // Send an unfriend notification
+            set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "unfriend", id: user.uid, date: Date.now(), read: false })
             setIsFriend(false);
             setIsPendingFriend(false);
         }

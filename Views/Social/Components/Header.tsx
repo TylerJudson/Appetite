@@ -10,7 +10,7 @@ import { SwipeToDelete } from "../../EditCreateRecipe/Components/Swipe";
 import { RootStackParamList } from "../../navigation";
 
 
-
+// TODO: docs!!!!!!!!!!!!!!!!
 
 type navProps = NativeStackNavigationProp<RootStackParamList, 'Appetite'>;
 type friend = {
@@ -66,14 +66,28 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                         const value = snapShot.val()[key];
                         await get(ref(db, "users-publicInfo/" + value.id)).then(data => {
                             value.picture = data.val().profilePicture;
+
+
+
+
+                            // TODO: if post id
+    
+
+
+                            if (!value.read) {
+                                unreadCount++;
+                            }
+
+                            let message = "";
+                            if (value.code === "accept") {
+                                message = data.val().displayName + " has accepted your friend request.";
+                            }
+                            if (value.code === "unfriend") {
+                                message = data.val().displayName + " has un-friended you."
+                            }
+                            ntfcns.push({ message: message, read: value.read, date: value.date, id: value.id, postId: value.postId, picture: value.picture, notificationId: key });
                         })
 
-                        // TODO: if post id
-
-                        if (!value.read) {
-                            unreadCount++;
-                        }
-                        ntfcns.push({ message: value.message, read: value.read, date: value.date, id: value.id, postId: value.postId, picture: value.picture, notificationId: key });
                         if (i == keys.length - 1) {
                             // TODO: i don't think this sort works FIX all date ones
                             ntfcns.sort((a, b) => a.date - b.date);
@@ -121,7 +135,6 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
 
     function changeSegmentedValue(value: string) {
         setSegmentedValue(value);
-        // TODO: read the non friend requests
         if (unreadFriend > 0 && value === "FriendRequests" && user) {
             setunReadFriend(0);
             setUnRead(0);
@@ -137,8 +150,10 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
             const db = getDatabase();
             set(ref(db, "users-social/users/" + user.uid + "/friends/" + id), true);
             set(ref(db, "users-social/users/" + id + "/friends/" + user.uid), true);
-            // TODO: add posts to friend feed?
-            set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { message: user.displayName + " has accepted your friend request.", id: user.uid, date: Date.now(), read: false })
+
+            // TODO: add posts to friend feed
+
+            set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "accept", id: user.uid, date: Date.now(), read: false })
             set(ref(db, "users-social/users/" + user.uid + "/inbox/friendRequests/" + id + "/accepted"), true);
             remove(ref(db, "users-social/users/" + user.uid + "/pendingFriends/" + id));
             remove(ref(db, "users-social/users/" + id + "/pendingFriends/" + user.uid));
@@ -194,6 +209,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                         <FlatList 
                             style={styles.flatList}
                             data={notifications} 
+                            keyExtractor={item => item.notificationId}
                             renderItem={({item}) => {
                                 function onPress() {
                                     if (item.id) {
