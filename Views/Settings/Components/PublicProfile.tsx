@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from "react-native";
 import { Button, Snackbar, Text, TextInput, useTheme } from "react-native-paper";
 import { User } from "../../../Models/User";
 import { useUserState } from "../../../state";
@@ -61,32 +61,74 @@ export function PublicProfile({ navigation, route }: NavProps) {
             })
             if (user) {
                 // Check to see if we are a pending friend
-                get(ref(db, '/users-social/users/' + route.params.id + "/pendingFriends/" + user.uid)).then(snapshot => {
+                get(ref(db, '/users-social/users/' + user.uid + "/pendingFriends/" + route.params.id)).then(snapshot => {
                     if (snapshot.exists() && snapshot.val()) {
                         setIsPendingFriend(true);
                     }   
                 })
+                // Check to see if we are a friend
+                get(ref(db, "users-social/users/" + user.uid + "/friends/" + route.params.id )).then(snapshot => {
+                    if (snapshot.exists() && snapshot.val()) {
+                        setIsFriend(true);
+                    }
+                });
             }
-            // TODO: check to see if the user is a friend
         }
     })
 
 
-    function handleButtonPress() {
+    function removeFriend(id: string, name: string) {
+        if (user) {
+            const db = getDatabase();
+            remove(ref(db, "users-social/users/" + user.uid + "/friends/" + id));
+            remove(ref(db, "users-social/users/" + id + "/friends/" + user.uid));
+            // TODO: remove posts from friend feed and notifications
+            setIsFriend(false);
+            setIsPendingFriend(false);
+        }
+    }
+
+    function addFriend(id: string) {
+        if (user) {
+            const db = getDatabase();
+            let updates: any = {};
+            updates['/users-social/users/' + id + "/pendingFriends/" + user.uid] = Date.now();
+            updates['/users-social/users/' + user?.uid + "/pendingFriends/" + id] = Date.now();
+            updates['/users-social/users/' + id + "/inbox/friendRequests/" + user.uid] = { accepted: false, read: false, date: Date.now() };
+            update(ref(db), updates);
+            setIsPendingFriend(true);
+            setSnackBar({ visible: true, message: "Friend request sent!", action: { label: "undo", onPressCode: "undoFriendRequest" } })
+        }
+    }
+    async function handleButtonPress() {
         if (route.params) {
             if (isFriend) {
-                // TODO: delete friend
+                if (Platform.OS === "web") {
+                    if (window.confirm("Remove Friend?\nAre you sure you want to unfriend " + displayName + "?")) {
+                        removeFriend(route.params.id, displayName);
+                    }
+                }
+                else {
+                    return Alert.alert(
+                        "Remove Friend?",
+                        "Are you sure you want to unfriend " + displayName + "?",
+                        [
+                            {
+                                text: "No",
+                                style: "cancel"
+                            },
+                            {
+                                text: "Yes",
+                                style: "destructive",
+                                onPress: () => removeFriend(route.params?.id || "", displayName)
+                            }
+                        ]
+                    )
+                }
+                
             }
             else {
-                if (user) {
-                    const db = getDatabase();
-                    let updates: any = {};
-                    updates['/users-social/users/' + route.params.id + "/pendingFriends/" + user.uid] = Date.now();
-                    updates['/users-social/users/' + route.params.id + "/inbox/friendRequests/" + user.uid] = Date.now();
-                    update(ref(db), updates);
-                    setIsPendingFriend(true);
-                    setSnackBar({ visible: true, message: "Friend request sent!", action: { label: "undo", onPressCode: "undoFriendRequest" } })
-                }
+                addFriend(route.params.id)
             }
         }
     }
@@ -145,7 +187,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
                     </View>
                     
 
-                    {route.params && <Button mode="outlined" disabled={isPendingFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
+                    {route.params && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
                 </View>
             </ScrollView>
 
@@ -160,6 +202,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
                         if (snackBar.action?.onPressCode === "undoFriendRequest" && route.params?.id && user?.uid) {
                             const db = getDatabase();
                             remove(ref(db, "users-social/users/" + route.params.id + "/pendingFriends/" + user?.uid));
+                            remove(ref(db, "users-social/users/" + user?.uid + "/pendingFriends/" + route.params.id));
                             remove(ref(db, "users-social/users/" + route.params.id + "/inbox/friendRequests/" + user?.uid));
                             setIsPendingFriend(false);
                         }
