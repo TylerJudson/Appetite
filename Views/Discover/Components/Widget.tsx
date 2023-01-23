@@ -17,7 +17,7 @@ import { Recipe } from "../../../Models/Recipe";
  * @param recipe The recipe to display on the widget
  * @param onPress The function to call when the user presses on the widget
  */
-export function Widget({ recipeId, title, image, onPress }: { recipeId: string, title: string, image: string, onPress: VoidFunction }) {
+export function Widget({ title, image, onPress }: { title: string, image: string, onPress: VoidFunction }) {
     const styles = createStyles();
 
     return (

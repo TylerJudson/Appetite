@@ -17,6 +17,8 @@ import { Account } from '../Settings/Components/Account';
 import { PublicProfile } from '../Settings/Components/PublicProfile';
 import { Friends } from '../Settings/Components/Friends';
 import { Settings } from '../Settings/Settings';
+import CreatePostScreen from '../Social/Components/CreatePostScreen';
+import { PostScreen } from '../Social/Components/PostScreen';
 
 
 
@@ -39,6 +41,8 @@ export type RootStackParamList = {
 	Account: undefined;
 	PublicProfile: { id: string } | undefined;
 	Friends: undefined;
+	CreatePost: undefined;
+	PostScreen: { id: string }
 };
 
 
@@ -58,6 +62,8 @@ export default function Navigation() {
 				<Stack.Screen name="Account" component={Account} />
 				<Stack.Screen name="PublicProfile" component={PublicProfile} />
 				<Stack.Screen name="Friends" component={Friends} />
+				<Stack.Screen name='CreatePost' component={CreatePostScreen} options={{ gestureEnabled: false }} />
+				<Stack.Screen name="PostScreen" component={PostScreen} options={{ presentation: "modal" }} />
 			</Stack.Navigator>
       </NavigationContainer>
   );

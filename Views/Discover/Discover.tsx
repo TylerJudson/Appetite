@@ -88,7 +88,7 @@ export default function Discover({ route }: Route) {
                     data={list}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => {
-                        return <Widget title={item.name} image={item.image} recipeId={item.id} onPress={() => onSearchWidgetPress(item.id, item.image)} />
+                        return <Widget title={item.name} image={item.image} onPress={() => onSearchWidgetPress(item.id, item.image)} />
                     }}
                     //@ts-ignore
                     itemLayoutAnimation={Layout}

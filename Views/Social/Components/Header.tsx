@@ -52,7 +52,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
 
     const [segmentedValue, setSegmentedValue] = useState("Notifications");
 
-
+    //#region BEHAVIOR
     useEffect(() => {
         if (user) {
             const db = getDatabase();
@@ -172,6 +172,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
             })
         }
     }
+    //#endregion
 
     
     return (
@@ -190,7 +191,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                 <Appbar.Action icon="account-group" onPress={() => navigation.navigate("Friends")} />
             </Tooltip>
             <Tooltip title="New Post">
-                <Appbar.Action icon="plus" onPress={() => {}} />
+                <Appbar.Action icon="plus" onPress={() => navigation.navigate("CreatePost")} />
             </Tooltip>
 
 
