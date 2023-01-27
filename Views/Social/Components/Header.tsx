@@ -72,7 +72,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
 
                             // TODO: if post id
     
-
+                            
 
                             if (!value.read) {
                                 unreadCount++;
@@ -82,8 +82,11 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                             if (value.code === "accept") {
                                 message = data.val().displayName + " has accepted your friend request.";
                             }
-                            if (value.code === "unfriend") {
+                            else if (value.code === "unfriend") {
                                 message = data.val().displayName + " has un-friended you."
+                            }
+                            else if (value.code === "post") {
+                                message = data.val().displayName + ` has posted "${value.title}" `
                             }
                             ntfcns.push({ message: message, read: value.read, date: value.date, id: value.id, postId: value.postId, picture: value.picture, notificationId: key });
                         })
@@ -215,7 +218,12 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                                 function onPress() {
                                     if (item.id) {
                                         setInboxModalVisible(false); 
-                                        setTimeout(() => navigation.navigate("PublicProfile", { id: item.id || "" }), 250);
+                                        if (item.postId) {
+                                            setTimeout(() => navigation.navigate("PostScreen", { id: item.postId || ""}), 250);
+                                        }
+                                        else {
+                                            setTimeout(() => navigation.navigate("PublicProfile", { id: item.id || "" }), 250);
+                                        }
                                     }
                                 }
 

@@ -40,7 +40,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     const screenWidth = useWindowDimensions().width;
     const insets = useSafeAreaInsets();
 
-
+    
     //#region BEHAVIOR
 
     /** Handles the action of pressing the heart */
@@ -75,7 +75,8 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
         if (addRecipeResult.success) {
             // Save and update the state
             setRecipeBook(recipeBook);
-            updateRecipe(user, recipe, true);
+            
+            updateRecipe(user, clone, true);
 
             // Navigate to the new recipe
             navigation.navigate("Recipe", { recipe: clone });

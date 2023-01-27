@@ -41,9 +41,9 @@ export default function CreatePostScreen({ navigation }: navProps) {
      * Handles the action of creating the post 
      */
     function handleCreate() {
-        // if (title === "") return alert("Missing Title", "You need a title before you can create a post.", [{text: "Okay", style: "cancel"}]);
-        // if (description === "") return alert("Missing Description", "You need a description before you can create a post.", [{text: "Okay", style: "cancel"}]);
-        // if (selectedImage === "") return alert("Missing Image", "You need an image before you can create a post.", [{text: "Okay", style: "cancel"}]);
+        if (title === "") return alert("Missing Title", "You need a title before you can create a post.", [{text: "Okay", style: "cancel"}]);
+        if (description === "") return alert("Missing Description", "You need a description before you can create a post.", [{text: "Okay", style: "cancel"}]);
+        if (selectedImage === "") return alert("Missing Image", "You need an image before you can create a post.", [{text: "Okay", style: "cancel"}]);
 
         AddPostToDatabase();
 
@@ -81,20 +81,23 @@ export default function CreatePostScreen({ navigation }: navProps) {
         if (user) {
             const db = getDatabase();
             const postId = uuidv4();
-            // Add the post to the global list of posts
-            // await set(ref(db, "users-social/posts/" + postId), { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe, created: Date.now() });
+            const post = { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe, created: Date.now(), author: user.uid }
+            // Add the post to the global list of posts // TODO: if set to everyone visible
+            await set(ref(db, "users-social/posts/" + postId), post);
             navigation.goBack();
             navigation.navigate("PostScreen", { id: postId });
             // Add the post to the list of user posts
-            // set(ref(db, "users-social/users/" + user.uid + "/posts/" + postId), { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe, created: Date.now() });
+            set(ref(db, "users-social/users/" + user.uid + "/posts/" + postId), post);
             // Add the post to all of the users friends
-            // get(ref(db, "users-social/users/" + user.uid + "/friends")).then(snapshot => {
-            //     if (snapshot.exists() && snapshot.val()) {
-            //         Object.keys(snapshot.val()).forEach(friend => {
-            //             set(ref(db, "users-social/users/" + friend + "/friendFeed/" + postId), { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe, created: Date.now() });
-            //         });
-            //     }
-            // })
+            get(ref(db, "users-social/users/" + user.uid + "/friends")).then(snapshot => {
+                if (snapshot.exists() && snapshot.val()) {
+                    Object.keys(snapshot.val()).forEach(friend => {
+                        set(ref(db, "users-social/users/" + friend + "/friendFeed/" + postId), post);
+                        // Send a notification
+                        set(push(ref(db, "users-social/users/" + friend + "/inbox/notifications/")), { code: "post", id: user.uid, postId: postId, date: Date.now(), title: title, read: false })
+                    });
+                }
+            })
         }
     }
 
