@@ -66,14 +66,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                         const value = snapShot.val()[key];
                         await get(ref(db, "users-publicInfo/" + value.id)).then(data => {
                             value.picture = data.val().profilePicture;
-
-
-
-
-                            // TODO: if post id
-    
                             
-
                             if (!value.read) {
                                 unreadCount++;
                             }

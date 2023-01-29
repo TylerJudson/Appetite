@@ -27,13 +27,21 @@ UI
  - Discover screen
  - Tags from the menu? Maybe change this to focus mode?
  - Social Screen
+ - Settings Screen
+   - Add about Appetite
+   - Add get help
+   - add see terms of service
+   - Add see privacy policy
+   - Actually implement the different switches
 
 Design
  - App icon
  - Splash screen
  - Colors
- - Remaining Icons
  
 Backend
  - Discover
- - Add Friends and feeds
+
+Notifications
+ - Send notifications
+ - limit notifications
