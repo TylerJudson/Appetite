@@ -192,7 +192,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
                     </View>
                     
 
-                    {route.params && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
+                    {route.params && route.params.id != user?.uid && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
                 </View>
             </ScrollView>
 

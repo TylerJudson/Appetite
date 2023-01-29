@@ -83,17 +83,22 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                                 message = data.val().displayName + " has accepted your friend request.";
                             }
                             else if (value.code === "unfriend") {
-                                message = data.val().displayName + " has un-friended you."
+                                message = data.val().displayName + " has un-friended you.";
                             }
                             else if (value.code === "post") {
-                                message = data.val().displayName + ` has posted "${value.title}" `
+                                message = data.val().displayName + ` has posted "${value.title}". `;
+                            }
+                            else if (value.code === "like") {
+                                message = data.val().displayName + ` has liked your post "${value.title}".`;
+                            }
+                            else if (value.code === "unlike") {
+                                message = data.val().displayName + ` has unliked your post "${value.title}".`;
                             }
                             ntfcns.push({ message: message, read: value.read, date: value.date, id: value.id, postId: value.postId, picture: value.picture, notificationId: key });
                         })
 
                         if (i == keys.length - 1) {
-                            // TODO: i don't think this sort works FIX all date ones
-                            ntfcns.sort((a, b) => a.date - b.date);
+                            ntfcns.sort((a, b) => b.date - a.date);
                             setUnRead(unreadCount)
                             setNotifications(ntfcns); 
                         }
@@ -122,7 +127,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                             }
                         });
                         if (i == keys.length - 1) {
-                            requests.sort((a, b) => a.date - b.date);
+                            requests.sort((a, b) => b.date - a.date);
                             setFriendRequests(requests);
                             setunReadFriend(unreadFriendCount)
                         }  

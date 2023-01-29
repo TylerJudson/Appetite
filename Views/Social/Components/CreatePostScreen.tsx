@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Platform, KeyboardAvoidingView, useWindowDimensions, ScrollView } from "react-native";
-import { Searchbar, TextInput, useTheme } from "react-native-paper";
+import { View, StyleSheet, Platform, KeyboardAvoidingView, useWindowDimensions, ScrollView, TouchableOpacity } from "react-native";
+import { Checkbox, Searchbar, TextInput, useTheme, Text } from "react-native-paper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Recipe } from "../../../Models/Recipe";
 import { useRecipeBookState, useUserState } from "../../../state";
@@ -31,6 +31,7 @@ export default function CreatePostScreen({ navigation }: navProps) {
 
     const [selectedImage, setSelectedImage] = useState("");
     const [title, setTitle] = useState("");
+    const [visibleToEveryone, setVisibleToEveryone] = useState(true);
     const [description, setDescription] = useState("");
     const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>();
 
@@ -81,9 +82,9 @@ export default function CreatePostScreen({ navigation }: navProps) {
         if (user) {
             const db = getDatabase();
             const postId = uuidv4();
-            const post = { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe, created: Date.now(), author: user.uid }
-            // Add the post to the global list of posts // TODO: if set to everyone visible
-            await set(ref(db, "users-social/posts/" + postId), post);
+            const post = { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe || {}, created: Date.now(), author: user.uid }
+            // Add the post to the global list of posts
+            if (visibleToEveryone) await set(ref(db, "users-social/posts/" + postId), post);
             navigation.goBack();
             navigation.navigate("PostScreen", { id: postId });
             // Add the post to the list of user posts
@@ -111,13 +112,23 @@ export default function CreatePostScreen({ navigation }: navProps) {
             />
 
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }} keyboardVerticalOffset={5}>
-                <ScrollView>
-                    <ImageChooser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                <ScrollView style={{flex: 1}}> 
+                    <View style={{maxWidth: 700, alignSelf: 'center', width: "100%"}}>
+
+                   <ImageChooser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
 
                     <TextInput style={styles.oneLineTextInput} label="Title" value={title} onChangeText={setTitle} />
+                    
+                    <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", margin: 10 }} onPress={() => setVisibleToEveryone(!visibleToEveryone)} >
+                        <Checkbox.Android status={visibleToEveryone ? 'checked' : 'unchecked'} onPress={() => setVisibleToEveryone(!visibleToEveryone)} />
+                        <Text variant="labelLarge">Visible to {visibleToEveryone ? "Everyone?" : "just friends."}</Text>
+                    </TouchableOpacity>
+                    
                     <TextInput style={[styles.oneLineTextInput, {marginBottom: 50}]} label="Description" multiline value={description} onChangeText={setDescription} />
 
                     <Widget title={linkedRecipe ? linkedRecipe.name : "Link a Recipe"} image={linkedRecipe?.image || ""} onPress={() => setModalVisible(true)}  />
+                    </View>
+
 
                 </ScrollView>
             </KeyboardAvoidingView>
