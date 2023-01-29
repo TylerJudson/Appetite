@@ -65,6 +65,7 @@ export function ShareRecipe({ recipe, hideModal }: { recipe: Recipe, hideModal: 
             id: recipe.id,
             name: recipe.name,
             image: recipe.image,
+            tags: recipe.tags,
         });
         const sendRecipe = recipe.onlyDefinedProperties();
         delete sendRecipe["favorited"];

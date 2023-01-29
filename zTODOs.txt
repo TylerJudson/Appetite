@@ -45,3 +45,6 @@ Backend
 Notifications
  - Send notifications
  - limit notifications
+
+
+// TODO: Fix how use effects should rereneder when the user changes
