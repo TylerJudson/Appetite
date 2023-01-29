@@ -156,10 +156,10 @@ export function PostScreen({navigation, route}: navProps) {
                     colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
                     style={styles.gradient}
                 />
-                <TouchableOpacity style={styles.heartContainer}  onPress={favorite}>
+                { author.id !== user?.uid && <TouchableOpacity style={styles.heartContainer}  onPress={favorite}>
                     <IconButton icon={favorited ? "heart" : "heart-outline"} iconColor={favorited ? "#f67" : "#ddd"} size={30} />
                     {favoritedCount > 0 && <Text style={styles.heartCount} variant="labelSmall">{favoritedCount}</Text>}
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
 
             <View style={styles.headerContainer}>
