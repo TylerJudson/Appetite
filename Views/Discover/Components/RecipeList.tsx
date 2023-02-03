@@ -42,13 +42,16 @@ export function RecipeList({ header, source, recipeCount, navigation, setSnackBa
         navigation.navigate("Recipe", { recipe: recipe })
     }
     function onAdd(recipe: Recipe) {
-        recipe.readonly = false;
+        // Create a clone of the recipe so we can safely change the readability
+        const clone = recipe.clone();
+        clone.readonly = false;
+
         // Try to add the recipe to the recipe book
-        const addRecipeResult = recipeBook.addRecipe(recipe);
+        const addRecipeResult = recipeBook.addRecipe(clone);
         if (addRecipeResult.success) {
             // Save and update the state
             setRecipeBook(recipeBook);
-            updateRecipe(user, recipe, true);
+            updateRecipe(user, clone, true);
 
             setSnackBar({ visible: true, message: "Recipe Saved" })
         }
@@ -84,7 +87,7 @@ export function RecipeList({ header, source, recipeCount, navigation, setSnackBa
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(_, index) => index.toString()}
-                    renderItem={({item}) => <RecipeCard title={item.name} description={item.description || ""} image={item.image} onPress={() => onPress(item)} onAdd={() => onAdd(item)} added={!item.readonly} />}
+                    renderItem={({item}) => <RecipeCard title={item.name} description={item.description || ""} image={item.image} onPress={() => onPress(item)} onAdd={() => onAdd(item)} />}
                 />
             </View>
 

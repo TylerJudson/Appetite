@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Text, Surface, Button } from "react-native-paper";
 
@@ -13,9 +13,9 @@ import { Text, Surface, Button } from "react-native-paper";
  * @param image The image of the recipe
  * @param onPress The function to call when the user presses on the card
  * @param onAdd The function to call when the user clicks on the add button
- * @param added Whether or not the recipe has been added to the user's database
  */
-export function RecipeCard({ title, description, image, onPress, onAdd, added }: { title: string, description: string, image: string, onPress: VoidFunction, onAdd: VoidFunction, added: boolean }) {
+export function RecipeCard({ title, description, image, onPress, onAdd }: { title: string, description: string, image: string, onPress: VoidFunction, onAdd: VoidFunction }) {
+    const [added, setAdded] = useState(false);
     const styles = createStyles();
 
     return (
@@ -23,8 +23,8 @@ export function RecipeCard({ title, description, image, onPress, onAdd, added }:
             <TouchableOpacity style={styles.container} onPress={onPress}>
                 <Surface style={styles.surfaceContainer} elevation={4} >
                     <View style={styles.imageContainer}>
-                        <Image style={styles.image} source={{ uri: image }} />
-                        <Button icon={added ? "check" : "plus"} style={styles.addButton} mode="contained" onPress={onAdd}>Save{added ? "d" : ""}</Button>
+                        <Image style={styles.image} source={{ uri: image ? image : undefined }} />
+                        <Button icon={added ? "check" : "plus"} style={styles.addButton} mode="contained" onPress={() => {onAdd(); setAdded(true)}}>Save{added ? "d" : ""}</Button>
                     </View>
 
                     <View style={styles.textContainer}>
