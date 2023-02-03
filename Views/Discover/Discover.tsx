@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { IconButton, Text, useTheme } from "react-native-paper";
 import { Recipe } from "../../Models/Recipe";
 import { Route } from "../navigation";
 import { createGlobalStyles } from "../styles/globalStyles";
+import { RecipeList } from "./Components/RecipeList";
 import { SearchModal } from "./Components/SearchModal";
+import { TagGrid, tagCard } from "./Components/TagGrid";
 
 
 
@@ -19,12 +21,17 @@ export default function Discover({ route }: Route) {
     const styles = createStyles();
 
     const [searchModalVisible, setSearchModalVisible] = useState(false);
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>(["dfjdk"]);
 
+    function openSearchModalWithTag(tag: string) {
+        setSearchModalVisible(true);
+        setTags([tag]);
+    }
 
     return (
         <View style={globalStyles.screenContainer}>
             <ScrollView stickyHeaderIndices={[1]} >
+
                 <View style={{marginTop: 30}}/>
                 <View>
                     <View style={styles.headerContainer} >
@@ -33,7 +40,10 @@ export default function Discover({ route }: Route) {
                     </View>
                 </View>
 
-                <View style={{height: 1000}}></View>
+                <RecipeList style={styles.recipeList} header="Check out these Featured Recipes" source="" recipeCount={5} />
+
+                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
+
             </ScrollView>
 
             <SearchModal visible={searchModalVisible} setVisible={setSearchModalVisible} navigation={route.navigation} tags={tags} setTags={setTags} />
@@ -47,19 +57,35 @@ export default function Discover({ route }: Route) {
  * @returns The styles
  */
 function createStyles() {
+    const colors = useTheme().colors;
+
     return StyleSheet.create({
         headerContainer: {
             flexDirection: 'row',
-            marginLeft: 15
+            paddingLeft: 15,
+            backgroundColor: colors.background
         },
+        recipeList: {
+
+        },
+
     });
 }
 
 
 
 
-function sortAlpha(a: Recipe, b: Recipe) {
-    if (a.name < b.name) return -1;
-    if (a.name > b.name) return 1;
-    return 0;
-}
+const foodOrginTags: tagCard[] = [
+    { title: "Mexican", image: ""},
+    { title: "Chinese", image: "" },
+    { title: "Italian", image: "" },
+    { title: "German", image: "" },
+    { title: "Japanese", image: "" },
+    { title: "French", image: "" },
+    { title: "Korean", image: "" },
+    { title: "Indian", image: "" },
+    { title: "Thai", image: "" },
+    { title: "African", image: "" },
+    { title: "Greek", image: "" },
+    { title: "Pakistani", image: ""},
+]

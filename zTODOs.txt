@@ -15,7 +15,6 @@
 
 UP NEXT!:
    - Make everyone Accounts
-   - Design (not implement) the discover screen
    - Design the social Screen
    - Add recipes
 

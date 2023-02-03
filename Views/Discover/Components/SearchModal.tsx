@@ -28,32 +28,39 @@ export function SearchModal({ visible, setVisible, navigation, tags, setTags }: 
     const [masterList, setMasterList] = useState<{ name: string, id: string, image: string, tags: string[] }[]>([]);
     const [list, setList] = useState(masterList);
 
-    useEffect(filter, [search, tags]);
+
+    useEffect(() => filter(masterList), [search, tags]);
     useEffect(getRecipes, [visible])
 
 
     /** Get's all of the public recipes from the database */
     function getRecipes() {
         if (visible) {
-            setTags([]);
-            setSearch("");
             const db = getDatabase();
             get(ref(db, "publicRecipes/shallow/"))
                 .then((snapShot) => {
                     if (snapShot.exists() && snapShot.val()) {
-                        setMasterList((Object.values(snapShot.val()).sort(sortAlpha) as any));
-                        setList((Object.values(snapShot.val()).sort(sortAlpha) as any));
+                        const ls = Object.values(snapShot.val()).sort(sortAlpha) as any;
+                        setMasterList(ls);
+                        filter(ls)
                     }
                 })
+        }
+        else {
+            setTimeout(() => {
+                setTags([]);
+                setSearch("");
+            }, 250);
         }
     }
 
     /** Filters the list of recipes by a search string and tags */
-    function filter() {
-        setList(masterList.filter(item => {
+    function filter(list: { name: string, id: string, image: string, tags: string[] }[]) {
+        setList(list.filter(item => {
             let ret = true;
             if (tags.length != 0) {
-                ret = item.tags && tags.every(tag => item.tags.includes(tag));
+                const lowerCaseTags = item.tags?.map(tag => tag.toLowerCase());
+                ret = item.tags && tags.every(tag => lowerCaseTags.includes(tag.toLowerCase()));
             }
             if (search) {
                 ret = ret && item.name.toUpperCase().indexOf(search.toUpperCase()) > -1;
@@ -112,6 +119,7 @@ export function SearchModal({ visible, setVisible, navigation, tags, setTags }: 
 
             <Animated.FlatList
                 style={styles.list}
+                keyboardShouldPersistTaps="always"
                 data={list}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => {
