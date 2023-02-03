@@ -76,7 +76,7 @@ function createStyles() {
 
 
 const foodOrginTags: tagCard[] = [
-    { title: "Mexican", image: ""},
+    { title: "Mexican", image: require("../../assets/images/flags/mexicanFlag.jpg")},
     { title: "Chinese", image: "" },
     { title: "Italian", image: "" },
     { title: "German", image: "" },

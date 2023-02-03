@@ -1,6 +1,6 @@
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from "react-native";
 import { Text, Surface, Button, useTheme } from "react-native-paper";
 
 
@@ -15,7 +15,7 @@ import { Text, Surface, Button, useTheme } from "react-native-paper";
  * @param onPress The function to call when the user presses on the card
  * @param onAdd The function to call when the user clicks on the add button
  */
-export function TagCard({ title, onPress, image, linearGradientProps }: { title: string, onPress: VoidFunction, image?: string, linearGradientProps?: LinearGradientProps }) {
+export function TagCard({ title, onPress, image, linearGradientProps }: { title: string, onPress: VoidFunction, image?: ImageSourcePropType, linearGradientProps?: LinearGradientProps }) {
     const styles = createStyles();
     const colors = useTheme().colors;
 
@@ -26,7 +26,7 @@ export function TagCard({ title, onPress, image, linearGradientProps }: { title:
                     <Text style={styles.title} variant="titleMedium">{title}</Text>
                 </View>
                     {
-                        image && !linearGradientProps && <Image style={styles.background} source={{uri: image}} />
+                        image && !linearGradientProps && <Image style={styles.background} source={image} />
                     }
                     {
                         linearGradientProps && !image && <LinearGradient style={styles.background} {...linearGradientProps} />
