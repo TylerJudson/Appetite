@@ -165,6 +165,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                         }
                         updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
                         updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
+                        updatedRecipe.image = recipe.image;
                         updates['/discover/featuredRecipes/' + recipe.id] = updatedRecipe;
                         update(ref(db), updates);
 

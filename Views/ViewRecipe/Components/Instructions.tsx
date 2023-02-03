@@ -4,7 +4,7 @@ import { Text, useTheme } from "react-native-paper";
 import { InstructionIngredientWord as SpecialWord} from "./InstructionIngredientWord";
 
 
-const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespoon", "cups", "and", "into", "cup"]
+const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespoon", "cups", "and", "into", "cup", "to", "medium", "slices"]
 
 /**
  * Displays an instruction with ingredients highlighted
