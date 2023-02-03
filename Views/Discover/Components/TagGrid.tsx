@@ -1,4 +1,4 @@
-import { View, ViewProps, StyleSheet } from "react-native";
+import { View, ViewProps, StyleSheet, ImageSourcePropType } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { LinearGradientProps } from "expo-linear-gradient";
 import { TagCard } from "./TagCard";
@@ -7,7 +7,7 @@ import { TagCard } from "./TagCard";
 
 export type tagCard = {
     title: string
-    image?: string
+    image?: ImageSourcePropType
     gradient?: LinearGradientProps
 }
 
@@ -24,8 +24,8 @@ export function TagGrid({ tagCards, openSearchModalWithTag, ...props }: props) {
     return (
         <View {...props} >
             <View style={styles.container} >
-                {tagCards.map(tag => 
-                    <View style={styles.tag}>
+                {tagCards.map((tag, index) => 
+                    <View style={styles.tag} key={index}>
                         <TagCard title={tag.title} image={tag.image} onPress={() => openSearchModalWithTag(tag.title)} />
                     </View> 
                 )}

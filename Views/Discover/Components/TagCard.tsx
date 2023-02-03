@@ -34,6 +34,7 @@ export function TagCard({ title, onPress, image, linearGradientProps }: { title:
                     {
                         !linearGradientProps && !image && <LinearGradient style={styles.background} colors={[colors.inversePrimary, colors.secondaryContainer]} start={{x: 0, y: 0}} end={{x: 1, y: 1}}/>
                     }
+                    <View style={[styles.background, {backgroundColor: "rgba(0, 0, 0, 0.1)"}]} />
             </Surface>
         </TouchableOpacity>
     );
@@ -59,7 +60,7 @@ function createStyles() {
         title: {
             width: "100%",
             textAlign: 'center',
-            fontWeight: "600", textShadowColor: "#333", textShadowRadius: 5,
+            fontWeight: "700", textShadowColor: "#000", textShadowRadius: 5,
             color: "#fff"
         },
         background: {

@@ -30,7 +30,7 @@ export default function Discover({ route }: Route) {
 
     return (
         <View style={globalStyles.screenContainer}>
-            <ScrollView stickyHeaderIndices={[1]} >
+            <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{paddingBottom: 100}}>
 
                 <View style={{marginTop: 30}}/>
                 <View>
@@ -40,7 +40,11 @@ export default function Discover({ route }: Route) {
                     </View>
                 </View>
 
-                <RecipeList style={styles.recipeList} header="Check out these Featured Recipes" source="" recipeCount={5} />
+                <RecipeList style={styles.recipeList} header="Check out these Featured Recipes" source="" recipeCount={5} navigation={route.navigation} />
+
+                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={meals} />
+
+                <RecipeList style={styles.recipeList} header="Popular Recipes" source="" recipeCount={5} navigation={route.navigation} />
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
 
@@ -66,7 +70,7 @@ function createStyles() {
             backgroundColor: colors.background
         },
         recipeList: {
-
+            marginTop: 20
         },
 
     });
@@ -88,4 +92,12 @@ const foodOrginTags: tagCard[] = [
     { title: "African", image: "" },
     { title: "Greek", image: "" },
     { title: "Pakistani", image: ""},
+]
+
+const meals: tagCard[] = [
+    { title: "Breakfast", image: require("../../assets/images/meals/Breakfast.jpg") },
+    { title: "Lunch", image: require("../../assets/images/meals/Lunch.jpg") },
+    { title: "Dinner", image: require("../../assets/images/meals/Dinner.jpg") },
+    { title: "Dessert", image: require("../../assets/images/meals/Dessert.jpg") },
+    { title: "Snack", image: require("../../assets/images/meals/Snack.jpg") },
 ]
