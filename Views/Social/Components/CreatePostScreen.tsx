@@ -22,7 +22,7 @@ type navProps = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
  * Displays a screen that allows the user to create a post
  * @param navigation The navigation 
  */
-export default function CreatePostScreen({ navigation }: navProps) {
+export default function CreatePostScreen({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
@@ -33,7 +33,7 @@ export default function CreatePostScreen({ navigation }: navProps) {
     const [title, setTitle] = useState("");
     const [visibleToEveryone, setVisibleToEveryone] = useState(true);
     const [description, setDescription] = useState("");
-    const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>();
+    const [linkedRecipe, setLinkedRecipe] = useState(route.params.linkedRecipe);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState("");

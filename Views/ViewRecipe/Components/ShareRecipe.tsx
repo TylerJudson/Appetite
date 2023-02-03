@@ -1,22 +1,24 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { getDatabase, ref, set } from "firebase/database";
 import React, {  } from "react";
 import { Alert, Platform, StyleSheet, View } from "react-native";
 import { TouchableRipple, Menu } from "react-native-paper";
 import { Recipe } from "../../../Models/Recipe";
+import { RootStackParamList } from "../../navigation";
 
 
 /**
  * Displays a view that allows the user to share a recipe
  * @param recipe The recipe to share
  */
-export function ShareRecipe({ recipe, hideModal }: { recipe: Recipe, hideModal: VoidFunction }) {
+export function ShareRecipe({ recipe, hideModal, navigation }: { recipe: Recipe, hideModal: VoidFunction, navigation: NativeStackNavigationProp<RootStackParamList, "Recipe", undefined> }) {
     
     /**
      * Handles the action of the user clicking the create post option
      */
     function handleCreatePost() {
-        console.log("Not yet implemented");
         hideModal();
+        navigation.navigate("CreatePost", { linkedRecipe: recipe });
     }
     /**
      * Handles the action of the user clicking on the share pdf option

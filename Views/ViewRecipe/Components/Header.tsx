@@ -182,7 +182,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
                                 <Menu.Item leadingIcon="tag-multiple" onPress={handleTags} title="Tags" />
 
                                 <Menu anchor={<Menu.Item leadingIcon="share" onPress={handleShare} title="Share" />} visible={shareMenuVisible} onDismiss={() => setShareMenuVisible(false)} anchorPosition="bottom">
-                                    <ShareRecipe recipe={recipe} hideModal={() => setShareMenuVisible(false)} />
+                                    <ShareRecipe recipe={recipe} hideModal={() => setShareMenuVisible(false)} navigation={navigation} />
                                 </Menu>
 
                                 <Divider />
@@ -194,7 +194,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
             }
 
             <BottomModal visible={shareModalVisible} setVisible={setShareModalVisible}>
-                <ShareRecipe recipe={recipe} hideModal={() => setShareModalVisible(false)} />
+                <ShareRecipe recipe={recipe} hideModal={() => setShareModalVisible(false)}  navigation={navigation}/>
             </BottomModal>
         </Appbar.Header>
     );
