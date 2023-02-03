@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
-import { IconButton, Text, useTheme } from "react-native-paper";
+import { IconButton, Snackbar, Text, useTheme } from "react-native-paper";
+import { updateRecipe } from "../../FireBase/Update";
 import { Recipe } from "../../Models/Recipe";
+import { useRecipeBookState, useUserState } from "../../state";
 import { Route } from "../navigation";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { RecipeList } from "./Components/RecipeList";
@@ -17,16 +19,25 @@ import { TagGrid, tagCard } from "./Components/TagGrid";
  */
 export default function Discover({ route }: Route) {
 
+
+
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
 
     const [searchModalVisible, setSearchModalVisible] = useState(false);
     const [tags, setTags] = useState<string[]>(["dfjdk"]);
 
+    const [snackBar, setSnackBar] = useState({
+        visible: false,
+        message: ""
+    });
+
     function openSearchModalWithTag(tag: string) {
         setSearchModalVisible(true);
         setTags([tag]);
     }
+
+
 
     return (
         <View style={globalStyles.screenContainer}>
@@ -40,17 +51,26 @@ export default function Discover({ route }: Route) {
                     </View>
                 </View>
 
-                <RecipeList style={styles.recipeList} header="Check out these Featured Recipes" source="" recipeCount={5} navigation={route.navigation} />
+                <RecipeList style={styles.recipeList} header="Check out these Featured Recipes" source="/discover/featuredRecipes" recipeCount={5} navigation={route.navigation} setSnackBar={setSnackBar} />
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={meals} />
 
-                <RecipeList style={styles.recipeList} header="Popular Recipes" source="" recipeCount={5} navigation={route.navigation} />
+                <RecipeList style={styles.recipeList} header="Popular Recipes" source="" recipeCount={5} navigation={route.navigation} setSnackBar={setSnackBar} />
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
 
             </ScrollView>
 
             <SearchModal visible={searchModalVisible} setVisible={setSearchModalVisible} navigation={route.navigation} tags={tags} setTags={setTags} />
+
+            <Snackbar
+                visible={snackBar.visible}
+                onDismiss={() => { setSnackBar({ ...snackBar, visible: false }) }}
+                duration={3000}
+            >
+                {snackBar.message}
+            </Snackbar>
+            
         </View>
     );
 }

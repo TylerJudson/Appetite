@@ -13,8 +13,9 @@ import { Text, Surface, Button } from "react-native-paper";
  * @param image The image of the recipe
  * @param onPress The function to call when the user presses on the card
  * @param onAdd The function to call when the user clicks on the add button
+ * @param added Whether or not the recipe has been added to the user's database
  */
-export function RecipeCard({ title, description, image, onPress, onAdd }: { title: string, description: string, image: string, onPress: VoidFunction, onAdd: VoidFunction }) {
+export function RecipeCard({ title, description, image, onPress, onAdd, added }: { title: string, description: string, image: string, onPress: VoidFunction, onAdd: VoidFunction, added: boolean }) {
     const styles = createStyles();
 
     return (
@@ -22,13 +23,13 @@ export function RecipeCard({ title, description, image, onPress, onAdd }: { titl
             <TouchableOpacity style={styles.container} onPress={onPress}>
                 <Surface style={styles.surfaceContainer} elevation={4} >
                     <View style={styles.imageContainer}>
-                        <Image style={styles.image} />
-                        <Button icon={"plus"} style={styles.addButton} mode="contained" onPress={onAdd}>Save</Button>
+                        <Image style={styles.image} source={{ uri: image }} />
+                        <Button icon={added ? "check" : "plus"} style={styles.addButton} mode="contained" onPress={onAdd}>Save{added ? "d" : ""}</Button>
                     </View>
 
                     <View style={styles.textContainer}>
-                        <Text style={styles.title} variant="titleLarge" >{title}Title</Text>
-                        <Text style={styles.description} numberOfLines={3} >{description}Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                        <Text style={styles.title} variant="titleLarge" numberOfLines={1} adjustsFontSizeToFit >{title}</Text>
+                        <Text style={styles.description} numberOfLines={3} >{description}</Text>
                     </View>
                 </Surface>
             </TouchableOpacity>
