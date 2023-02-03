@@ -1,4 +1,4 @@
-import { Pressable, View, Image, StyleSheet, useWindowDimensions } from "react-native";
+import { Pressable, View, Image, StyleSheet, useWindowDimensions, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Avatar, Text } from "react-native-paper";
@@ -29,8 +29,8 @@ export function ImageChooser({ selectedImage, setSelectedImage, profile=false, e
             // Compress the image further
             const manipResult = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
-                [{ resize: { width: profile ? 200 : 750, height: profile ? 200 : 750 } }],
-                { base64: true, compress: 0 }
+                [{ resize: { width: profile ? 200 : 750 }}],
+                { base64: true, compress: Platform.OS === "ios" ? 0 : 0.25 }
             )
             setSelectedImage?.('data:image/jpeg;base64,' + manipResult.base64)
         }

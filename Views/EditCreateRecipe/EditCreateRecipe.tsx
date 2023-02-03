@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useRef, useState } from "react";
 import { View, StyleSheet, Alert, Platform, KeyboardAvoidingView, useWindowDimensions } from "react-native";
-import { TextInput, useTheme } from "react-native-paper";
+import { Button, TextInput, useTheme } from "react-native-paper";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { Header } from "./Components/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -150,6 +150,26 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                 <Tags title="Tags" tags={tags} setTags={setTags} addTags />
                 <View style={{ marginVertical: 75 }} />
 
+
+                <Button onPress={() => {
+                        recipe.image = selectedImage;
+                        recipe.tags = tags;
+
+                        const db = getDatabase();
+                        let updates: any = {};
+                        let updatedRecipe = recipe.onlyDefinedProperties();
+
+                        // Add a date created attribute if we are creating the recipe
+                        if (create) {
+                            updatedRecipe["created"] = Date.now();
+                        }
+                        updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
+                        updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
+                        updates['/discover/featuredRecipes/' + recipe.id] = updatedRecipe;
+                        update(ref(db), updates);
+
+                        navigation.goBack();
+                }}>Send to Discover Featured Recipe</Button>
             </ScrollView>
             </KeyboardAvoidingView>
 
