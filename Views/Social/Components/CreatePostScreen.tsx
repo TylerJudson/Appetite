@@ -33,7 +33,7 @@ export default function CreatePostScreen({ navigation, route }: navProps) {
     const [title, setTitle] = useState("");
     const [visibleToEveryone, setVisibleToEveryone] = useState(true);
     const [description, setDescription] = useState("");
-    const [linkedRecipe, setLinkedRecipe] = useState(route.params.linkedRecipe);
+    const [linkedRecipe, setLinkedRecipe] = useState(route.params?.linkedRecipe);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState("");
