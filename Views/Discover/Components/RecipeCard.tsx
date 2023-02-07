@@ -57,7 +57,6 @@ function createStyles() {
         image: {
             width: "100%",
             height: 150,
-            borderWidth: 1, borderColor: "#003",
             borderRadius: 10,
         },
         addButton: {

@@ -21,7 +21,7 @@ export function ImageChooser({ selectedImage, setSelectedImage, profile=false, e
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            quality: 0,
+            quality: Platform.OS === "android" ? 0.33 : 0,
             base64: true,
         });
 
@@ -30,8 +30,9 @@ export function ImageChooser({ selectedImage, setSelectedImage, profile=false, e
             const manipResult = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
                 [{ resize: { width: profile ? 200 : 750 }}],
-                { base64: true, compress: Platform.OS === "ios" ? 0 : 0.25 }
+                { base64: true, compress: Platform.OS === "ios" ? 0 : Platform.OS === "android" ? 1 : 0.25 }
             )
+            
             setSelectedImage?.('data:image/jpeg;base64,' + manipResult.base64)
         }
     };

@@ -4,7 +4,7 @@ import { Text, useTheme } from "react-native-paper";
 import { InstructionIngredientWord as SpecialWord} from "./InstructionIngredientWord";
 
 
-const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespoon", "cups", "and", "into", "cup", "to", "medium", "slices"]
+const ignoreWords = ["room", "temperature", "tsp", "tbsp", "teaspoon", "tablespoon", "cups", "and", "into", "cup", "to", "medium", "slices", "or", "your", "about", "for", "more", "pinch"]
 
 /**
  * Displays an instruction with ingredients highlighted
@@ -53,7 +53,7 @@ export function Instructions({ instruction, index, ingredients }: { instruction:
      */
     function getCompleteIngredient(instructionWords: string[], i: number, ingredientsWords: string[][]): {word: string, ingredientsIncluded: string[], newI: number} {
         // We don't want to check if the word is undefined or it contains non-alpha characters or if it is a word in the ignore list
-        if (instructionWords[i] != undefined && /^[a-zA-Z]+$/.test(instructionWords[i]) && !ignoreWords.includes(instructionWords[i])) {
+        if (instructionWords[i] != undefined && /^[a-zA-Z]+$/.test(instructionWords[i]) && !ignoreWords.includes(instructionWords[i].toLowerCase())) {
             // Find all the ingredients the word is included in
             const ingredientsIncluded = instructionInIngredient(instructionWords[i].replace(/[^a-z]/gi, ""), ingredientsWords)
             // If the word is included in some ingredients check the next word to see if they are the same ingredient i.e. baking powder (two words...)

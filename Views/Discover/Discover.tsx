@@ -55,10 +55,13 @@ export default function Discover({ route }: Route) {
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={meals} />
 
-                <RecipeList style={styles.recipeList} header="Popular Recipes" source="" recipeCount={5} navigation={route.navigation} setSnackBar={setSnackBar} />
+                <RecipeList style={styles.recipeList} header="Popular Recipes" source="/discover/popularRecipes" recipeCount={5} navigation={route.navigation} setSnackBar={setSnackBar} />
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
 
+                <RecipeList style={styles.recipeList} header="Get your Green on with some St. Patrick's Day Recipes" source="" recipeCount={3} navigation={route.navigation} setSnackBar={setSnackBar} />
+
+                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={timeTags} />
             </ScrollView>
 
             <SearchModal visible={searchModalVisible} setVisible={setSearchModalVisible} navigation={route.navigation} tags={tags} setTags={setTags} />
@@ -120,4 +123,10 @@ const meals: tagCard[] = [
     { title: "Dinner", image: require("../../assets/images/meals/Dinner.jpg") },
     { title: "Dessert", image: require("../../assets/images/meals/Dessert.jpg") },
     { title: "Snack", image: require("../../assets/images/meals/Snack.jpg") },
+]
+
+const timeTags: tagCard[] = [
+    { title: "<10 Mins", },
+    { title: "<30 Mins", },
+    { title: "1 Hour", }
 ]

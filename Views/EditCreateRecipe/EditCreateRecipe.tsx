@@ -151,7 +151,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                 <View style={{ marginVertical: 75 }} />
 
 
-                <Button onPress={() => {
+                    <Button onPress={() => {
                         recipe.image = selectedImage;
                         recipe.tags = tags;
 
@@ -166,11 +166,11 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                         updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
                         updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
                         updatedRecipe.image = recipe.image;
-                        updates['/discover/featuredRecipes/' + recipe.id] = updatedRecipe;
+                        updates['/discover/popularRecipes/' + recipe.id] = updatedRecipe;
                         update(ref(db), updates);
 
                         navigation.goBack();
-                }}>Send to Discover Featured Recipe</Button>
+                    }}>Send to Discover Popular Recipes</Button>
             </ScrollView>
             </KeyboardAvoidingView>
 

@@ -113,7 +113,7 @@ export function createStyles() {
             borderRadius: 10,
         },
         header: {
-            marginLeft: 20, fontWeight: "700"
+            marginHorizontal: 20, fontWeight: "700"
         },
         list: {
             padding: 5, paddingBottom: 25
