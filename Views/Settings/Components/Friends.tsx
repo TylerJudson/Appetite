@@ -69,7 +69,7 @@ export function Friends({ navigation }: NavProps) {
                 }
             });
         }
-    }, [])
+    }, [user])
 
 
     return (

@@ -74,7 +74,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
                 });
             }
         }
-    })
+    }, [user])
 
 
     function removeFriend(id: string, name: string) {

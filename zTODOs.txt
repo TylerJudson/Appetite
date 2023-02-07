@@ -14,16 +14,12 @@
 
 
 UP NEXT!:
-   - Make everyone Accounts
    - Design the social Screen
-   - Add recipes
+   - Add More to the discover screen
+   - Make everyone Accounts
 
-
-General
- - MORE RECIPES!!!
 
 UI
- - Discover screen
  - Tags from the menu? Maybe change this to focus mode?
  - Social Screen
  - Settings Screen
@@ -38,12 +34,6 @@ Design
  - Splash screen
  - Colors
  
-Backend
- - Discover
-
 Notifications
  - Send notifications
  - limit notifications
-
-
-// TODO: Fix how use effects should rereneder when the user changes

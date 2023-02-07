@@ -132,7 +132,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                 }
             }))
         }
-    }, [])
+    }, [user])
 
     function changeSegmentedValue(value: string) {
         setSegmentedValue(value);

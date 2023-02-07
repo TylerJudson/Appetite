@@ -140,7 +140,7 @@ export function PostScreen({navigation, route}: navProps) {
                 }
             })
         }
-    }, [])
+    }, [user])
 
 
 
