@@ -165,12 +165,13 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                         }
                         updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
                         updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
-                        updatedRecipe.image = recipe.image;
-                        updates['/discover/popularRecipes/' + recipe.id] = updatedRecipe;
+                        let newUpdated = recipe.onlyDefinedProperties();
+                        newUpdated.image = recipe.image;
+                        updates['/discover/stPatricks/' + recipe.id] = newUpdated;
                         update(ref(db), updates);
 
                         navigation.goBack();
-                    }}>Send to Discover Popular Recipes</Button>
+                    }}>Send to St. Patricks Day Discover</Button>
             </ScrollView>
             </KeyboardAvoidingView>
 
