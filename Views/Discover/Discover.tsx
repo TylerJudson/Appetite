@@ -105,17 +105,17 @@ function createStyles() {
 
 const foodOrginTags: tagCard[] = [
     { title: "Mexican", image: require("../../assets/images/flags/mexicanFlag.jpg")},
-    { title: "Chinese", image: "" },
-    { title: "Italian", image: "" },
-    { title: "German", image: "" },
-    { title: "Japanese", image: "" },
-    { title: "French", image: "" },
-    { title: "Korean", image: "" },
-    { title: "Indian", image: "" },
-    { title: "Thai", image: "" },
-    { title: "African", image: "" },
-    { title: "Greek", image: "" },
-    { title: "Pakistani", image: ""},
+    { title: "Chinese", image: "../../assets/images/flags/chineseFlag.jpg" },
+    { title: "Italian", image: "../../assets/images/flags/italianFlag.jpg" },
+    { title: "German", image: "../../assets/images/flags/germanFlag.jpg" },
+    { title: "Japanese", image: "../../assets/images/flags/japaneseFlag.jpg" },
+    { title: "French", image: "../../assets/images/flags/frenchFlag.jpg" },
+    { title: "Korean", image: "../../assets/images/flags/koreanFlag.jpg" },
+    { title: "Indian", image: "../../assets/images/flags/indianFlag.jpg" },
+    { title: "Thai", image: "../../assets/images/flags/thaiFlag.jpg" },
+    { title: "African", image: "../../assets/images/flags/africanFlag.jpg" },
+    { title: "Greek", image: "../../assets/images/flags/greekFlag.jpg" },
+    { title: "Pakistani", image: "../../assets/images/flags/pakistaniFlag.jpg"},
 ]
 
 const meals: tagCard[] = [
