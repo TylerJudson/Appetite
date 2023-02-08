@@ -43,7 +43,7 @@ export function Header({ viewFavorites, setViewFavorites, toggleSearch, tags, se
 
                 </Tooltip>
 
-                <View style={{ alignSelf: "center", flex: 1, marginHorizontal: 10 }}>
+                <View style={{ alignSelf: "center", flex: 1, marginHorizontal: 10, maxWidth: 300 }}>
                     <SegmentedButtons
                         value={viewFavorites ? "Favorites" : "All Recipes"}
                         onValueChange={(value) => { setViewFavorites(value === "Favorites") }}

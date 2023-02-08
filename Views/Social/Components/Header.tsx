@@ -200,7 +200,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
 
             <Modal visible={inboxModalVisible} setVisible={setInboxModalVisible} headerTitle="Inbox" headerButton="Done">
                 <View style={styles.container}>
-                    <View>
+                    <View style={{ width: 325 }}>
                         <SegmentedButtons buttons={[{ value: 'Notifications', icon: 'bell-ring-outline', label: "Notifications   ", showSelectedCheck: true }, { value: 'FriendRequests', icon: 'account-multiple-plus-outline', label: "Friend Requests", showSelectedCheck: true }]} value={segmentedValue} onValueChange={changeSegmentedValue} />
                         <Badge style={{ position: "absolute", top: 0, right: 0 }} size={15} visible={unreadFriend != 0} >{unreadFriend}</Badge>
                     </View>
@@ -290,7 +290,7 @@ function createStyles() {
     return StyleSheet.create({
         container: {
             flex: 1,
-            alignItems: 'center', paddingTop: 10
+            alignItems: 'center', paddingTop: 10, 
         },
         flatList: {
             width: "100%", marginTop: 10

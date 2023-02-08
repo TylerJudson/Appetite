@@ -10,6 +10,7 @@ import { Recipe } from "../../../Models/Recipe";
 import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
 import { useUserState } from "../../../state";
 import { LinearGradient } from "expo-linear-gradient";
+import { Comments, Comment } from "./Comments";
 
 
 
@@ -36,7 +37,7 @@ export function PostScreen({navigation, route}: navProps) {
 
     const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>(undefined);
 
-
+    const [comments, setComments] = useState<Comment[]>([{ author: { authorId: "hi", authorName: "Test Author" }, value: "This is a test comment. I hope this looks good!" }, { author: { authorId: "hi", authorName: "Author Test" }, value: "This is another test comment that is going to be super duper long. I hope this looks good! And somehow looks exactly how I want it to look." }]);
 
     async function favorite() {
         if (user) {
@@ -174,6 +175,8 @@ export function PostScreen({navigation, route}: navProps) {
             <Text style={styles.description} variant="bodyLarge">{description}</Text>
 
             { linkedRecipe && <View style={styles.linkedRecipe}><Widget title={linkedRecipe.name} image={linkedRecipe.image} onPress={onRecipePress} /></View> }
+
+                <Comments comments={comments} source=" " />
             </View>
         </ScrollView>
         </View>
