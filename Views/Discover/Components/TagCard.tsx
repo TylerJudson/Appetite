@@ -23,7 +23,7 @@ export function TagCard({ title, onPress, image, linearGradientProps }: { title:
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <Surface style={styles.surfaceContainer}>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.title} variant="titleMedium">{title}</Text>
+                    <Text style={styles.title} variant="titleMedium" numberOfLines={1} >{title}</Text>
                 </View>
                     {
                         image && !linearGradientProps && <Image style={styles.background} source={image} />

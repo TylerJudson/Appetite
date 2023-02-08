@@ -104,18 +104,18 @@ function createStyles() {
 
 
 const foodOrginTags: tagCard[] = [
-    { title: "Mexican", image: require("../../assets/images/flags/mexicanFlag.jpg")},
-    { title: "Chinese", image: "../../assets/images/flags/chineseFlag.jpg" },
-    { title: "Italian", image: "../../assets/images/flags/italianFlag.jpg" },
-    { title: "German", image: "../../assets/images/flags/germanFlag.jpg" },
-    { title: "Japanese", image: "../../assets/images/flags/japaneseFlag.jpg" },
-    { title: "French", image: "../../assets/images/flags/frenchFlag.jpg" },
-    { title: "Korean", image: "../../assets/images/flags/koreanFlag.jpg" },
-    { title: "Indian", image: "../../assets/images/flags/indianFlag.jpg" },
-    { title: "Thai", image: "../../assets/images/flags/thaiFlag.jpg" },
-    { title: "African", image: "../../assets/images/flags/africanFlag.jpg" },
-    { title: "Greek", image: "../../assets/images/flags/greekFlag.jpg" },
-    { title: "Pakistani", image: "../../assets/images/flags/pakistaniFlag.jpg"},
+    { title: "Mexican",     image: require("../../assets/images/flags/mexicanFlag.jpg")},
+    { title: "Chinese",     image: require("../../assets/images/flags/chineseFlag.jpg") },
+    { title: "Italian",     image: require("../../assets/images/flags/italianFlag.jpg") },
+    { title: "German",      image: require("../../assets/images/flags/germanFlag.jpg") },
+    { title: "Japanese",    image: require("../../assets/images/flags/japaneseFlag.jpg") },
+    { title: "French",      image: require("../../assets/images/flags/frenchFlag.jpg") },
+    { title: "Korean",      image: require("../../assets/images/flags/koreanFlag.jpg") },
+    { title: "Indian",      image: require("../../assets/images/flags/indianFlag.jpg") },
+    { title: "Thai",        image: require("../../assets/images/flags/thaiFlag.jpg") },
+    { title: "African",     image: require("../../assets/images/flags/africanFlag.jpg") },
+    { title: "Greek",       image: require("../../assets/images/flags/greekFlag.jpg") },
+    { title: "Pakistani",   image: require("../../assets/images/flags/pakistanFlag.jpg")},
 ]
 
 const meals: tagCard[] = [
