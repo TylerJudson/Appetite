@@ -101,6 +101,11 @@ export function Comments({ comments, setComments, postId, postUserId, postTitle,
 
         alert("Delete Comment?", "Are you sure you want to delete this comment?", [{ text: "No", style: "cancel" }, { text: "Yes", style: "destructive", onPress: deleteCmmnt}], deleteCmmnt);
     }
+
+    function onAuthorPress(authorId: string) {
+        navigation.goBack();
+        setTimeout(() => navigation.navigate("PublicProfile", { id: authorId }))
+    }
     
     return (
 
@@ -110,6 +115,8 @@ export function Comments({ comments, setComments, postId, postUserId, postTitle,
             <View style={styles.commentListContainer}>
                 {
                     comments.map((comment, index) => {
+                        console.log(comment.commentId);
+                        
                         let showEdit = false;
                         if (user) {
                             showEdit = user.uid === comment.author.authorId || user.uid === postUserId;
@@ -118,7 +125,7 @@ export function Comments({ comments, setComments, postId, postUserId, postTitle,
                             <Fragment key={index}>
                             <View style={styles.commentContainer} >
                                 <View style={styles.commentHeaderContainer}>
-                                    <TouchableOpacity style={styles.authorContainer} onPress={() => navigation.navigate("PublicProfile", { id: comment.author.authorId })}>
+                                    <TouchableOpacity style={styles.authorContainer} onPress={() => onAuthorPress(comment.author.authorId) }>
                                         <Avatar.Image style={styles.authorImage} size={25} source={comment.author.authorPic ? { uri: comment.author.authorPic } : require("../../../assets/images/defaultProfilePic.jpeg")} />
                                         <Text style={styles.authorTitle} variant="labelLarge" >{comment.author.authorName}</Text>
                                     </TouchableOpacity>
