@@ -87,6 +87,9 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
                             else if (value.code === "unlike") {
                                 message = data.val().displayName + ` has unliked your post "${value.title}".`;
                             }
+                            else if (value.code === "comment") {
+                                message = data.val().displayName + ` has commented on your post "${value.title}".`;
+                            }
                             ntfcns.push({ message: message, read: value.read, date: value.date, id: value.id, postId: value.postId, picture: value.picture, notificationId: key });
                         })
 

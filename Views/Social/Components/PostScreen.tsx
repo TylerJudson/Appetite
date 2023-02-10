@@ -1,16 +1,16 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity  } from "react-native";
 import { RootStackParamList } from "../../navigation";
 import { Avatar, IconButton, Text, useTheme } from "react-native-paper"
-import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
 import { createGlobalStyles } from "../../styles/globalStyles";
 import { Widget } from "../../Discover/Components/Widget";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Recipe } from "../../../Models/Recipe";
-import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
+import { get, getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
 import { useUserState } from "../../../state";
 import { LinearGradient } from "expo-linear-gradient";
 import { Comments, Comment } from "./Comments";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
 
@@ -37,7 +37,9 @@ export function PostScreen({navigation, route}: navProps) {
 
     const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>(undefined);
 
-    const [comments, setComments] = useState<Comment[]>([{ author: { authorId: "hi", authorName: "Test Author" }, value: "This is a test comment. I hope this looks good!" }, { author: { authorId: "hi", authorName: "Author Test" }, value: "This is another test comment that is going to be super duper long. I hope this looks good! And somehow looks exactly how I want it to look." }]);
+    
+    const [comments, setComments] = useState<Comment[]>([]);
+    
 
     async function favorite() {
         if (user) {
@@ -87,6 +89,41 @@ export function PostScreen({navigation, route}: navProps) {
         }
     }
 
+    async function displayPostComments(data: any) {
+        const db = getDatabase();
+        const array = Object.keys(data).sort((a, b) => data[a].date - data[b].date);
+
+        for (let i = 0; i < array.length; i++) {
+            const key = array[i];
+            const value = data[key];
+            const newComment: Comment = {
+                author: {
+                    authorId: "",
+                    authorName: "",
+                    authorPic: undefined
+                },
+                commentId: key,
+                value: value.value,
+                date: value.date
+            };
+
+            get(ref(db, "users-publicInfo/" + value.authorId)).then(snapshot => {
+                newComment.author = {
+                    
+                    authorId: value.authorId,
+                    authorName: snapshot.val().displayName,
+                    authorPic: snapshot.val().profilePicture
+                }
+                setComments(prevData => {
+                    prevData[i] = newComment;
+                    return [...prevData]
+                });
+            })
+
+        }
+
+    }
+
     function displayPost(value: any) {
         const db = getDatabase();
 
@@ -94,9 +131,11 @@ export function PostScreen({navigation, route}: navProps) {
         setTitle(value.title);
         setDescription(value.description);
 
-        if (user && value.favorited) {
-            setFavoritedCount(Object.keys(value.favorited).length || 0)
-            setFavorited(user.uid in value.favorited || false);
+        if (user) {
+            setFavoritedCount(Object.keys(value.favorited || []).length)
+            if (value.favorited) {
+                setFavorited(user.uid in value.favorited || false);
+            }
         }
 
         const recipe = value.linkedRecipe;
@@ -110,24 +149,26 @@ export function PostScreen({navigation, route}: navProps) {
                 setAuthorPic(snapshot.val().profilePicture);
             }
         })
+
+        if (value.comments) displayPostComments(value.comments);
     }
 
     useEffect(() => {
         if (route.params.id && user) {
             const db = getDatabase();
-            get(ref(db, "users-social/posts/" + route.params.id )).then(snapShot1 => {
+            onValue(ref(db, "users-social/posts/" + route.params.id), (snapShot1) => {
                 if (snapShot1.exists() && snapShot1.val()) {
                     displayPost(snapShot1.val())
                 }
                 else {
                     // Try to get the post from friend feed
-                    get(ref(db, "users-social/users/" + user.uid + "/friendFeed/" + route.params.id )).then((snapshot2) => {
+                    onValue(ref(db, "users-social/users/" + user.uid + "/friendFeed/" + route.params.id ), (snapshot2) => {
                         if (snapshot2.exists() && snapshot2.val()) {
                             displayPost(snapshot2.val())
                         }
                         else {
                             // Try to get the post from the user's posts
-                            get(ref(db, "users-social/users/" + user.uid + "/posts/" + route.params.id)).then(snapshot3 => {
+                            onValue(ref(db, "users-social/users/" + user.uid + "/posts/" + route.params.id), (snapshot3) => {
                                 if (snapshot3.exists() && snapshot3.val()) {
                                     displayPost(snapshot3.val())
                                 }
@@ -146,8 +187,8 @@ export function PostScreen({navigation, route}: navProps) {
 
 
     return (
-        <View style={globalStyles.container}>
-        <ScrollView style={styles.container}>
+        <KeyboardAwareScrollView style={globalStyles.container} keyboardOpeningTime={100} keyboardShouldPersistTaps="handled" >
+        <View style={styles.container}>
             <View style={{marginBottom: 50}}>
 
             <View>
@@ -157,8 +198,8 @@ export function PostScreen({navigation, route}: navProps) {
                     colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
                     style={styles.gradient}
                 />
-                { author.id !== user?.uid && <TouchableOpacity style={styles.heartContainer}  onPress={favorite}>
-                    <IconButton icon={favorited ? "heart" : "heart-outline"} iconColor={favorited ? "#f67" : "#ddd"} size={30} />
+                { (author.id !== user?.uid || favoritedCount > 0) && <TouchableOpacity style={styles.heartContainer} disabled={author.id === user?.uid}  onPress={favorite}>
+                    <IconButton icon={favorited || author.id === user?.uid ? "heart" : "heart-outline"} iconColor={favorited || author.id === user?.uid ? "#f67" : "#ddd"} size={30} />
                     {favoritedCount > 0 && <Text style={styles.heartCount} variant="labelSmall">{favoritedCount}</Text>}
                 </TouchableOpacity>}
             </View>
@@ -176,10 +217,10 @@ export function PostScreen({navigation, route}: navProps) {
 
             { linkedRecipe && <View style={styles.linkedRecipe}><Widget title={linkedRecipe.name} image={linkedRecipe.image} onPress={onRecipePress} /></View> }
 
-                <Comments comments={comments} source=" " />
+                <Comments comments={comments} setComments={setComments} postId={route.params.id} postUserId={author.id} postTitle={title} navigation={navigation} />
             </View>
-        </ScrollView>
         </View>
+        </KeyboardAwareScrollView>
     )
 }
 

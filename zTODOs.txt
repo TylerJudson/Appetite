@@ -28,12 +28,9 @@ UI
    - add see terms of service
    - Add see privacy policy
    - Actually implement the different switches
+   - limit notifications
 
 Design
  - App icon
  - Splash screen
  - Colors
- 
-Notifications
- - Send notifications
- - limit notifications
