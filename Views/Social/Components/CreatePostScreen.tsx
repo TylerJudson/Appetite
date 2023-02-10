@@ -25,6 +25,7 @@ type navProps = NativeStackScreenProps<RootStackParamList, 'CreatePost'>;
 export default function CreatePostScreen({ navigation, route }: navProps) {
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
+    const screenWidth = useWindowDimensions().width;
 
     const { recipeBook, setRecipeBook } = useRecipeBookState();
     const user = useUserState();
@@ -115,18 +116,26 @@ export default function CreatePostScreen({ navigation, route }: navProps) {
                 <ScrollView style={{flex: 1}}> 
                     <View style={{maxWidth: 700, alignSelf: 'center', width: "100%"}}>
 
-                   <ImageChooser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                        <View style={{flexDirection: screenWidth > 700 ? "row" : undefined}}>
+                            
+                            <View style={{ maxWidth: screenWidth > 700 ? 350 : undefined }}>
+                                <ImageChooser selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                            </View>
 
-                    <TextInput style={styles.oneLineTextInput} label="Title" value={title} onChangeText={setTitle} />
-                    
-                    <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", margin: 10 }} onPress={() => setVisibleToEveryone(!visibleToEveryone)} >
-                        <Checkbox.Android status={visibleToEveryone ? 'checked' : 'unchecked'} onPress={() => setVisibleToEveryone(!visibleToEveryone)} />
-                        <Text variant="labelLarge">Visible to {visibleToEveryone ? "Everyone?" : "just friends."}</Text>
-                    </TouchableOpacity>
-                    
-                    <TextInput style={[styles.oneLineTextInput, {marginBottom: 50}]} label="Description" multiline value={description} onChangeText={setDescription} />
+                            <View style={{flex: 1}}>
+                                <TextInput style={styles.oneLineTextInput} label="Title" value={title} onChangeText={setTitle} />
+                            
+                                <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", margin: 10 }} onPress={() => setVisibleToEveryone(!visibleToEveryone)} >
+                                    <Checkbox.Android status={visibleToEveryone ? 'checked' : 'unchecked'} onPress={() => setVisibleToEveryone(!visibleToEveryone)} />
+                                    <Text variant="labelLarge">Visible to {visibleToEveryone ? "Everyone?" : "just friends."}</Text>
+                                </TouchableOpacity>
 
-                    <Widget title={linkedRecipe ? linkedRecipe.name : "Link a Recipe"} image={linkedRecipe?.image || ""} onPress={() => setModalVisible(true)}  />
+                                <TextInput style={[styles.oneLineTextInput, {marginBottom: 50}]} label="Description" multiline value={description} onChangeText={setDescription} />
+                            </View>
+
+                        </View>
+
+                        <Widget title={linkedRecipe ? linkedRecipe.name : "Link a Recipe"} image={linkedRecipe?.image || ""} onPress={() => setModalVisible(true)}  />
                     </View>
 
 
