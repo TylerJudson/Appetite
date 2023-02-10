@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated as animated, Easing, TextInput, useWindowDim
 import { useTheme, Searchbar, Text, FAB, Chip, Button } from "react-native-paper";
 import { Route } from "../navigation";
 import { Header } from "./Components/Header";
-import { useRecipeBookState, useUserState } from "../../state";
+import { useRecipeBookState, useSettingsState, useUserState } from "../../state";
 import Widget from "./Components/Widget";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { filterObject } from "../../utilities/filter";
@@ -21,6 +21,7 @@ import { getDatabase, remove, ref } from "firebase/database";
 export default function Recipes({ route }: Route) {
     const { recipeBook, setRecipeBook } = useRecipeBookState();
     const user = useUserState();
+    const { settings } = useSettingsState();
 
     const theme = useTheme();
     const colors = theme.colors;
@@ -118,6 +119,20 @@ export default function Recipes({ route }: Route) {
         setTags(newTags);
     }
 
+    function sortRecipes(a: Recipe, b: Recipe) {
+        if (settings.showFavoritesAtTop && a.favorited) {
+            if (b.favorited) {
+                return sortAlpha(a, b);
+            }
+            return -1;
+        }
+        if (settings.showFavoritesAtTop && b.favorited) {
+            return 1;
+        }
+
+        return sortAlpha(a, b);
+    }
+
     //#endregion
 
     return (
@@ -125,7 +140,7 @@ export default function Recipes({ route }: Route) {
             <Header viewFavorites={viewFavorites} setViewFavorites={setViewFavorites} toggleSearch={toggleSearch} tags={tags} setTags={setTags} />
             
             <Animated.FlatList  
-                data={Object.values(filteredRecipes).sort(sortAlpha)}
+                data={Object.values(filteredRecipes).sort(sortRecipes)}
                 renderItem={ ({item}) => {
                     return <Widget recipe={item} onPress={() => route.navigation.navigate("Recipe", { recipe: item })} screenWidth={screenWidth} />
                 }}

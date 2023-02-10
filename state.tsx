@@ -8,21 +8,26 @@ import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildA
 import { importToObject } from "./utilities/importToObject";
 
 
-
+interface ISettings {
+    showFavoritesAtTop: boolean;
+}
 
 interface IState {
     user: undefined | User;
     recipeBook: RecipeBook;
+    settings: ISettings;
 }
 
 export let State: IState = {
     user: undefined,
     recipeBook: RecipeBook.Initial(),
+    settings: { showFavoritesAtTop: false }
 }
 
 
 const UserContext = React.createContext(State.user);
 const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: (recipeBook: RecipeBook) => {}});
+const SettingsContext = React.createContext({settings: State.settings, setSettings: (settings: ISettings) => {}});
 
 export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
@@ -38,6 +43,7 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
     const recipeBookContextValue = { recipeBook, setRecipeBook };
 
+    const [settings, setSettings] = React.useState(State.settings);
 
 
     useEffect(() => {
@@ -122,13 +128,16 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
     
 
     return (
-        <UserContext.Provider value={user}>
-            <RecipeBookStateContext.Provider value={recipeBookContextValue}>
-                {children}
-            </RecipeBookStateContext.Provider>
-        </UserContext.Provider>
+        <SettingsContext.Provider value={{ settings, setSettings }}>
+            <UserContext.Provider value={user}>
+                <RecipeBookStateContext.Provider value={recipeBookContextValue}>
+                    {children}
+                </RecipeBookStateContext.Provider>
+            </UserContext.Provider>
+        </SettingsContext.Provider>
     );
 };
 
 export const useUserState = () => React.useContext(UserContext);
 export const useRecipeBookState = () => React.useContext(RecipeBookStateContext);
+export const useSettingsState = () => React.useContext(SettingsContext);

@@ -27,8 +27,6 @@ UI
    - Add get help
    - add see terms of service
    - Add see privacy policy
-   - Actually implement the different switches
-   - limit notifications
 
 Design
  - App icon

@@ -1,6 +1,6 @@
 import { useWindowDimensions, View, StyleSheet, Switch, Platform } from "react-native";
 import { Avatar, IconButton, Text, useTheme } from "react-native-paper";
-import { useUserState } from "../../state";
+import { useSettingsState, useUserState } from "../../state";
 import { createGlobalStyles } from "../styles/globalStyles";
 import { logout } from "../../FireBase/Authentication";
 import { SettingWidget } from "./Components/SettingWidget";
@@ -26,6 +26,8 @@ export function Settings({ route }: Route) {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
+
+    const {settings, setSettings} = useSettingsState();
     const user = useUserState();
 
     const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -37,14 +39,15 @@ export function Settings({ route }: Route) {
 
     const styles = createStyles();
 
-    const [showFavoritesAtTop, setShowFavoritesAtTop] = useState(false);
     const [newPosts, setNewPosts] = useState(true);
     const [friendRequests, setFriendRequests] = useState(true);
     const [postLikes, setPostLikes] = useState(true);
+    const [postComments, setPostCommments] = useState(true);
 
     //#region BEHAVIOR
     function toggleFavorites() {
-        setShowFavoritesAtTop(!showFavoritesAtTop);
+        settings.showFavoritesAtTop = !settings.showFavoritesAtTop;
+        setSettings({...settings});
     }
 
     function toggleFriendRequests() {
@@ -59,6 +62,9 @@ export function Settings({ route }: Route) {
         setPostLikes(!postLikes);
     }
 
+    function togglePostComments() {
+        setPostCommments(!postComments);
+    }
     //#endregion
 
 
@@ -140,7 +146,7 @@ export function Settings({ route }: Route) {
                             title="Show Favorites at Top"
                             icon={<IconButton icon="heart" />}
                             roundUpperCorners
-                            rightIcon={<Switch style={styles.switch} trackColor={{ true: colors.tertiary }} value={showFavoritesAtTop} onValueChange={toggleFavorites} />}
+                            rightIcon={<Switch style={styles.switch} trackColor={{ true: colors.tertiary }} value={settings.showFavoritesAtTop} onValueChange={toggleFavorites} />}
                         />
                         <SettingWidget
                             title="About Appetite"
@@ -166,6 +172,11 @@ export function Settings({ route }: Route) {
                                     title="Friend Requests" 
                                     icon={<IconButton icon="account-multiple-plus" />} 
                                     rightIcon={<Switch style={styles.switch} trackColor={{true: colors.tertiary}} value={friendRequests} onValueChange={toggleFriendRequests} />}
+                                />
+                                <SettingWidget
+                                    title="Post Comments"
+                                    icon={<IconButton icon="chat-plus" />}
+                                    rightIcon={<Switch style={styles.switch} trackColor={{ true: colors.tertiary }} value={postComments} onValueChange={togglePostComments} />}
                                 />
                                 <SettingWidget  
                                     title="Post Likes" 

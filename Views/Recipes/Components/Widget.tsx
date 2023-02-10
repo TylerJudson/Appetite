@@ -35,7 +35,7 @@ export function Widget({ recipe, onPress, screenWidth }: { recipe: Recipe, onPre
                     <Text style={[styles.title, { color: recipe.image || useTheme().dark ? "#fff" : "#000" }]} variant={screenWidth > 500 ? "titleLarge" : "titleMedium"}>{recipe.name}</Text>
 
                     {/** Heart icon */}
-                    { recipe.favorited && <IconButton style={styles.heartIcon} icon="heart" size={30} /> }
+                    { recipe.favorited && <IconButton style={styles.heartIcon} icon="heart" size={30} iconColor="#eb8dad" /> }
 
                     {/** Chevron to the right on small screens. */}
                     { screenWidth <= 500 && <IconButton style={styles.chevronIcon} icon="chevron-right" size={40}/> }
@@ -69,11 +69,12 @@ function createStyles(screenWidth: number) {
         },
         title: {
             position: "absolute", bottom: 3, left: 10,
-            paddingRight: 15
+            paddingRight: 15, paddingLeft: 2,
+            textShadowColor: "#000", textShadowRadius: 5
         },
         heartIcon: {
             position: "absolute", top: 0,
-            zIndex: 100
+            zIndex: 100,
         },
         chevronIcon: {
             position: "absolute", right: -10
