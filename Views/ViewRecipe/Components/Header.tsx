@@ -1,4 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 import { getDatabase, ref, remove, update } from "firebase/database";
 import { useState } from "react";
 import { useWindowDimensions, View } from "react-native";
@@ -36,6 +37,8 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
     const user = useUserState();
     const [shareModalVisible, setShareModalVisible] = useState(false);
     const [shareMenuVisible, setShareMenuVisible] = useState(false);
+
+    const [focus, setFocus] = useState(false);
 
     const screenWidth = useWindowDimensions().width;
     const insets = useSafeAreaInsets();
@@ -93,9 +96,20 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
         toggleMenu();
         navigation.navigate("EditCreate", { recipe: recipe })
     }
-    /** Handles the action of adding and viewing tags */
-    function handleTags() {
-        console.log("Not yet implemented");
+    /** Handles the action of clicking the focus button */
+    function handleFocus() {
+        if (focus) {
+            deactivateKeepAwake();
+            setFocus(false);
+        }
+        else {
+            activateKeepAwake();
+            setFocus(true);
+            setSnackBar({
+                visible: true,
+                message: "Focus on. Your screen will not turn off."
+            })
+        }
     }
     /** Handles the action of deleteing the recipe */
     function handleDelete() {
@@ -179,7 +193,7 @@ export function Header({ navigation, recipe, setSnackBar }: ViewRecipeHeader) {
                                 anchorPosition="bottom"
                             >
                                 <Menu.Item leadingIcon="lead-pencil" onPress={handleEdit} title="Edit" />
-                                <Menu.Item leadingIcon="tag-multiple" onPress={handleTags} title="Tags" />
+                                <Menu.Item leadingIcon={ focus ? "white-balance-sunny" : "weather-sunny"} onPress={handleFocus} title="Focus" titleStyle={{ fontWeight: focus ? '800' : undefined }} />
 
                                 <Menu anchor={<Menu.Item leadingIcon="share" onPress={handleShare} title="Share" />} visible={shareMenuVisible} onDismiss={() => setShareMenuVisible(false)} anchorPosition="bottom">
                                     <ShareRecipe recipe={recipe} hideModal={() => setShareMenuVisible(false)} navigation={navigation} />

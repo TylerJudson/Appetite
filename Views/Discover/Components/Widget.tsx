@@ -8,9 +8,6 @@ import { Recipe } from "../../../Models/Recipe";
 
 
 
-// TODO: Docs
-
-
 
 /**
  * Displays a clickable widget with the picture of a recipe on it.

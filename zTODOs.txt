@@ -20,7 +20,6 @@ UP NEXT!:
 
 
 UI
- - Tags from the menu? Maybe change this to focus mode?
  - Social Screen
  - Settings Screen
    - Add about Appetite

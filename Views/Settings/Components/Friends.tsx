@@ -11,8 +11,6 @@ import { RootStackParamList } from "../../navigation";
 import { createGlobalStyles } from "../../styles/globalStyles";
 
 
-// TODO: limit screens to only signed in people
-
 type NavProps = NativeStackScreenProps<RootStackParamList, 'Friends'>;
 type navigation = NativeStackNavigationProp<RootStackParamList, "Friends", undefined>
 type friend = {

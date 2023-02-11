@@ -10,7 +10,6 @@ import { SwipeToDelete } from "../../EditCreateRecipe/Components/Swipe";
 import { RootStackParamList } from "../../navigation";
 
 
-// TODO: docs!!!!!!!!!!!!!!!!
 
 type navProps = NativeStackNavigationProp<RootStackParamList, 'Appetite'>;
 type friend = {
