@@ -8,6 +8,7 @@ import { RootStackParamList } from "../../navigation";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import * as FileSystem from 'expo-file-system'
+import { useUserState } from "../../../state";
 
 
 
@@ -16,7 +17,8 @@ import * as FileSystem from 'expo-file-system'
  * @param recipe The recipe to share
  */
 export function ShareRecipe({ recipe, hideModal, navigation }: { recipe: Recipe, hideModal: VoidFunction, navigation: NativeStackNavigationProp<RootStackParamList, "Recipe", undefined> }) {
-    
+    const user = useUserState();  
+
     /**
      * Handles the action of the user clicking the create post option
      */
@@ -117,9 +119,9 @@ export function ShareRecipe({ recipe, hideModal, navigation }: { recipe: Recipe,
 
     return (
         <View style={{ padding: 10 }}>
-            <TouchableRipple onPress={handleCreatePost}>
+            { user && <TouchableRipple onPress={handleCreatePost}>
                 <Menu.Item leadingIcon="post" title="Create a Post" />
-            </TouchableRipple>
+            </TouchableRipple> }
             <TouchableRipple onPress={handleSharePdf} >
                 <Menu.Item leadingIcon="file" title="Share Pdf" />
             </TouchableRipple>

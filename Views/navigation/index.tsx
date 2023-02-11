@@ -97,7 +97,19 @@ function Appetite({navigation, route}: Props) {
 		message: "",
 		action: undefined
 	});
-
+	const routesWithSocial = [
+		{ key: 'recipes', title: 'Recipes', focusedIcon: 'book', unfocusedIcon: "book-outline", navigation: navigation },
+		{ key: 'discover', title: 'Discover', focusedIcon: 'magnify', navigation: navigation },
+		{ key: 'social', title: 'Social', focusedIcon: 'message', unfocusedIcon: "message-outline", navigation: navigation },
+		{ key: 'settings', title: 'Settings', focusedIcon: 'dots-horizontal', navigation: navigation },
+	]
+	const routesWithoutSoical = [
+		{ key: 'recipes', title: 'Recipes', focusedIcon: 'book', unfocusedIcon: "book-outline", navigation: navigation },
+		{ key: 'discover', title: 'Discover', focusedIcon: 'magnify', navigation: navigation },
+		{ key: 'settings', title: 'Settings', focusedIcon: 'dots-horizontal', navigation: navigation },
+	]
+	// This creates the different tabs on the bottom
+	const [routes, setRoutes] = React.useState(routesWithSocial);
 	
 	useEffect(() =>{
 		if (route.params) {
@@ -111,14 +123,20 @@ function Appetite({navigation, route}: Props) {
 		}
 	}, [route.params])
 	
-
-	// This creates the different tabs on the bottom
-	const [routes] = React.useState([
-		{ key: 'recipes', 	title: 'Recipes', 	focusedIcon: 'book', unfocusedIcon: "book-outline", 		navigation: navigation },
-		{ key: 'discover', 	title: 'Discover', 	focusedIcon: 'magnify', 									navigation: navigation },
-		{ key: 'social', 	title: 'Social', 	focusedIcon: 'message', unfocusedIcon: "message-outline", 	navigation: navigation },
-		{ key: 'settings', 	title: 'Settings', 	focusedIcon: 'dots-horizontal', 							navigation: navigation },
-	]);
+	useEffect(() => {
+		if (user) {
+			if (index == 2) {
+				setIndex(3);
+			}
+			setRoutes(routesWithSocial);
+		}
+		else {
+			setRoutes(routesWithoutSoical);
+			if (index == 3) {
+				setIndex(2);
+			}
+		}
+	}, [user])
 
 	// This is all the different screens that get displayed with the designated tab
 	const renderScene = BottomNavigation.SceneMap({
@@ -170,3 +188,7 @@ function Appetite({navigation, route}: Props) {
 		</SafeAreaView>
 	)
 }
+
+
+
+
