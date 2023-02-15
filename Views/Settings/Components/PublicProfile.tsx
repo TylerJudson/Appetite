@@ -1,16 +1,20 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform, useWindowDimensions } from "react-native";
 import { Button, Snackbar, Text, TextInput, useTheme } from "react-native-paper";
+import Animated, { FadeIn, Layout } from "react-native-reanimated";
+import { Post } from "../../../Models/Post";
+import { Recipe } from "../../../Models/Recipe";
 import { User } from "../../../Models/User";
 import { useUserState } from "../../../state";
 import { BottomModal } from "../../components/BottomModal";
 import { ImageChooser } from "../../EditCreateRecipe/Components/ImageChooser";
 import { RootStackParamList } from "../../navigation";
+import { PostCard } from "../../Social/Components/PostCard";
 import { createGlobalStyles } from "../../styles/globalStyles";
 import { Header } from "./Header";
-
+import { Comment } from "../../../Models/Post";
 
 
 
@@ -30,6 +34,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
 
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
+    const screenWidth = useWindowDimensions().width;
     const colors = useTheme().colors;
 
     const [isFriend, setIsFriend] = useState(false);
@@ -48,7 +53,9 @@ export function PublicProfile({ navigation, route }: NavProps) {
     const [skillLevel, setSkillLevel] = useState(user?.skillLevel || "");
 
     const [displayNameError, setDisplayNameError] = useState("");
+    const [posts, setPosts] = useState<Post[]>([]);
 
+    //#region PUBLIC BEHEAVIOR
     useEffect(() => {
         if (route.params && route.params.id) {
             const db = getDatabase();
@@ -179,13 +186,97 @@ export function PublicProfile({ navigation, route }: NavProps) {
             }
         }
     }
+    //#endregion
+
+    //#region GET POST BEHAVIOR
+    async function getComments(data: any, postRef: Post) {
+
+        if (data) {
+            const db = getDatabase();
+            const array = Object.keys(data).sort((a, b) => data[a].date - data[b].date);
+            const comments: Comment[] = [];
+
+            for (let i = 0; i < array.length; i++) {
+                const key = array[i];
+                const value = data[key];
+                const newComment: Comment = {
+                    author: {
+                        authorId: "",
+                        authorName: "",
+                        authorPic: undefined
+                    },
+                    commentId: key,
+                    value: value.value,
+                    date: value.date
+                };
+
+                await get(ref(db, "users-publicInfo/" + value.authorId)).then(snapshot => {
+                    newComment.author = {
+                        authorId: value.authorId,
+                        authorName: snapshot.val().displayName,
+                        authorPic: snapshot.val().profilePicture
+                    }
+                    comments.push(newComment);
+                })
+
+                if (i == array.length - 1) {
+                    postRef.comments = comments;
+                }
+            }
+        }
+
+    }
+    function getPosts() {
+
+        const db = getDatabase();
+        get(ref(db, "users-social/users/" + (route.params?.id || user?.uid) + "/posts/")).then(async snapShot => {
+            if (snapShot.exists() && snapShot.val() && user) {
+                const keys = Object.keys(snapShot.val()).sort((a, b) => snapShot.val()[b].created - snapShot.val()[a].created);
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    const post = snapShot.val()[key];
+
+                    await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                        if (data.exists() && data.val()) {
+
+                            let linkedRecipe: Recipe | undefined = undefined;
+                            if (post.linkedRecipe) {
+                                linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                            }
+
+                            const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            getComments(post.comments, newPost);
+                            posts[i] = newPost;
+                            setPosts([...posts]);
+                        }
+                    })
+                }
+
+            }
+        })
+    }
+
+    useEffect(getPosts, []);
+    //#endregion
 
 
     return (
         <View style={globalStyles.container}>
             <Header title={route.params ? displayName :  "Public Profile"} onBack={navigation.goBack} editing={editing} setEditing={route.params ? undefined : handleEdit} />
-            <ScrollView>
-                <View style={styles.container}>
+            <Animated.FlatList
+                data={posts}
+                keyExtractor={(item, index) => item === undefined ? index.toString() : item.id}
+                renderItem={({ item }) => {
+                    return <Animated.View entering={FadeIn} style={{ flex: 1 / Math.floor(screenWidth / 300) }}>
+                        <PostCard post={item} navigation={navigation as any} />
+                    </Animated.View>
+                }}
+                //@ts-ignore
+                itemLayoutAnimation={screenWidth >= 600 ? undefined : Layout}
+                contentContainerStyle={{paddingBottom: 100}}
+                numColumns={Math.floor(screenWidth / 300)}
+                key={Math.floor(screenWidth / 300)}
+                ListHeaderComponent={<View style={styles.container}>
 
                     <ImageChooser selectedImage={profilePic} setSelectedImage={setProfilePic} profile editable={editing} />
 
@@ -207,11 +298,14 @@ export function PublicProfile({ navigation, route }: NavProps) {
                             <Text variant="titleMedium">{skillLevel}</Text>
                         </TouchableOpacity>
                     </View>
-                    
 
-                    {route.params && route.params.id != user?.uid && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{alignSelf: "flex-end", marginVertical: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
-                </View>
-            </ScrollView>
+
+                    {route.params && route.params.id != user?.uid && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{ alignSelf: "flex-end", marginTop: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
+
+                    <Text variant="titleLarge" style={{alignSelf: "flex-start", marginTop: 30, top: 10}}>Posts</Text>
+                </View>}
+            />
+
 
 
             <Snackbar
