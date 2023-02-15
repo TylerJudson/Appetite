@@ -84,7 +84,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
     }, [user])
 
 
-    function removeFriend(id: string, name: string) {
+    async function removeFriend(id: string, name: string) {
         if (user) {
             const db = getDatabase();
             // Remove friend from friends
@@ -113,6 +113,11 @@ export function PublicProfile({ navigation, route }: NavProps) {
             // Send an unfriend notification
             set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "unfriend", id: user.uid, date: Date.now(), read: false })
             setIsFriend(false);
+
+            // Decrement number of friends
+            set(ref(db, "users-publicInfo/" + user.uid + "/numOfFriends"), user.numOfFriends - 1);
+            set(ref(db, "users-publicInfo/" + id + "/numOfFriends"), await get(ref(db, "users-publicInfo/" + id + "/numOfFriends")).then(data => { if (data.exists()) return parseInt(data.val()) - 1; else return 0; }))
+
             setIsPendingFriend(false);
         }
     }
@@ -302,7 +307,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
 
                     {route.params && route.params.id != user?.uid && <Button mode="outlined" disabled={isPendingFriend && !isFriend} style={{ alignSelf: "flex-end", marginTop: 30 }} textColor={isFriend ? colors.error : undefined} icon={isFriend ? "close" : "plus"} onPress={handleButtonPress} >{isFriend ? "Un-Friend" : "Send Friend Request"}</Button>}
 
-                    <Text variant="titleLarge" style={{alignSelf: "flex-start", marginTop: 30, top: 10}}>Posts</Text>
+                    {posts.length != 0 && <Text variant="titleLarge" style={{alignSelf: "flex-start", marginTop: 30, top: 10}}>Posts</Text>}
                 </View>}
             />
 

@@ -148,9 +148,10 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
         }
     }
 
-    function handleAccept(id: string) {
+    async function handleAccept(id: string) {
         if (user) {
             const db = getDatabase();
+
             set(ref(db, "users-social/users/" + user.uid + "/friends/" + id), true);
             set(ref(db, "users-social/users/" + id + "/friends/" + user.uid), true);
 
@@ -177,6 +178,12 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
 
             set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "accept", id: user.uid, date: Date.now(), read: false })
             set(ref(db, "users-social/users/" + user.uid + "/inbox/friendRequests/" + id + "/accepted"), true);
+
+            
+            // Increment number of friends
+            set(ref(db, "users-publicInfo/" + user.uid + "/numOfFriends"), user.numOfFriends + 1);
+            set(ref(db, "users-publicInfo/" + id + "/numOfFriends"), await get(ref(db, "users-publicInfo/" + id + "/numOfFriends")).then(data => {if (data.exists()) return parseInt(data.val()) + 1; else return 1;}))
+
             remove(ref(db, "users-social/users/" + user.uid + "/pendingFriends/" + id));
             remove(ref(db, "users-social/users/" + id + "/pendingFriends/" + user.uid));
         }

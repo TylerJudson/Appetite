@@ -100,6 +100,7 @@ export default function CreatePostScreen({ navigation, route }: navProps) {
                     });
                 }
             })
+            set(ref(db, "users-publicInfo/" + user.uid + "/numOfPosts/"), user.numOfPosts + 1);
         }
     }
 

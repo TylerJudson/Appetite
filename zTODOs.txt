@@ -13,21 +13,14 @@
 
 
 
-UP NEXT!:
-   - Design the social Screen
-   - Add More to the discover screen
-   - Make everyone Accounts
-
-
-UI
- - Social Screen
- - Settings Screen
-   - Add about Appetite
-   - Add get help
-   - add see terms of service
-   - Add see privacy policy
-
-Design
- - App icon
- - Splash screen
- - Colors
+- Add More to the discover screen
+- Make everyone Accounts
+- Make posts
+- Settings Screen
+- Add about Appetite
+- Add get help
+- add see terms of service
+- Add see privacy policy
+- Colors
+- App icon
+- Splash screen
