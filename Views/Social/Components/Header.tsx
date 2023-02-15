@@ -170,6 +170,7 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
         if (unread - unreadFriend > 0 && user) {
             setUnRead(unreadFriend);
             const db = getDatabase();
+            // TODO: make this be update instead of set
             notifications.forEach(ntfcn => {
                 set(ref(db, "users-social/users/" + user.uid + "/inbox/notifications/" + ntfcn.notificationId + "/read"), true)
             })

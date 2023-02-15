@@ -9,8 +9,9 @@ import { Recipe } from "../../../Models/Recipe";
 import { get, getDatabase, onValue, push, ref, remove, set, update } from "firebase/database";
 import { useUserState } from "../../../state";
 import { LinearGradient } from "expo-linear-gradient";
-import { Comments, Comment } from "./Comments";
+import { Comments } from "./Comments";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Comment } from "../../../Models/Post";
 
 
 

@@ -8,14 +8,9 @@ import { v4 as uuidv4 } from "uuid";
 import { alert } from "../../../utilities/Alert";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation";
+import { Comment } from "../../../Models/Post";
 
 
-export type Comment = {
-    commentId: string;
-    author: { authorId: string, authorName: string, authorPic?: string }; 
-    value: string;
-    date: number;
-}
 
 
 export function Comments({ comments, setComments, postId, postUserId, postTitle, navigation }: { comments: Comment[], setComments: React.Dispatch<React.SetStateAction<Comment[]>>, postId: string, postUserId: string, postTitle: string, navigation: NativeStackNavigationProp<RootStackParamList, "PostScreen", undefined> }) {
