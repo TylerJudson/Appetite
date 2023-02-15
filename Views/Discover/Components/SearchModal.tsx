@@ -101,7 +101,7 @@ export function SearchModal({ visible, setVisible, navigation, tags, setTags }: 
     }
 
     return (
-        <Modal visible={visible} setVisible={setVisible} >
+        <Modal visible={visible} setVisible={setVisible}avoidingEnabled={false} >
             <View style={styles.searchContainer}>
                 <View style={{ flex: 1 }}>
                     <Searchbar style={styles.searchBar} 

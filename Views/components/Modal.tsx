@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
  * @param headerTitle The optional title to display at the top of the modal
  * @param headerButton The optional button to display along the top of the modal
  */
-export function Modal({ visible, setVisible, headerTitle, headerButton, children }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, headerTitle?: string, headerButton?: string, changeToHide?: string, children: React.ReactNode }) {
+export function Modal({ visible, setVisible, headerTitle, headerButton, children, avoidingEnabled=true }: { visible: boolean, setVisible: Dispatch<SetStateAction<boolean>>, headerTitle?: string, headerButton?: string, changeToHide?: string, avoidingEnabled?: boolean, children: React.ReactNode }) {
     const styles = createStyles();
 
     const [height, setHeight] = useState(1000);
@@ -80,7 +80,7 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
                                 transform: [{ translateY: animModal.interpolate({ inputRange: [0, 1], outputRange: [height  + height / 4, 0] }) }],
                             }]}
                         >
-                            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ justifyContent: "flex-end" }}>
+                            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ justifyContent: "flex-end" }} enabled={avoidingEnabled}>
                             <Pressable style={styles.contentContainer} ref={modalRef}>
                                 {
                                     (headerTitle || headerButton) &&
