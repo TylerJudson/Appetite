@@ -59,7 +59,7 @@ export default function Discover({ route }: Route) {
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
 
-                <RecipeList style={styles.recipeList} header="Get your Green on with some St. Patrick's Day Recipes" source="/discover/stPatricks" recipeCount={3} navigation={route.navigation} setSnackBar={setSnackBar} />
+                <RecipeList style={styles.recipeList} header="Get your Green on with some St. Patrick's Day Recipes" source="/discover/stPatricks" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
 
                 <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={timeTags} />
                 

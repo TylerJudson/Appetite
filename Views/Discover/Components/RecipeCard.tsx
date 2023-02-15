@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, useWindowDimensions } from "react-native";
 import { Text, Surface, Button } from "react-native-paper";
 
 
@@ -43,20 +43,22 @@ export function RecipeCard({ title, description, image, onPress, onAdd }: { titl
  * @returns The styles
  */
 function createStyles() {
+    const screenWidth = useWindowDimensions().width;
+
     return StyleSheet.create({
         container: {
-            width: 225, marginLeft: 10, margin: 5
+            width: screenWidth / 2, marginLeft: 10, margin: 5,
+            maxWidth: 375
         },
         surfaceContainer: {
             borderRadius: 10
         },
         imageContainer: {
             width: "100%",
-            height: 150
         },
         image: {
             width: "100%",
-            height: 150,
+            height: screenWidth / 3 > 250 ? 250 : screenWidth / 3,
             borderRadius: 10,
         },
         addButton: {

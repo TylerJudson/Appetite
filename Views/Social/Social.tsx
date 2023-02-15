@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { Route } from "../navigation";
 import { createGlobalStyles } from "../styles/globalStyles";
@@ -20,6 +20,7 @@ export default function Social({ route }: Route) {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
+    const screenWidth = useWindowDimensions().width;
 
     const [friendPosts, setFriendPosts] = useState<Post[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
@@ -67,13 +68,14 @@ export default function Social({ route }: Route) {
                 data={posts}
                 keyExtractor={(item, index) => item === undefined ? index.toString() : item.id}
                 renderItem={({ item }) => {
-                    return <Animated.View entering={FadeIn}>
+                    return <Animated.View entering={FadeIn} style={{ flex: 1 / Math.floor(screenWidth / 300) }}>
                         <PostCard post={item} navigation={route.navigation} />
                     </Animated.View>
                 }}
                 //@ts-ignore
                 itemLayoutAnimation={Layout}
-
+                numColumns={Math.floor(screenWidth / 300)}
+                key={Math.floor(screenWidth / 300)}
                 ListHeaderComponent={<View>
                     <Text style={{ paddingLeft: 10 }} variant="headlineLarge">Social</Text>
                 </View>}

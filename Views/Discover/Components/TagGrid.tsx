@@ -51,7 +51,7 @@ export function createStyles() {
             flex: 1, flexDirection: "row", flexWrap: 'wrap', 
         },
         tag: {  
-            margin: 8, flexGrow: 1, width: 100
+            margin: 8, flexGrow: 1, width: 110,
         }
     })
 }

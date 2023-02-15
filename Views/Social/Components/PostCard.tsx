@@ -70,11 +70,13 @@ export function PostCard({ post, navigation }: { post: Post, navigation: NativeS
 function createStyles() {
     return StyleSheet.create({
         container: {
-            margin: 10
+            margin: 10,
+            flex: 1,
         },
         contentContainer: {
             borderRadius: 20,
-            padding: 15
+            padding: 15,
+            flex: 1,
         },
         authorContainer: {
             flexDirection: "row",
