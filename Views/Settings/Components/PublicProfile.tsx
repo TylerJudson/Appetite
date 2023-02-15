@@ -83,8 +83,25 @@ export function PublicProfile({ navigation, route }: NavProps) {
             // Remove friend from friends
             remove(ref(db, "users-social/users/" + user.uid + "/friends/" + id));
             remove(ref(db, "users-social/users/" + id + "/friends/" + user.uid));
-            // TODO: remove posts from friend feed 
-            
+
+            // Remove all of the other user's posts from your friend feed
+            get(ref(db, "users-social/users/" + id + "/posts")).then(snapshot => {
+                if (snapshot.exists() && snapshot.val()) {
+                    Object.keys(snapshot.val()).forEach(key => {
+                        remove(ref(db, "users-social/users/" + user.uid + "/friendFeed/" + key));
+                    });
+                }
+            });
+            // Remove all of our posts from the other user's friend feed
+            get(ref(db, "users-social/users/" + user.uid + "/posts")).then(snapshot => {
+                if (snapshot.exists() && snapshot.val()) {
+                    const updates: any = {};
+                    Object.keys(snapshot.val()).forEach(key => {
+                        remove(ref(db, "users-social/users/" + id + "/friendFeed/" + key));
+                    });
+                    update(ref(db), updates);
+                }
+            });
 
             // Send an unfriend notification
             set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "unfriend", id: user.uid, date: Date.now(), read: false })

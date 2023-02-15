@@ -154,7 +154,26 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
             set(ref(db, "users-social/users/" + user.uid + "/friends/" + id), true);
             set(ref(db, "users-social/users/" + id + "/friends/" + user.uid), true);
 
-            // TODO: add posts to friend feed
+            // Add all of the other user's posts to your friend feed
+            get(ref(db, "users-social/users/" + id + "/posts")).then(snapshot => {
+                if (snapshot.exists() && snapshot.val()) {
+                    const updates: any = {};
+                    Object.keys(snapshot.val()).forEach(key => {
+                        updates["users-social/users/" + user.uid + "/friendFeed/" + key] = snapshot.val()[key];
+                    });
+                    update(ref(db), updates);
+                }
+            });
+            // Add all of our posts to the other user's friend feed
+            get(ref(db, "users-social/users/" + user.uid + "/posts")).then(snapshot => {
+                if (snapshot.exists() && snapshot.val()) {
+                    const updates: any = {};
+                    Object.keys(snapshot.val()).forEach(key => {
+                        updates["users-social/users/" + id + "/friendFeed/" + key] = snapshot.val()[key];
+                    });
+                    update(ref(db), updates);
+                }
+            });
 
             set(push(ref(db, "users-social/users/" + id + "/inbox/notifications/")), { code: "accept", id: user.uid, date: Date.now(), read: false })
             set(ref(db, "users-social/users/" + user.uid + "/inbox/friendRequests/" + id + "/accepted"), true);
@@ -170,10 +189,12 @@ export function Header({ title, navigation }: { title?: string, navigation: navP
         if (unread - unreadFriend > 0 && user) {
             setUnRead(unreadFriend);
             const db = getDatabase();
-            // TODO: make this be update instead of set
+
+            const updates: any = {};
             notifications.forEach(ntfcn => {
-                set(ref(db, "users-social/users/" + user.uid + "/inbox/notifications/" + ntfcn.notificationId + "/read"), true)
+                updates["users-social/users/" + user.uid + "/inbox/notifications/" + ntfcn.notificationId + "/read"] = true;
             })
+            update(ref(db), updates)
         }
     }
     //#endregion

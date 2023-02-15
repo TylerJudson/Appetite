@@ -10,6 +10,7 @@ import { PostCard } from "./Components/PostCard";
 import { get, getDatabase, onValue, ref } from "firebase/database";
 import { Recipe } from "../../Models/Recipe";
 import { Comment } from "../../Models/Post";
+import { useUserState } from "../../state";
 
 
 
@@ -21,6 +22,7 @@ export default function Social({ route }: Route) {
     const theme = useTheme();
     const colors = theme.colors;
     const globalStyles = createGlobalStyles();
+    const user = useUserState();
     const screenWidth = useWindowDimensions().width;
 
     const [friendPosts, setFriendPosts] = useState<Post[]>([]);
@@ -68,27 +70,29 @@ export default function Social({ route }: Route) {
         
         const db = getDatabase();
         onValue(ref(db, "users-social/posts"), async snapShot => {
-            if (snapShot.exists() && snapShot.val()) {
+            if (snapShot.exists() && snapShot.val() && user) {
                 const keys = Object.keys(snapShot.val()).sort((a, b) => snapShot.val()[b].created - snapShot.val()[a].created);
 
                 for (let i = 0; i < keys.length; i++) {
                     const key = keys[i];
                     const post = snapShot.val()[key];
                     
-                    await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
-                        if (data.exists() && data.val()) {
-
-                            let linkedRecipe: Recipe | undefined = undefined;
-                            if (post.linkedRecipe) {
-                                linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                    if (post.author !== user.uid) {
+                        await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                            if (data.exists() && data.val()) {
+    
+                                let linkedRecipe: Recipe | undefined = undefined;
+                                if (post.linkedRecipe) {
+                                    linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                                }
+    
+                                const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                                getComments(post.comments, newPost);
+                                posts[i] = newPost;
+                                setPosts([...posts]);
                             }
-
-                            const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
-                            getComments(post.comments, newPost);
-                            posts[i] = newPost;
-                            setPosts([...posts]);
-                        }
-                    })
+                        })
+                    }
                 }
 
             }
