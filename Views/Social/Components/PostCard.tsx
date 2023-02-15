@@ -19,12 +19,12 @@ export function PostCard({ post, navigation }: { post: Post, navigation: NativeS
     }
 
     return (
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { id: post.id })}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { post: post })}>
             <Surface style={styles.contentContainer} elevation={3} >
 
                 <View style={styles.authorContainer} >
                     <Avatar.Image size={25} source={post?.authorPic ? { uri: post.authorPic ? post.authorPic : "" } : require("../../../assets/images/defaultProfilePic.jpeg")} />
-                    <Text style={styles.authorName} variant="labelLarge">{post.author}</Text>
+                    <Text style={styles.authorName} variant="labelLarge">{post.authorName}</Text>
                 </View>
 
                 <View style={styles.imageContainer} >
@@ -39,7 +39,7 @@ export function PostCard({ post, navigation }: { post: Post, navigation: NativeS
                     <View style={styles.likeCommentContainer} >
                         <View style={[styles.button, styles.likeButton]}>
                             <MaterialCommunityIcons name="heart" size={24} color="#f65" />
-                            <Text style={styles.buttonTitle} >{post.likes}</Text>
+                            <Text style={styles.buttonTitle} >{post.favorited.length}</Text>
                         </View>
                         <View style={[styles.button, styles.commentButton]}>
                             <MaterialCommunityIcons name="chat" size={24} color="#65f" />

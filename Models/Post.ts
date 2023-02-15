@@ -11,12 +11,14 @@ export type Comment = {
 interface IPost {
     /** The unique Identifier for the post */
     id: string;
-    /** The author of the post */
-    author: string;
+    /** The name of the author of the post */
+    authorName: string;
+    /** The id of the author of the post */
+    authorId: string;
     /** The author's picture */
     authorPic?: string;
-    /** The number of likes the post has received */
-    likes: number;
+    /** The array of user id's of people who have favorited the post */
+    favorited: string[];
     /** The image of the post */
     image: string;
     /** The title of the post */
@@ -34,9 +36,10 @@ interface IPost {
 
 export class Post implements IPost {
     id: string;
-    author: string;
+    authorName: string;
+    authorId: string
     authorPic?: string;
-    likes: number;
+    favorited: string[];
     image: string;
     title: string;
     description: string;
@@ -44,11 +47,12 @@ export class Post implements IPost {
     comments: Comment[];
     timeStamp: number
 
-    constructor(id: string, author: string, authorPic: string | undefined, likes: number, image: string, title: string, description: string, linkedRecipe: Recipe | undefined, comments: Comment[], timeStamp: number) {
+    constructor(id: string, authorName: string, authorId: string, authorPic: string | undefined, favorited: string[], image: string, title: string, description: string, linkedRecipe: Recipe | undefined, comments: Comment[], timeStamp: number) {
         this.id = id;
-        this.author = author;
+        this.authorName = authorName;
+        this.authorId = authorId;
         this.authorPic = authorPic;
-        this.likes = likes;
+        this.favorited = favorited;
         this.image = image;
         this.title = title;
         this.description = description;

@@ -110,7 +110,6 @@ export function Comments({ comments, setComments, postId, postUserId, postTitle,
             <View style={styles.commentListContainer}>
                 {
                     comments.map((comment, index) => {
-                        console.log(comment.commentId);
                         
                         let showEdit = false;
                         if (user) {

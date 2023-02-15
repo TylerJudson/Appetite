@@ -26,28 +26,29 @@ export function PostScreen({navigation, route}: navProps) {
     const styles = createStyles();
     const colors = useTheme().colors;
 
-    const [image, setImage] = useState('');
-    const [author, setAuthor] = useState({id: "", name: ""});
-    const [authorPic, setAuthorPic] = useState('');
+    const [image, setImage] = useState(route.params.post?.image || "");
+    const [author, setAuthor] = useState({ id: route.params.post?.authorId || "", name: route.params.post?.authorName || "" });
+    const [authorPic, setAuthorPic] = useState(route.params.post?.authorPic || "");
 
-    const [favorited, setFavorited] = useState(false);
-    const [favoritedCount, setFavoritedCount] = useState(0);
+    const [favorited, setFavorited] = useState(route.params.post?.favorited && user ? route.params.post.favorited.includes(user.uid) : false);
+    const [favoritedCount, setFavoritedCount] = useState(route.params.post?.favorited.length || 0);
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState(route.params.post?.title || "");
+    const [description, setDescription] = useState(route.params.post?.description || "");
 
-    const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>(undefined);
+    const [linkedRecipe, setLinkedRecipe] = useState<Recipe | undefined>(route.params.post?.linkedRecipe);
 
     
-    const [comments, setComments] = useState<Comment[]>([]);
+    const [comments, setComments] = useState<Comment[]>(route.params.post?.comments || []);
     
 
     async function favorite() {
         if (user) {
             const db = getDatabase();
-            let postRef = "users-social/posts/" + route.params.id;
-            let friendFeedRef = "users-social/users/" + user.uid + "/friendFeed/" + route.params.id;
-            let userRef = "users-social/users/" + author.id + "/posts/" + route.params.id;
+            const id = route.params.id || route.params.post?.id || "";
+            let postRef = "users-social/posts/" + id;
+            let friendFeedRef = "users-social/users/" + user.uid + "/friendFeed/" + id;
+            let userRef = "users-social/users/" + author.id + "/posts/" + id;
             if (favorited) {
                 setFavorited(false);
                 setFavoritedCount(favoritedCount - 1);
@@ -57,7 +58,7 @@ export function PostScreen({navigation, route}: navProps) {
                 remove(ref(db, userRef + "/favorited/" + user.uid));
 
                 // Send an unlike notification
-                set(push(ref(db, "users-social/users/" + author.id + "/inbox/notifications/")), { code: "unlike", id: user.uid, postId: route.params.id, date: Date.now(), title: title, read: false })
+                set(push(ref(db, "users-social/users/" + author.id + "/inbox/notifications/")), { code: "unlike", id: user.uid, postId: id, date: Date.now(), title: title, read: false })
             }
             else {
                 setFavorited(true);
@@ -75,7 +76,7 @@ export function PostScreen({navigation, route}: navProps) {
                 }
                 update(ref(db), updates);
                 // Send a like notification
-                set(push(ref(db, "users-social/users/" + author.id + "/inbox/notifications/")), { code: "like", id: user.uid, postId: route.params.id, date: Date.now(), title: title, read: false })
+                set(push(ref(db, "users-social/users/" + author.id + "/inbox/notifications/")), { code: "like", id: user.uid, postId: id, date: Date.now(), title: title, read: false })
             }
         }
     }
@@ -156,6 +157,8 @@ export function PostScreen({navigation, route}: navProps) {
 
     useEffect(() => {
         if (route.params.id && user) {
+            console.log("Getting the post from the database");
+            
             const db = getDatabase();
             onValue(ref(db, "users-social/posts/" + route.params.id), (snapShot1) => {
                 if (snapShot1.exists() && snapShot1.val()) {
@@ -218,7 +221,7 @@ export function PostScreen({navigation, route}: navProps) {
 
             { linkedRecipe && <View style={styles.linkedRecipe}><Widget title={linkedRecipe.name} image={linkedRecipe.image} onPress={onRecipePress} /></View> }
 
-                <Comments comments={comments} setComments={setComments} postId={route.params.id} postUserId={author.id} postTitle={title} navigation={navigation} />
+                <Comments comments={comments} setComments={setComments} postId={route.params.id || route.params.post?.id || ""} postUserId={author.id} postTitle={title} navigation={navigation} />
             </View>
         </View>
         </KeyboardAwareScrollView>

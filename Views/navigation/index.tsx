@@ -19,6 +19,7 @@ import { Friends } from '../Settings/Components/Friends';
 import { Settings } from '../Settings/Settings';
 import CreatePostScreen from '../Social/Components/CreatePostScreen';
 import { PostScreen } from '../Social/Components/PostScreen';
+import { Post } from '../../Models/Post';
 
 
 
@@ -42,7 +43,7 @@ export type RootStackParamList = {
 	PublicProfile: { id: string } | undefined;
 	Friends: undefined;
 	CreatePost: { linkedRecipe?: Recipe } | undefined;
-	PostScreen: { id: string }
+	PostScreen: { id?: string, post?: Post };
 };
 
 

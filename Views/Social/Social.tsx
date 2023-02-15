@@ -9,6 +9,7 @@ import { Post } from "../../Models/Post";
 import { PostCard } from "./Components/PostCard";
 import { get, getDatabase, onValue, ref } from "firebase/database";
 import { Recipe } from "../../Models/Recipe";
+import { Comment } from "../../Models/Post";
 
 
 
@@ -26,6 +27,43 @@ export default function Social({ route }: Route) {
     const [posts, setPosts] = useState<Post[]>([]);
 
 
+    async function getComments(data: any, postRef: Post) {
+        
+        if (data) {
+            const db = getDatabase();
+            const array = Object.keys(data).sort((a, b) => data[a].date - data[b].date);
+            const comments: Comment[] = [];
+    
+            for (let i = 0; i < array.length; i++) {
+                const key = array[i];
+                const value = data[key];
+                const newComment: Comment = {
+                    author: {
+                        authorId: "",
+                        authorName: "",
+                        authorPic: undefined
+                    },
+                    commentId: key,
+                    value: value.value,
+                    date: value.date
+                };
+    
+                await get(ref(db, "users-publicInfo/" + value.authorId)).then(snapshot => {
+                    newComment.author = {
+                        authorId: value.authorId,
+                        authorName: snapshot.val().displayName,
+                        authorPic: snapshot.val().profilePicture
+                    }
+                    comments.push(newComment);
+                })
+    
+                if (i == array.length - 1) {
+                    postRef.comments = comments;
+                }
+            }
+        }
+
+    }
     function getPosts() {
         
         const db = getDatabase();
@@ -45,9 +83,9 @@ export default function Social({ route }: Route) {
                                 linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
                             }
 
-                            // TODO: fix comments
-                            let comments: Comment[];
-                            posts[i] = new Post(key, data.val().displayName, data.val().profilePicture || undefined, post.favorited === undefined ? 0 : Object.keys(post.favorited).length, post.image, post.title, post.description, linkedRecipe, post.comments || [], post.created);
+                            const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            getComments(post.comments, newPost);
+                            posts[i] = newPost;
                             setPosts([...posts]);
                         }
                     })
@@ -73,7 +111,7 @@ export default function Social({ route }: Route) {
                     </Animated.View>
                 }}
                 //@ts-ignore
-                itemLayoutAnimation={Layout}
+                itemLayoutAnimation={screenWidth >= 600 ? undefined : Layout}
                 numColumns={Math.floor(screenWidth / 300)}
                 key={Math.floor(screenWidth / 300)}
                 ListHeaderComponent={<View>
