@@ -111,7 +111,7 @@ function Appetite({navigation, route}: Props) {
 	]
 	// This creates the different tabs on the bottom
 	const [routes, setRoutes] = React.useState(routesWithSocial);
-	
+	``
 	useEffect(() =>{
 		if (route.params) {
 			if (route.params.snackBar) {
@@ -126,7 +126,7 @@ function Appetite({navigation, route}: Props) {
 	
 	useEffect(() => {
 		if (user) {
-			if (index == 2) {
+			if (routes.length == 3 && index == 2) {
 				setIndex(3);
 			}
 			setRoutes(routesWithSocial);
