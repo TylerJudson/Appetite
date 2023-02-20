@@ -7,7 +7,7 @@ import { Header } from "./Components/Header";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { Post } from "../../Models/Post";
 import { PostCard } from "./Components/PostCard";
-import { get, getDatabase, onValue, ref } from "firebase/database";
+import { get, getDatabase, limitToFirst, limitToLast, onChildAdded, onChildChanged, onValue, orderByChild, query, ref, startAfter, startAt } from "firebase/database";
 import { Recipe } from "../../Models/Recipe";
 import { Comment } from "../../Models/Post";
 import { useUserState } from "../../state";
@@ -28,6 +28,8 @@ export default function Social({ route }: Route) {
 
     const [friendPosts, setFriendPosts] = useState<Post[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
+
+    const [refreshing, setRefreshing] = useState(false);
 
 
     async function getComments(data: any, postRef: Post) {
@@ -62,74 +64,120 @@ export default function Social({ route }: Route) {
     
                 if (i == array.length - 1) {
                     postRef.comments = comments;
+                    setPosts([...posts]);
+                    setFriendPosts([...friendPosts]);
                 }
             }
         }
 
     }
     function getPosts() {
-
-        const db = getDatabase();
-        onValue(ref(db, "users-social/posts"), async snapShot => {
-            if (snapShot.exists() && snapShot.val() && user) {
-                const keys = Object.keys(snapShot.val()).sort((a, b) => snapShot.val()[b].created - snapShot.val()[a].created);
-
-                for (let i = 0; i < keys.length; i++) {
-                    const key = keys[i];
-                    const post = snapShot.val()[key];
-                    
-                    if (post.author !== user.uid) {
-                        await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
-                            if (data.exists() && data.val()) {
-    
-                                let linkedRecipe: Recipe | undefined = undefined;
-                                if (post.linkedRecipe) {
-                                    linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
-                                }
-    
-                                const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
-                                getComments(post.comments, newPost);
-                                posts[i] = newPost;
-                                setPosts([...posts]);
-                            }
-                        })
-                    }
-                }
-
-            }
-        })
-
         if (user) {
-            onValue(ref(db, "users-social/users/" + user.uid + "/friendFeed/"), async snapShot => {
+            const db = getDatabase();
+            let q = query(ref(db, "users-social/posts"), orderByChild("created"), limitToFirst(10), startAfter(posts[posts.length - 1]?.timeStamp || null));
+            get(q).then(snapShot => {
                 if (snapShot.exists() && snapShot.val()) {
-                    const keys = Object.keys(snapShot.val()).sort((a, b) => snapShot.val()[b].created - snapShot.val()[a].created);
-    
-                    for (let i = 0; i < keys.length; i++) {
-                        const key = keys[i];
-                        const post = snapShot.val()[key];
-
-                        await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
-                            if (data.exists() && data.val()) {
-
-                                let linkedRecipe: Recipe | undefined = undefined;
-                                if (post.linkedRecipe) {
-                                    linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                    snapShot.forEach(child => {
+                        const post = child.val();
+                        if (post.author !== user.uid) {
+                            get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                                if (data.exists() && data.val()) {
+                                    let linkedRecipe: Recipe | undefined = undefined;
+                                    if (post.linkedRecipe) {
+                                        linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                                    }
+        
+                                    const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                                    getComments(post.comments, newPost);
+                                    posts.push(newPost);
+                                    setPosts([...posts.sort((a, b) => a.timeStamp - b.timeStamp)]);
                                 }
-
-                                const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
-                                getComments(post.comments, newPost);
-                                posts[i] = newPost;
-                                setFriendPosts([...posts]);
-                            }
-                        })
-                    }
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    }
+    function getFriendPosts() {
+        if (user) {
+            const db = getDatabase();
+            let q = query(ref(db, "users-social/users/" + user.uid + "/friendFeed/"), orderByChild("created"), limitToFirst(5), startAfter(friendPosts[friendPosts.length - 1]?.timeStamp || null));
+            get(q).then(snapShot => {
+                if (snapShot.exists() && snapShot.val()) {
     
+                    snapShot.forEach(child => {
+                        const post = child.val();
+    
+                        if (post.author !== user.uid) {
+                            get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                                if (data.exists() && data.val()) {
+                                    let linkedRecipe: Recipe | undefined = undefined;
+                                    if (post.linkedRecipe) {
+                                        linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                                    }
+    
+                                    const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                                    getComments(post.comments, newPost);
+                                    friendPosts.push(newPost);
+                                    setFriendPosts([...friendPosts.sort((a, b) => a.timeStamp - b.timeStamp)]);
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
     }
 
-    useEffect(getPosts, []);
+    useEffect(() => {
+        if (user) {
+
+            getFriendPosts();
+            getPosts();
+
+            const db = getDatabase();
+            onChildChanged(ref(db, "users-social/posts"), snapShot => {
+                if (snapShot.exists() && snapShot.val()) {
+                    const post = snapShot.val();
+                    get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                        if (data.exists() && data.val()) {
+                            let linkedRecipe: Recipe | undefined = undefined;
+                            if (post.linkedRecipe) {
+                                linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                            }
+
+                            const newPost = new Post(snapShot.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            getComments(post.comments, newPost);
+                            posts[posts.findIndex(post => post.id === snapShot.key)] = newPost;
+                            setPosts([...posts])
+                        }
+                    })
+                }
+            });
+
+            onChildChanged(ref(db, "users-social/users/" + user.uid + "/friendFeed/"), snapShot => {
+                if (snapShot.exists() && snapShot.val()) {
+                    const post = snapShot.val();
+                    get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+                        if (data.exists() && data.val()) {
+                            let linkedRecipe: Recipe | undefined = undefined;
+                            if (post.linkedRecipe) {
+                                linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
+                            }
+
+                            const newPost = new Post(snapShot.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            getComments(post.comments, newPost);
+                            friendPosts[friendPosts.findIndex(post => post.id === snapShot.key)] = newPost;
+                            setFriendPosts([...friendPosts])
+                        }
+                    })
+                }
+            });
+            
+
+        }
+    }, []);
 
     return (
         <View style={globalStyles.container}>
@@ -151,7 +199,7 @@ export default function Social({ route }: Route) {
                 ListHeaderComponent={<View>
                     <Text style={{ paddingLeft: 10 }} variant="headlineLarge">Social</Text>
                     <Animated.FlatList
-                        data={posts}
+                        data={friendPosts}
                         horizontal
                         keyExtractor={(item, index) => item === undefined ? index.toString() : item.id}
                         renderItem={({ item }) => {
@@ -161,9 +209,22 @@ export default function Social({ route }: Route) {
                         }}
                         //@ts-ignore
                         itemLayoutAnimation={screenWidth >= 600 ? undefined : Layout}
+                        onEndReached={getFriendPosts}
+                        onEndReachedThreshold={0.25}
                     />
                 </View>}
+                onEndReached={getPosts}
+                onEndReachedThreshold={0.5}
+                refreshing={refreshing}
+                onRefresh={() => {
+                    setRefreshing(true);
+                    friendPosts.splice(0, friendPosts.length);
+                    getFriendPosts();
+                    posts.splice(0, posts.length);
+                    getPosts();
+                    setTimeout(() => setRefreshing(false), 500);
+                }}
             />
         </View>
     );
-}
+}``

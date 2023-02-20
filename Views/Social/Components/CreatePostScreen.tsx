@@ -83,7 +83,7 @@ export default function CreatePostScreen({ navigation, route }: navProps) {
         if (user) {
             const db = getDatabase();
             const postId = uuidv4();
-            const post = { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe || {}, created: Date.now(), author: user.uid }
+            const post = { title: title, description: description, image: selectedImage, linkedRecipe: linkedRecipe || {}, created: -Date.now(), author: user.uid }
             // Add the post to the global list of posts
             if (visibleToEveryone) await set(ref(db, "users-social/posts/" + postId), post);
             navigation.goBack();

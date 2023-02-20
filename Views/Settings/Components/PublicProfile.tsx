@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { get, getDatabase, push, ref, remove, set, update } from "firebase/database";
+import { get, getDatabase, limitToFirst, orderByChild, push, query, ref, remove, set, startAfter, update } from "firebase/database";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform, useWindowDimensions } from "react-native";
 import { Button, Snackbar, Text, TextInput, useTheme } from "react-native-paper";
@@ -55,8 +55,10 @@ export function PublicProfile({ navigation, route }: NavProps) {
     const [displayNameError, setDisplayNameError] = useState("");
     const [posts, setPosts] = useState<Post[]>([]);
 
+    const [refreshing, setRefreshing] = useState(false);
+
     //#region PUBLIC BEHEAVIOR
-    useEffect(() => {
+    function getUserInfo() {
         if (route.params && route.params.id) {
             const db = getDatabase();
             get(ref(db, "users-publicInfo/" + route.params.id)).then(snapshot => {
@@ -71,17 +73,19 @@ export function PublicProfile({ navigation, route }: NavProps) {
                 get(ref(db, '/users-social/users/' + user.uid + "/pendingFriends/" + route.params.id)).then(snapshot => {
                     if (snapshot.exists() && snapshot.val()) {
                         setIsPendingFriend(true);
-                    }   
+                    }
                 })
                 // Check to see if we are a friend
-                get(ref(db, "users-social/users/" + user.uid + "/friends/" + route.params.id )).then(snapshot => {
+                get(ref(db, "users-social/users/" + user.uid + "/friends/" + route.params.id)).then(snapshot => {
                     if (snapshot.exists() && snapshot.val()) {
                         setIsFriend(true);
                     }
                 });
             }
         }
-    }, [user])
+    }
+
+    useEffect(getUserInfo, [user])
 
 
     async function removeFriend(id: string, name: string) {
@@ -232,31 +236,27 @@ export function PublicProfile({ navigation, route }: NavProps) {
 
     }
     function getPosts() {
-
         const db = getDatabase();
-        get(ref(db, "users-social/users/" + (route.params?.id || user?.uid) + "/posts/")).then(async snapShot => {
-            if (snapShot.exists() && snapShot.val() && user) {
-                const keys = Object.keys(snapShot.val()).sort((a, b) => snapShot.val()[b].created - snapShot.val()[a].created);
-                for (let i = 0; i < keys.length; i++) {
-                    const key = keys[i];
-                    const post = snapShot.val()[key];
-
-                    await get(ref(db, "users-publicInfo/" + post.author)).then(data => {
+        let r = ref(db, "users-social/users/" + (route.params?.id || user?.uid) + "/posts/");
+        let q = query(r, orderByChild("created"), limitToFirst(2), startAfter(posts[posts.length - 1]?.timeStamp || null))
+        get(q).then(async snapShot => {
+            if (snapShot.exists() && snapShot.val()) {
+                snapShot.forEach(child => {
+                    const post = child.val();
+                    get(ref(db, "users-publicInfo/" + post.author)).then(data => {
                         if (data.exists() && data.val()) {
-
                             let linkedRecipe: Recipe | undefined = undefined;
                             if (post.linkedRecipe) {
                                 linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
                             }
 
-                            const newPost = new Post(key, data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                            posts.push(newPost);
                             getComments(post.comments, newPost);
-                            posts[i] = newPost;
-                            setPosts([...posts]);
+                            setPosts([...posts.sort((a, b) => a.timeStamp - b.timeStamp)]);
                         }
                     })
-                }
-
+                })
             }
         })
     }
@@ -270,6 +270,16 @@ export function PublicProfile({ navigation, route }: NavProps) {
             <Header title={route.params ? displayName :  "Public Profile"} onBack={navigation.goBack} editing={editing} setEditing={route.params ? undefined : handleEdit} />
             <Animated.FlatList
                 data={posts}
+                onEndReached={getPosts}
+                onEndReachedThreshold={0.25}
+                refreshing={refreshing}
+                onRefresh={() => {
+                    setRefreshing(true);
+                    getUserInfo();
+                    posts.splice(0, posts.length);
+                    getPosts();
+                    setTimeout(() => setRefreshing(false), 500);
+                }}
                 keyExtractor={(item, index) => item === undefined ? index.toString() : item.id}
                 renderItem={({ item }) => {
                     return <Animated.View entering={FadeIn} style={{ flex: 1 / Math.floor(screenWidth / 300) }}>
