@@ -51,6 +51,8 @@ export function PublicProfile({ navigation, route }: NavProps) {
     const [profilePic, setProfilePic] = useState(user?.profilePicture || "");
     const [displayName, setDisplayName] = useState(user?.displayName || "");
     const [skillLevel, setSkillLevel] = useState(user?.skillLevel || "");
+    const [numOfFriends, setNumOfFriends] = useState(user?.numOfFriends || 0);
+    const [numOfPosts, setNumOfPosts] = useState(user?.numOfPosts || 0);
 
     const [displayNameError, setDisplayNameError] = useState("");
     const [posts, setPosts] = useState<Post[]>([]);
@@ -66,6 +68,8 @@ export function PublicProfile({ navigation, route }: NavProps) {
                     setProfilePic(snapshot.val().profilePicture);
                     setDisplayName(snapshot.val().displayName);
                     setSkillLevel(snapshot.val().skillLevel);
+                    setNumOfFriends(snapshot.val().numOfFriends);
+                    setNumOfPosts(snapshot.val().numOfPosts);
                 }
             })
             if (user) {
@@ -295,7 +299,7 @@ export function PublicProfile({ navigation, route }: NavProps) {
 
                     <ImageChooser selectedImage={profilePic} setSelectedImage={setProfilePic} profile editable={editing} />
 
-                    <Text>{user?.numOfFriends} Friends • {user?.numOfPosts} Posts</Text>
+                    <Text>{numOfFriends} Friends • {numOfPosts} Posts</Text>
 
                     <TextInput
                         style={styles.textInput}
