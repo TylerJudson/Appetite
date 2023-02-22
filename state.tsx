@@ -6,10 +6,12 @@ import { RecipeBook } from "./Models/RecipeBook";
 import { User } from "./Models/User";
 import { getDatabase, ref, onValue, update, onChildChanged, get, child, onChildAdded, onChildRemoved, query, limitToLast, orderByChild } from "firebase/database";
 import { importToObject } from "./utilities/importToObject";
+import { saveItem } from "./utilities/AsyncHelpers";
 
 
 interface ISettings {
     showFavoritesAtTop: boolean;
+    themeColor: "red" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple" | "pink";
 }
 
 interface IState {
@@ -21,7 +23,7 @@ interface IState {
 export let State: IState = {
     user: undefined,
     recipeBook: RecipeBook.Initial(),
-    settings: { showFavoritesAtTop: false }
+    settings: { showFavoritesAtTop: false, themeColor: "green" }
 }
 
 
@@ -43,7 +45,13 @@ export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.
 
     const recipeBookContextValue = { recipeBook, setRecipeBook };
 
-    const [settings, setSettings] = React.useState(State.settings);
+    const [settings, setSettings] = React.useReducer(
+        (_currentValue: ISettings, newValue: ISettings) => {
+            saveItem("Settings", newValue);
+            return newValue;
+        },
+        State.settings
+    );
 
 
     useEffect(() => {

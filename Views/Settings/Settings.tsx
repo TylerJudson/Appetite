@@ -17,6 +17,7 @@ import { GetHelp } from "./Components/GetHelp";
 import { TermsOfService } from "./Components/TermsOfService";
 import { PrivacyPolicy } from "./Components/PrivacyPolicy";
 import { Route } from "../navigation";
+import { ThemeColorPicker } from "./Components/ThemeColorPicker";
 
 
 /**
@@ -36,6 +37,8 @@ export function Settings({ route }: Route) {
     const [getHelpVisible, setGetHelpVisible] = useState(false);
     const [termsOfServiceVisible, setTermsOfServiceVisible] = useState(false);
     const [privacyPolicyVisible, setPrivacyPolicyVisible] = useState(false);
+
+    const [themeColorPickerVisible, setThemeColorPickerVisible] = useState(false);
 
     const styles = createStyles();
 
@@ -149,12 +152,19 @@ export function Settings({ route }: Route) {
                             rightIcon={<Switch style={styles.switch} trackColor={{ true: colors.tertiary }} value={settings.showFavoritesAtTop} onValueChange={toggleFavorites} />}
                         />
                         <SettingWidget
+                            title="Theme"
+                            icon={<IconButton icon="brush" />}
+                            rightIcon={<IconButton icon="circle" iconColor={colors.primary} />}
+                            onPress={() => setThemeColorPickerVisible(true)}
+                        />
+                        <SettingWidget
                             title="About Appetite"
                             icon={<IconButton icon="information-outline" />}
                             roundBottomCorners
                             rightIcon={<IconButton icon="chevron-right" />}
                             onPress={() => setAboutModalVisible(true)}
                         />
+
                     </View>
                     
 
@@ -223,6 +233,8 @@ export function Settings({ route }: Route) {
             <GetHelp modalVisible={getHelpVisible} setModalVisible={setGetHelpVisible} />
             <TermsOfService modalVisible={termsOfServiceVisible} setModalVisible={setTermsOfServiceVisible} />
             <PrivacyPolicy modalVisible={privacyPolicyVisible} setModalVisible={setPrivacyPolicyVisible} />
+
+            <ThemeColorPicker modalVisible={themeColorPickerVisible} setModalVisible={setThemeColorPickerVisible} />
         </View>
     );
 }

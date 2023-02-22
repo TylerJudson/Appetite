@@ -7,6 +7,7 @@ import { auth } from '../firebaseConfig';
 import { Recipe } from '../Models/Recipe';
 import { User } from '../Models/User';
 import { State } from '../state';
+import { getItem } from '../utilities/AsyncHelpers';
 
 
 
@@ -28,6 +29,7 @@ export default function useCachedResources() {
         });
 
         await State.recipeBook.getData();
+        await getItem("Settings", State.settings);
         
       } catch (e) {
         // We might want to provide this error information to an error reporting service

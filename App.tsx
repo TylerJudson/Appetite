@@ -6,27 +6,37 @@ import { auth } from './firebaseConfig';
 
 import useCachedResources from './hooks/useCachedResources';
 import { User } from './Models/User';
-import { GlobalStateProvider, State, useUserState } from './state';
-import { darkTheme, lightTheme } from './theme';
+import { GlobalStateProvider, State, useSettingsState, useUserState } from './state';
+import { themes } from './themes';
 import Navigation from './Views/navigation';
 
 export default function App() {
 	const isLoadingComplete = useCachedResources();
-	const colorScheme = useColorScheme();
-
+	
 	if (!isLoadingComplete) {
 		return null;
 	} else {
 
 		return (
 			<GlobalStateProvider>
-				<Provider theme={colorScheme === 'dark' ? darkTheme : lightTheme}>
-					<SafeAreaProvider>
-						<Navigation />
-						<StatusBar />
-					</SafeAreaProvider>
-				</Provider>
+				<RestOfApp />
 			</GlobalStateProvider>
 		);
 	}
+}
+
+
+function RestOfApp() {
+	
+	const colorScheme = useColorScheme();
+	const { settings } = useSettingsState();
+
+	return (
+		<Provider theme={colorScheme === 'dark' ? themes[settings.themeColor].dark : themes[settings.themeColor].light}>
+			<SafeAreaProvider>
+				<Navigation />
+				<StatusBar />
+			</SafeAreaProvider>
+		</Provider>
+	)
 }
