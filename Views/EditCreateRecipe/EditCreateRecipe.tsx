@@ -174,10 +174,6 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                 <View style={{ marginVertical: 75 }} />
 
 
-                    <Button onPress={() => sendToDatabase("/discover/stPatricks/")}>Send to St. Patricks Day Discover</Button>
-                    <Button onPress={() => sendToDatabase("/discover/aroundWorld/") }>Send to world</Button>
-                    <Button onPress={() => sendToDatabase("/discover/difficult/") }>Send to difficult</Button>
-                    <Button onPress={() => sendToDatabase("/discover/easy/") }>send to easy</Button>
                     <Button onPress={() => sendToDatabase("/discover/vegan/") }>Send to vegan</Button>
                     <Button onPress={() => sendToDatabase("/discover/noCarbs/") }>Send to no Carbs</Button>
             </ScrollView>

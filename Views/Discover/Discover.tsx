@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { ScrollView, View, StyleSheet, useWindowDimensions } from "react-native";
 import { IconButton, Snackbar, Text, useTheme } from "react-native-paper";
 import { updateRecipe } from "../../FireBase/Update";
 import { Recipe } from "../../Models/Recipe";
@@ -23,6 +23,7 @@ export default function Discover({ route }: Route) {
 
     const globalStyles = createGlobalStyles();
     const styles = createStyles();
+    const screenWidth = useWindowDimensions().width;
 
     const [searchModalVisible, setSearchModalVisible] = useState(false);
     const [tags, setTags] = useState<string[]>(["dfjdk"]);
@@ -41,7 +42,7 @@ export default function Discover({ route }: Route) {
 
     return (
         <View style={globalStyles.screenContainer}>
-            <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{paddingBottom: 100}}>
+            <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{ paddingBottom: 100, flex: 1, maxWidth: 1250, paddingHorizontal: 5, alignSelf: screenWidth < 1250 ? undefined : "center" }}>
 
                 <View style={{marginTop: 30}}/>
                 <View>
