@@ -15,10 +15,6 @@
 
 - Add More to the discover screen
 - Make everyone Accounts
-- Add about Appetite
-- Add get help
-- add see terms of service
-- Add see privacy policy
 - Make posts
 - App icon
 - Splash screen

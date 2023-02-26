@@ -22,8 +22,8 @@ export function Times({ prepTime, cookTime }: { prepTime?: number, cookTime?: nu
                 <Button style={styles.button} mode="outlined"  icon="clock-outline">Cook: {cookTime}m</Button>
             }
             {
-                prepTime && cookTime &&
-                <Button style={styles.button} mode="outlined" icon="timelapse">Total: {prepTime + cookTime}m</Button>
+                (prepTime || cookTime) &&
+                <Button style={styles.button} mode="outlined" icon="timelapse">Total: {(prepTime || 0) + (cookTime || 0)}m</Button>
             }
         </View>
     );

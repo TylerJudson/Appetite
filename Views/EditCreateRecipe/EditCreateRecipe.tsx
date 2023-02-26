@@ -101,6 +101,29 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
         }
     }
 
+
+    function sendToDatabase(source: string) {
+        recipe.image = selectedImage;
+        recipe.tags = tags;
+
+        const db = getDatabase();
+        let updates: any = {};
+        let updatedRecipe = recipe.onlyDefinedProperties();
+
+        // Add a date created attribute if we are creating the recipe
+        if (create) {
+            updatedRecipe["created"] = Date.now();
+        }
+        updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
+        updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
+        let newUpdated = recipe.onlyDefinedProperties();
+        newUpdated.image = recipe.image;
+        updates[source + recipe.id] = newUpdated;
+        update(ref(db), updates);
+
+        navigation.goBack();
+    }
+
     return (
         <View style={globalStyles.container}>
 
@@ -151,27 +174,12 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                 <View style={{ marginVertical: 75 }} />
 
 
-                    <Button onPress={() => {
-                        recipe.image = selectedImage;
-                        recipe.tags = tags;
-
-                        const db = getDatabase();
-                        let updates: any = {};
-                        let updatedRecipe = recipe.onlyDefinedProperties();
-
-                        // Add a date created attribute if we are creating the recipe
-                        if (create) {
-                            updatedRecipe["created"] = Date.now();
-                        }
-                        updates['/publicRecipes/deep/' + recipe.id] = updatedRecipe;
-                        updates['/publicRecipes/shallow/' + recipe.id] = { id: recipe.id, name: recipe.name, image: recipe.image, tags: recipe.tags };
-                        let newUpdated = recipe.onlyDefinedProperties();
-                        newUpdated.image = recipe.image;
-                        updates['/discover/stPatricks/' + recipe.id] = newUpdated;
-                        update(ref(db), updates);
-
-                        navigation.goBack();
-                    }}>Send to St. Patricks Day Discover</Button>
+                    <Button onPress={() => sendToDatabase("/discover/stPatricks/")}>Send to St. Patricks Day Discover</Button>
+                    <Button onPress={() => sendToDatabase("/discover/aroundWorld/") }>Send to world</Button>
+                    <Button onPress={() => sendToDatabase("/discover/difficult/") }>Send to difficult</Button>
+                    <Button onPress={() => sendToDatabase("/discover/easy/") }>send to easy</Button>
+                    <Button onPress={() => sendToDatabase("/discover/vegan/") }>Send to vegan</Button>
+                    <Button onPress={() => sendToDatabase("/discover/noCarbs/") }>Send to no Carbs</Button>
             </ScrollView>
             </KeyboardAvoidingView>
 

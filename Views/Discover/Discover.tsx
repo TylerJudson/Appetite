@@ -57,12 +57,23 @@ export default function Discover({ route }: Route) {
 
                 <RecipeList style={styles.recipeList} header="Popular Recipes" source="/discover/popularRecipes" recipeCount={5} navigation={route.navigation} setSnackBar={setSnackBar} />
 
-                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
+                <RecipeList style={styles.recipeList} header="Let's be healthy!" source="/discover/beHealthy" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
 
                 <RecipeList style={styles.recipeList} header="Get your Green on with some St. Patrick's Day Recipes" source="/discover/stPatricks" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
 
-                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={timeTags} />
+                <RecipeList style={styles.recipeList} header="Eat from around the world" source="/discover/aroundWorld" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
+
+                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={foodOrginTags} />
                 
+                <RecipeList style={styles.recipeList} header="Try these difficult recipes" source="/discover/difficult" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
+
+                <RecipeList style={styles.recipeList} header="Quick and easy" source="/discover/easy" recipeCount={4} navigation={route.navigation} setSnackBar={setSnackBar} />
+
+                <TagGrid openSearchModalWithTag={openSearchModalWithTag} tagCards={timeTags} />
+
+                <RecipeList style={styles.recipeList} header="Vegan delights" source="/discover/vegan" recipeCount={3} navigation={route.navigation} setSnackBar={setSnackBar} />
+
+                <RecipeList style={styles.recipeList} header="No carbs?!!" source="/discover/noCarbs" recipeCount={3} navigation={route.navigation} setSnackBar={setSnackBar} />
             </ScrollView>
 
             <SearchModal visible={searchModalVisible} setVisible={setSearchModalVisible} navigation={route.navigation} tags={tags} setTags={setTags} />
