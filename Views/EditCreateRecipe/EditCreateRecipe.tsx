@@ -152,7 +152,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                     list={recipe.ingredients}
                     onDelete={(index) => { recipe.ingredients.splice(index, 1); setRecipe(recipe.clone()) }}
                     onItemChange={(text, index) => { recipe.ingredients[index] = text; setRecipe(recipe.clone()) }}
-                    onAdd={value => { recipe.ingredients.push(...value.split("\n")); setRecipe(recipe.clone()) }}
+                    onAdd={value => { recipe.ingredients.push(...splitAndStrip(value)); setRecipe(recipe.clone()) }}
                     addPlaceholder="Add Ingredient..."
                     scrollRef={scrollRef}
                     affix="Checks"
@@ -163,7 +163,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                     list={recipe.instructions}
                     onDelete={(index) => { recipe.instructions.splice(index, 1); setRecipe(recipe.clone()) }}
                     onItemChange={(text, index) => { recipe.instructions[index] = text; setRecipe(recipe.clone()) }}
-                    onAdd={value => { recipe.instructions.push(...value.split("\n")); setRecipe(recipe.clone()) }}
+                    onAdd={value => { recipe.instructions.push(...splitAndStrip(value)); setRecipe(recipe.clone()) }}
                     addPlaceholder="Add Instruction..."
                     scrollRef={scrollRef}
                     multiline
@@ -172,10 +172,6 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
                 <View style={{ marginVertical: 20 }}/>
                 <Tags title="Tags" tags={tags} setTags={setTags} addTags />
                 <View style={{ marginVertical: 75 }} />
-
-
-                    <Button onPress={() => sendToDatabase("/discover/vegan/") }>Send to vegan</Button>
-                    <Button onPress={() => sendToDatabase("/discover/noCarbs/") }>Send to no Carbs</Button>
             </ScrollView>
             </KeyboardAvoidingView>
 
@@ -206,4 +202,11 @@ function createStyles() {
             justifyContent: screenWidth > 700 ? "space-between" : undefined,
         },
     }); 
+}
+
+
+
+
+function splitAndStrip(value: string) {
+    return value.split("\n").filter(value => value !== "" && value !== "\n" && value !== " ");
 }

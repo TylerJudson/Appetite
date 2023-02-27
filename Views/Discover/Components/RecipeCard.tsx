@@ -28,7 +28,7 @@ export function RecipeCard({ title, description, image, onPress, onAdd }: { titl
                     </View>
 
                     <View style={styles.textContainer}>
-                        <Text style={styles.title} variant="titleLarge" numberOfLines={1} adjustsFontSizeToFit >{title}</Text>
+                        <Text style={styles.title} variant="titleMedium" numberOfLines={1} >{title}</Text>
                         <Text style={styles.description} numberOfLines={3} >{description}</Text>
                     </View>
                 </Surface>
@@ -69,7 +69,9 @@ function createStyles() {
             height: 100, margin: 10
         },
         title: {
-            margin: 5
+            margin: 5,
+            fontWeight: "600",
+            fontSize: 18
         },
         description: {
         },

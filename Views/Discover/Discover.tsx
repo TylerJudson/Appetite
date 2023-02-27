@@ -42,7 +42,7 @@ export default function Discover({ route }: Route) {
 
     return (
         <View style={globalStyles.screenContainer}>
-            <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{ paddingBottom: 100, flex: 1, maxWidth: 1250, paddingHorizontal: 5, alignSelf: screenWidth < 1250 ? undefined : "center" }}>
+            <ScrollView stickyHeaderIndices={[1]} contentContainerStyle={{ paddingBottom: 100, maxWidth: 1250, paddingHorizontal: 5, alignSelf: screenWidth < 1250 ? undefined : "center" }}>
 
                 <View style={{marginTop: 30}}/>
                 <View>
@@ -139,7 +139,7 @@ const meals: tagCard[] = [
 ]
 
 const timeTags: tagCard[] = [
-    { title: "<10 Mins", },
-    { title: "<30 Mins", },
-    { title: "1 Hour", }
+    { title: "<10 Mins", image: require("../../assets/images/times/10Mins.jpg") },
+    { title: "<30 Mins", image: require("../../assets/images/times/30Mins.jpg") },
+    { title: "1 Hour", image: require("../../assets/images/times/60Mins.jpg") }
 ]
