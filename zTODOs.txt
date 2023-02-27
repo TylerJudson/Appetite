@@ -13,7 +13,6 @@
 
 
 
-- Add More to the discover screen
 - Make everyone Accounts
 - Make posts
 - App icon
