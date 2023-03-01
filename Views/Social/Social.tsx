@@ -86,11 +86,13 @@ export default function Social({ route }: Route) {
                                     if (post.linkedRecipe) {
                                         linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
                                     }
-        
-                                    const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
-                                    getComments(post.comments, newPost);
-                                    posts.push(newPost);
-                                    setPosts([...posts.sort((a, b) => a.timeStamp - b.timeStamp)]);
+
+                                    if (posts.find(p => p.id === child.key) === undefined) {
+                                        const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                                        getComments(post.comments, newPost);
+                                        posts.push(newPost);
+                                        setPosts([...posts.sort((a, b) => a.timeStamp - b.timeStamp)]);
+                                    }
                                 }
                             })
                         }
@@ -117,10 +119,12 @@ export default function Social({ route }: Route) {
                                         linkedRecipe = new Recipe(post.linkedRecipe.name, post.linkedRecipe.ingredients, post.linkedRecipe.instructions, post.linkedRecipe.description, post.linkedRecipe.image, post.linkedRecipe.id, post.linkedRecipe.prepTime, post.linkedRecipe.cookTime, false, post.linkedRecipe.tags, true);
                                     }
     
-                                    const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
-                                    getComments(post.comments, newPost);
-                                    friendPosts.push(newPost);
-                                    setFriendPosts([...friendPosts.sort((a, b) => a.timeStamp - b.timeStamp)]);
+                                    if (friendPosts.find(p => p.id === child.key) === undefined) {
+                                        const newPost = new Post(child.key || "", data.val().displayName, post.author, data.val().profilePicture || undefined, post.favorited ? Object.keys(post.favorited) : [], post.image, post.title, post.description, linkedRecipe, [], post.created);
+                                        getComments(post.comments, newPost);
+                                        friendPosts.push(newPost);
+                                        setFriendPosts([...friendPosts.sort((a, b) => a.timeStamp - b.timeStamp)]);
+                                    }
                                 }
                             })
                         }
@@ -210,7 +214,7 @@ export default function Social({ route }: Route) {
                         //@ts-ignore
                         itemLayoutAnimation={screenWidth >= 600 ? undefined : Layout}
                         onEndReached={getFriendPosts}
-                        onEndReachedThreshold={0.25}
+                        onEndReachedThreshold={0.5}
                     />
                 </View>}
                 onEndReached={getPosts}

@@ -180,11 +180,12 @@ function AddFriendModal({visible, setVisible, navigation}: {visible: boolean, se
                 <Animated.FlatList
                     //@ts-ignore
                     itemLayoutAnimation={Layout} 
+                    contentContainerStyle={{paddingBottom: 40}}
                     data={list}
                     renderItem={({ item }) => {
                         return <PersonWidget small name={item.name} picture={item.picture} onPress={() => { setVisible(false); setTimeout(() => navigation.navigate("PublicProfile", { id: item.id }), 250);}}/>
                     }}
-                ItemSeparatorComponent={() => <Animated.View entering={FadeIn.delay(100)} style={{width: "100%", paddingLeft: 50, paddingRight: 10}}><View style={{width: "100%", borderTopWidth: 0.25, borderColor: colors.outline}}/></Animated.View>}
+                    ItemSeparatorComponent={() => <Animated.View entering={FadeIn.delay(100)} style={{width: "100%", paddingLeft: 50, paddingRight: 10}}><View style={{width: "100%", borderTopWidth: 0.33, borderColor: colors.outline}}/></Animated.View>}
                 />
         </Modal>
     )
