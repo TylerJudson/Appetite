@@ -23,7 +23,7 @@ interface IState {
 export let State: IState = {
     user: undefined,
     recipeBook: RecipeBook.Initial(),
-    settings: { showFavoritesAtTop: false, themeColor: "green" }
+    settings: { showFavoritesAtTop: false, themeColor: "red" }
 }
 
 

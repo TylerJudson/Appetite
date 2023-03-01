@@ -16,6 +16,7 @@ import { Recipe } from "../../../Models/Recipe";
  */
 export function Widget({ title, image, onPress }: { title: string, image: string, onPress: VoidFunction }) {
     const styles = createStyles();
+    const theme = useTheme();
 
     return (
         <View style={{ flex: 1 }}>
@@ -36,7 +37,7 @@ export function Widget({ title, image, onPress }: { title: string, image: string
                             />
                         }
 
-                        <Text style={[styles.title, { color: image || useTheme().dark ? "#fff" : "#000" }]} variant={"titleMedium"}>{title}</Text>
+                        <Text style={[styles.title, { color: image || theme.dark ? "#fff" : "#000"}]} variant={"titleMedium"}>{title}</Text>
 
                         <IconButton style={styles.chevronIcon} icon="chevron-right" size={40} />
 

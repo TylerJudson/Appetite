@@ -5,6 +5,7 @@ import { MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 export const themes = {
     red: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(192, 1, 0)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -49,6 +50,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(255, 180, 168)",
                 "onPrimary": "rgb(105, 1, 0)",
@@ -95,6 +97,7 @@ export const themes = {
     },
     orange: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(225, 140, 50)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -139,6 +142,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(255, 185, 92)",
                 "onPrimary": "rgb(70, 42, 0)",
@@ -185,6 +189,7 @@ export const themes = {
     },
     yellow: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(150, 150, 10)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -229,6 +234,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(205, 205, 0)",
                 "onPrimary": "rgb(50, 50, 0)",
@@ -367,6 +373,7 @@ export const themes = {
     },
     blue: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(52, 61, 255)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -411,6 +418,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(190, 194, 255)",
                 "onPrimary": "rgb(0, 1, 172)",
@@ -457,6 +465,7 @@ export const themes = {
     },
     indigo: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(73, 81, 195)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -501,6 +510,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(191, 194, 255)",
                 "onPrimary": "rgb(20, 25, 148)",
@@ -547,6 +557,7 @@ export const themes = {
     },
     purple: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(123, 65, 179)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -591,6 +602,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(221, 183, 255)",
                 "onPrimary": "rgb(74, 0, 128)",
@@ -637,6 +649,7 @@ export const themes = {
     },
     pink: {
         light: {
+            ...MD3LightTheme,
             "colors": {
                 "primary": "rgb(154, 64, 87)",
                 "onPrimary": "rgb(255, 255, 255)",
@@ -681,6 +694,7 @@ export const themes = {
             }
         },
         dark: {
+            ...MD3DarkTheme,
             "colors": {
                 "primary": "rgb(255, 177, 192)",
                 "onPrimary": "rgb(95, 17, 42)",
