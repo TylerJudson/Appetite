@@ -43,7 +43,7 @@ export type RootStackParamList = {
 	PublicProfile: { id: string } | undefined;
 	Friends: undefined;
 	CreatePost: { linkedRecipe?: Recipe } | undefined;
-	PostScreen: { id?: string, post?: Post };
+	PostScreen: { id: string, post?: Post };
 };
 
 

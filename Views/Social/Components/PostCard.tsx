@@ -19,7 +19,7 @@ export function PostCard({ post, navigation }: { post: Post, navigation: NativeS
     }
 
     return (
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { post: post })}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { post: post, id: post.id })}>
             <Surface style={styles.contentContainer} elevation={3} >
 
                 <View style={styles.authorContainer} >

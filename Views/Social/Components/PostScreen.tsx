@@ -156,7 +156,7 @@ export function PostScreen({navigation, route}: navProps) {
     }
 
     useEffect(() => {
-        if (route.params.id && user) {
+        if (user) {
             console.log("Getting the post from the database");
             
             const db = getDatabase();

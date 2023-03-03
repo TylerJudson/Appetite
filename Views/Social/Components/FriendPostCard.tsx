@@ -19,7 +19,7 @@ export function FriendPostCard({ post, navigation }: { post: Post, navigation: N
     }
 
     return (
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { post: post })}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("PostScreen", { post: post, id: post.id })}>
             <Surface style={styles.contentContainer} elevation={3} >
 
                 <Image style={styles.image} source={{ uri: post.image }} />
