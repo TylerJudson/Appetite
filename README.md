@@ -12,7 +12,7 @@ Discover recipes and save them directly to your recipe book with a click of a bu
 
 <br>
 
-[See Presentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#links)
+[See Presentation](https://1drv.ms/v/s!Aq7NIYMqp1_7gid5Hh8xyyaQJgDy?e=gKBRBA)
 
 <br>
 
