@@ -1,5 +1,5 @@
 
-<h1> <img align="center" src="https://user-images.githubusercontent.com/74631372/222922789-1f93adb2-996a-4ccb-b9cd-5878045a3017.png" width="33" height="33" /> Appetite </h1>
+<h1> <img align="center" src="https://user-images.githubusercontent.com/74631372/222922789-1f93adb2-996a-4ccb-b9cd-5878045a3017.png" width="40" height="40" /> Appetite </h1>
 
 ### Introducing Appetite
 **Appetite is a fully functional, blazing fast, beautifully designed, recipe holder and social media app that works on iOS, android, and even the web.**
