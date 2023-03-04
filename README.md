@@ -16,12 +16,12 @@ Discover recipes and save them directly to your recipe book with a click of a bu
 
 <br>
 
-### Try Appetite yourself:
+### Try Appetite yourself
 
 <details> 
   <summary>&nbsp;On iOS</summary>
   
-  1. Download the Expo Go app on your ios device: 
+  1. Download the Expo Go app on your ios device
   2. Scan this QR code to open up the app:
   
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/74631372/222916936-ed47cf25-47b1-487c-8050-a791fd0efc16.svg" width="150" height="150" />
@@ -33,7 +33,7 @@ Discover recipes and save them directly to your recipe book with a click of a bu
 <details> 
   <summary>&nbsp;On android</summary>
   
-  1. Download the Expo Go app on your android device: 
+  1. Download the Expo Go app on your android device 
   2. Scan this QR code to open up the app:
   
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/74631372/222917092-dc5d6a6b-90a6-4cfb-95c9-66f3239efc51.svg" width="150" height="150" />
