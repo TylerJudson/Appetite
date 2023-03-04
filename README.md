@@ -16,7 +16,7 @@ Discover recipes and save them directly to your recipe book with a click of a bu
 
 <br>
 
-### Try Appetite yourself
+### Try Appetite Yourself
 
 <details> 
   <summary>&nbsp;On iOS</summary>
