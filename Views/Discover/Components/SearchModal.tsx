@@ -1,8 +1,8 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { getDatabase, get, ref } from "firebase/database";
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Keyboard } from "react-native";
-import { Searchbar, Button } from "react-native-paper";
+import { View, StyleSheet, Keyboard, useWindowDimensions } from "react-native";
+import { Searchbar, Button, Menu } from "react-native-paper";
 import { Recipe } from "../../../Models/Recipe";
 import { Modal } from "../../components/Modal";
 import { RootStackParamList } from "../../navigation";
@@ -22,12 +22,14 @@ export function SearchModal({ visible, setVisible, navigation, tags, setTags }: 
     const styles = createStyles();
     
     const [tagsModalVisible, setTagsModalVisible] = useState(false);
+    const [tagsMenuVisible, setTagsMenuVisible] = useState(false);
     
     const [search, setSearch] = useState("");
 
     const [masterList, setMasterList] = useState<{ name: string, id: string, image: string, tags: string[] }[]>([]);
     const [list, setList] = useState(masterList);
 
+    const screenWidth = useWindowDimensions().width;
 
     useEffect(() => filter(masterList), [search, tags]);
     useEffect(getRecipes, [visible])
@@ -104,15 +106,32 @@ export function SearchModal({ visible, setVisible, navigation, tags, setTags }: 
         <Modal visible={visible} setVisible={setVisible}avoidingEnabled={false} >
             <View style={styles.searchContainer}>
                 <View style={{ flex: 1 }}>
-                    <Searchbar style={styles.searchBar} 
-                        icon="filter-variant"
-                        onIconPress={() => {setTagsModalVisible(true); Keyboard.dismiss()}}
-                        value={search} 
-                        onChangeText={setSearch} 
-                        placeholder="Search Recipes" 
-                        autoFocus 
-                        autoCapitalize="words" 
-                    />
+                    <Menu 
+                        visible={tagsMenuVisible} onDismiss={() => setTagsMenuVisible(false)} anchorPosition="bottom"
+                        anchor={
+                            <Searchbar style={styles.searchBar}
+                                icon="filter-variant"
+                                onIconPress={() => { 
+                                    if (screenWidth < 700) {
+                                        setTagsModalVisible(true); 
+                                    }
+                                    else {
+                                        setTagsMenuVisible(true);
+                                    }
+                                    
+                                    Keyboard.dismiss();
+                                }}
+                                value={search}
+                                onChangeText={setSearch}
+                                placeholder="Search Recipes"
+                                autoFocus
+                                autoCapitalize="words"
+                            />    
+                        } 
+                    >
+                        <Tags title="Filters" clear tags={tags} setTags={setTags} addTags />
+                    </Menu>
+                    
                 </View>
                 <Button onPress={() => setVisible(false)}>Done</Button>
             </View>
