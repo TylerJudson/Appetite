@@ -18,27 +18,20 @@ Discover recipes and save them directly to your recipe book with a click of a bu
 
 ### Try Appetite Yourself
 
-<details> 
-  <summary>&nbsp;On iOS</summary>
-  
-  1. Download the Expo Go app on your ios device
-  2. Scan this QR code to open up the app:
-  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/74631372/222916936-ed47cf25-47b1-487c-8050-a791fd0efc16.svg" width="150" height="150" />
-  
-- Or open this link on your device: exp://u.expo.dev/update/0753c532-ba94-463e-89fa-db8de819e0da
+<img src="AppetiteExpoAppQRCode.svg" width="150" height="150" />
 
+<details>
+  <summary>&nbsp;On iOS</summary>
+
+  1. Download the Expo Go app on your iOS device
+  2. Scan the QR code above or open [this link](https://expo.dev/preview/update?message=Upgraded+to+SDK+54&updateRuntimeVersion=exposdk%3A54.0.0&createdAt=2025-12-24T01%3A26%3A30.713Z&slug=exp&projectId=44a0e697-bdc5-4c7e-a69a-408877d49b12&group=a01ec2d3-bcc8-46e9-9751-0c419a134462)
 
 </details>
-<details> 
-  <summary>&nbsp;On android</summary>
-  
-  1. Download the Expo Go app on your android device 
-  2. Scan this QR code to open up the app:
-  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://user-images.githubusercontent.com/74631372/222917092-dc5d6a6b-90a6-4cfb-95c9-66f3239efc51.svg" width="150" height="150" />
-  
-  - Or open this link on your device: exp://u.expo.dev/update/f5343585-50c9-4432-a62a-72eae7917dac
+<details>
+  <summary>&nbsp;On Android</summary>
+
+  1. Download the Expo Go app on your Android device
+  2. Scan the QR code above or open [this link](https://expo.dev/preview/update?message=Upgraded+to+SDK+54&updateRuntimeVersion=exposdk%3A54.0.0&createdAt=2025-12-24T01%3A26%3A30.713Z&slug=exp&projectId=44a0e697-bdc5-4c7e-a69a-408877d49b12&group=a01ec2d3-bcc8-46e9-9751-0c419a134462)
 
 </details>
 
