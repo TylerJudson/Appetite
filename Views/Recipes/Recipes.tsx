@@ -36,7 +36,7 @@ export default function Recipes({ route }: Route) {
     const [filteredRecipes, setFilteredRecipes] = useState(recipeBook.recipes); // The list of recipes to display
 
     const animSearchBar = useRef(new animated.Value(0)).current;
-    const searchBar = useRef<TextInput>() as MutableRefObject<TextInput>;
+    const searchBar = useRef<TextInput>(null) as MutableRefObject<TextInput>;
 
     //#region BEHAVIOR
 

@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'react-native';
 import { Provider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { auth } from './firebaseConfig';
 
 import useCachedResources from './hooks/useCachedResources';
@@ -27,16 +28,18 @@ export default function App() {
 
 
 function RestOfApp() {
-	
+
 	const colorScheme = useColorScheme();
 	const { settings } = useSettingsState();
 
 	return (
-		<Provider theme={colorScheme === 'dark' ? themes[settings.themeColor].dark : themes[settings.themeColor].light}>
-			<SafeAreaProvider>
-				<Navigation />
-				<StatusBar />
-			</SafeAreaProvider>
-		</Provider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<Provider theme={colorScheme === 'dark' ? themes[settings.themeColor].dark : themes[settings.themeColor].light}>
+				<SafeAreaProvider>
+					<Navigation />
+					<StatusBar />
+				</SafeAreaProvider>
+			</Provider>
+		</GestureHandlerRootView>
 	)
 }

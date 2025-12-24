@@ -21,7 +21,7 @@ export function Modal({ visible, setVisible, headerTitle, headerButton, children
 
 
     const animModal = useRef(new Animated.Value(0)).current;
-    const modalRef = useRef<View>() as MutableRefObject<View>;
+    const modalRef = useRef<View>(null) as MutableRefObject<View>;
     
     /**
      * Hides the modal by displaying the hide animation.

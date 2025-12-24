@@ -1,9 +1,9 @@
 
+import React, { MutableRefObject, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerGestureEvent, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Animated, { runOnJS, timing, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { IconButton, Text, useTheme } from "react-native-paper";
-import { MutableRefObject, useState } from 'react';
 
 
 
@@ -14,7 +14,7 @@ import { MutableRefObject, useState } from 'react';
  * @param onSwipe the function to call when the user swipes the element
  * @param scrollRef The gestured scroll reference the swipe is in
  */
-export function SwipeToDelete({ onSwipe, children, scrollRef }: {onSwipe: VoidFunction, children: JSX.Element, scrollRef: MutableRefObject<ScrollView>}) {
+export function SwipeToDelete({ onSwipe, children, scrollRef }: {onSwipe: VoidFunction, children: React.ReactElement, scrollRef: MutableRefObject<ScrollView>}) {
 
 
     const translationX = useSharedValue(0);
@@ -24,20 +24,23 @@ export function SwipeToDelete({ onSwipe, children, scrollRef }: {onSwipe: VoidFu
 
     const [width, setWidth] = useState(0);
 
-    const panGesture = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-        onActive: (event) => {
-            translationX.value = event.translationX > 0 ? 0 : event.translationX;
+    const panGesture = (event: any) => {
+        'worklet';
+        const isActive = event.nativeEvent.state === 4; // ACTIVE state
+        const isEnd = event.nativeEvent.state === 5; // END state
+
+        if (isActive) {
+            translationX.value = event.nativeEvent.translationX > 0 ? 0 : event.nativeEvent.translationX;
             runOnJS(setShouldDelete)(translationX.value < 0.2 * -width);
             if (translationX.value != 0) {
                 runOnJS(setStopScroll)(true);
             }
-        },
-        onEnd: () => {
+        } else if (isEnd) {
             if (shouldDelete) {
-                translationX.value = withTiming(-width, undefined, () => {
+                translationX.value = withTiming(-width, undefined, (finished) => {
                     opacity.value = withTiming(0, undefined, (finished) => {
                         runOnJS(onSwipe)();
-                        
+
                         translationX.value = 0;
                         opacity.value = withTiming(1);
                     });
@@ -48,7 +51,7 @@ export function SwipeToDelete({ onSwipe, children, scrollRef }: {onSwipe: VoidFu
                 translationX.value = withTiming(0);
             }
         }
-    });
+    };
 
 
     const rstyles = useAnimatedStyle(() => ({

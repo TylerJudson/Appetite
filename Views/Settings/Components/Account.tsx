@@ -33,8 +33,8 @@ export function Account({ navigation }: AccountInfoNavProps) {
     const [newPasswordError, setNewPasswordError] = useState("");
     const [verifyPasswordError, setVerifyPasswordError] = useState("");
 
-    const newPasswordRef = useRef<input>() as MutableRefObject<input>;
-    const verifyPasswordRef = useRef<input>() as MutableRefObject<input>;
+    const newPasswordRef = useRef<input>(null) as MutableRefObject<input>;
+    const verifyPasswordRef = useRef<input>(null) as MutableRefObject<input>;
 
 
     function handleChangePassword() {

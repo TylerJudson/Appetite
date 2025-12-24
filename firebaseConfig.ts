@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { initializeAuth } from "firebase/auth";
-import { getReactNativePersistence } from "firebase/auth/react-native"
+// @ts-ignore - getReactNativePersistence exists but may not be in type definitions
+import { initializeAuth, getReactNativePersistence } from "firebase/auth"
 
 // Initialize Firebase
 const firebaseConfig = {

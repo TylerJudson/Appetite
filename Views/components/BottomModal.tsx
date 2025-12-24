@@ -16,7 +16,7 @@ export function BottomModal({ visible, setVisible, children }: { visible: boolea
     const [height, setHeight] = useState(1000);
 
     const animModal = useRef(new Animated.Value(0)).current;
-    const modalRef = useRef<View>() as MutableRefObject<View>;
+    const modalRef = useRef<View>(null) as MutableRefObject<View>;
 
     /**
      * Hides the modal by displaying the hide animation.

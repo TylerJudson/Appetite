@@ -31,8 +31,8 @@ export function CreateAccount({ modalVisible, setModalVisible }: { modalVisible:
     const [password, setPassword] = useState("");
     const [verifyPassword, setVerifyPassword] = useState("");
 
-    const verifyPasswordRef = useRef<input>() as MutableRefObject<input>;
-    const displayNameRef = useRef<input>() as MutableRefObject<input>;
+    const verifyPasswordRef = useRef<input>(null) as MutableRefObject<input>;
+    const displayNameRef = useRef<input>(null) as MutableRefObject<input>;
     
     const [emailError, setEmailError] = useState("");
     const [displayNameError, setDisplayNameError] = useState("");

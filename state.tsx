@@ -31,7 +31,7 @@ const UserContext = React.createContext(State.user);
 const RecipeBookStateContext = React.createContext({ recipeBook: State.recipeBook, setRecipeBook: (recipeBook: RecipeBook) => {}});
 const SettingsContext = React.createContext({settings: State.settings, setSettings: (settings: ISettings) => {}});
 
-export const GlobalStateProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+export const GlobalStateProvider = ({ children }: { children: React.ReactElement | React.ReactElement[] }) => {
 
     const [user, setUser] = React.useState(State.user);
 

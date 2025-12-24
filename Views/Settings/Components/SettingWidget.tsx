@@ -13,9 +13,9 @@ import { Recipe } from "../../../Models/Recipe";
 interface SettingWidgetProps {
     title: string,
     subTitle?: string,
-    icon: JSX.Element,
+    icon: React.ReactElement,
     onPress?: VoidFunction,
-    rightIcon?: JSX.Element,
+    rightIcon?: React.ReactElement,
     roundUpperCorners?: boolean,
     roundBottomCorners?: boolean,
     danger?: boolean

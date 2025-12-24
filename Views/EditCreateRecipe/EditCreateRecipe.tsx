@@ -34,7 +34,7 @@ export default function EditCreateRecipe({ navigation, route }: navProps) {
     const [tags, setTags] = useState<string[]>(recipe.tags);
     const [selectedImage, setSelectedImage] = useState(recipe.image);
 
-    const scrollRef = useRef() as MutableRefObject<ScrollView>;
+    const scrollRef = useRef<ScrollView>(null) as unknown as MutableRefObject<ScrollView>;
 
     /**
      * Handles the action of saving the recipe

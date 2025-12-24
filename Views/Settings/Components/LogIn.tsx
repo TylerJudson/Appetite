@@ -19,7 +19,7 @@ export function LogIn({ loginModalVisible, setLoginModalVisible }: { loginModalV
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const passwordRef = useRef<input>() as MutableRefObject<input>;
+    const passwordRef = useRef<input>(null) as MutableRefObject<input>;
     
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
